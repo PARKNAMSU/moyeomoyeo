@@ -22,7 +22,7 @@ import com.spring.moyeo.service.LoginService;
 import com.spring.moyeo.service.MemberService;
 import com.spring.moyeo.vo.MemberEntity;
 
-@SessionAttributes("id")
+@SessionAttributes("user_id")
 @Controller
 public class LoginCont {
 	
@@ -31,6 +31,7 @@ public class LoginCont {
 	@Autowired
 	MemberService memberService;
 	
+
 	@RequestMapping("/login_page")
 	public String loginPage() {
 		return "account/loginPage";
@@ -49,17 +50,11 @@ public class LoginCont {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page","index");
 		return mv;
-	}
-	
-	@RequestMapping("/member/index.do")
-	public ModelAndView indexPage(ModelAndView mv, HttpSession session) {
-		mv.addObject("jsp_page","index");
-		mv.setViewName("root/main");
-		return mv;
-	}
+	}	
+
 	@RequestMapping("/login_access.do")
 	public ModelAndView getMember(@AuthenticationPrincipal User user,ModelAndView mv) {
-		mv.addObject("id",user.getUsername());
+		mv.addObject("user_id",user.getUsername());
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "index");
 		return mv;

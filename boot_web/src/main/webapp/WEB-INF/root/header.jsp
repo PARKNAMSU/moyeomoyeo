@@ -74,25 +74,7 @@
 </div>
 <div class="clear"></div>
 <script>
-/*
-	function visibleEl(idx,type){
-		if(type === 'line'){
-			$("#h_line"+idx).css("visibility","visible");
-		}else if(type === 'sub_menu'){
-			var cssType = 'visible';
-			if($("#h_sub_menu_"+idx).css("visibility") === "visible"){
-				cssType = 'hidden'
-			}
-			$("#h_sub_menu_"+idx).css("visibility",cssType);
-		}
 
-	}
-	function hiddenEl(idx,type){
-		if(type === 'line'){
-			$("#h_line"+idx).css("visibility","hidden");
-		}
-	}
-	*/
 	function visibleEl(idx,type){
 		if(type === 'line'){
 			$("#h_line"+idx).css("visibility","visible");

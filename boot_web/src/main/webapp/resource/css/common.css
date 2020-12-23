@@ -5,6 +5,7 @@
  }
 body{
  	font-family: 'Do Hyeon', sans-serif;
+ 	background-color: #EBFBFF; 
 }
 .fl{
 	float:left;
@@ -58,4 +59,25 @@ body{
 	border-radius:2%;
 	border-color:black;
 	color: white; 
+}
+.margin_left_10{
+	margin-left:10px;
+}
+.margin_left_20{
+	margin-left:20px;
+}
+.margin_left_30{
+	margin-left:30px;
+}
+.margin_left_40{
+	margin-left:40px;
+}
+.margin_left_50{
+	margin-left:50px;
+}
+.margin_left_80{
+	margin-left:80px;
+}
+.margin_left_100{
+	margin-left:100px;
 }
