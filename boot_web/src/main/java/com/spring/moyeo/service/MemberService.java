@@ -1,4 +1,4 @@
-package com.spring.board.service;
+package com.spring.moyeo.service;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.Role;
-import com.spring.board.dao.LoginDao;
-import com.spring.board.vo.MemberEntity;
+import com.spring.moyeo.dao.LoginDao;
+import com.spring.moyeo.vo.MemberEntity;
 
 @Service
 public class MemberService implements UserDetailsService{

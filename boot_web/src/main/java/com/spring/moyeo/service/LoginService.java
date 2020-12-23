@@ -1,12 +1,12 @@
-package com.spring.board.service;
+package com.spring.moyeo.service;
 
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.board.dao.LoginDao;
-import com.spring.board.vo.MemberEntity;
+import com.spring.moyeo.dao.LoginDao;
+import com.spring.moyeo.vo.MemberEntity;
 
 @Service
 public class LoginService {

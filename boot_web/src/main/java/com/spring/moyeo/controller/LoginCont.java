@@ -1,4 +1,4 @@
-package com.spring.board.controller;
+package com.spring.moyeo.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.Role;
-import com.spring.board.service.LoginService;
-import com.spring.board.service.MemberService;
-import com.spring.board.vo.MemberEntity;
+import com.spring.moyeo.service.LoginService;
+import com.spring.moyeo.service.MemberService;
+import com.spring.moyeo.vo.MemberEntity;
 
 @SessionAttributes("id")
 @Controller

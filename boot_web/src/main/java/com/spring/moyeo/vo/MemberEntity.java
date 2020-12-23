@@ -1,4 +1,4 @@
-package com.spring.board.vo;
+package com.spring.moyeo.vo;
 
 import java.util.Date;
 

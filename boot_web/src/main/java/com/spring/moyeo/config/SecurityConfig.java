@@ -1,4 +1,4 @@
-package com.spring.board.config;
+package com.spring.moyeo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.spring.board.service.MemberService;
+import com.spring.moyeo.service.MemberService;
 
 
 @Configuration
