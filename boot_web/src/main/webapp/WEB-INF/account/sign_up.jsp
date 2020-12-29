@@ -22,8 +22,8 @@
 			<img alt="" src="/resource/img/logo.png" style="width: 350px; height: 350px;margin-left:20px;"><br>
 			<b style="font-size: 50px;margin-left:50px;margin-left:120px;" class="g_text">회원가입</b>
 			<form action="#" method="post" style="width: 430px;">
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token" />
-				<input type="text" name="email" id="email" placeholder="이메일" class="form-control"><br>
+				<input type="text" name="email" id="email" placeholder="이메일" class="form-control fl" style="width:77%;margin-right:3%;"><button class="btn btn-primary" style="width:20%;font-size:12px;height:38px">중복확인</button>
+				<br><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호" class="form-control"><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호 확인" class="form-control"><br>
 				<input type="text" name="email" id="email" placeholder="이름" class="form-control"><br>

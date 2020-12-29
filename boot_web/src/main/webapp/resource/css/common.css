@@ -29,6 +29,12 @@ body{
 .font_20{
 	font-size:20px;
 }
+.font_15{
+	font-size:15px;
+}
+.font_13{
+	font-size:13px;
+}
 .font_10{
 	font-size:10px;
 }
@@ -80,4 +86,70 @@ body{
 }
 .margin_left_100{
 	margin-left:100px;
+}
+.margin_right_10{
+	margin-right:10px;
+}
+.margin_right_20{
+	margin-right:20px;
+}
+.margin_right_30{
+	margin-right:30px;
+}
+.margin_right_40{
+	margin-right:40px;
+}
+.margin_right_50{
+	margin-right:50px;
+}
+.margin_right_80{
+	margin-right:80px;
+}
+.margin_right_100{
+	margin-right:100px;
+}
+.line_01{
+	height:1px;width:100%;background-color:black;
+}
+.dis_n{
+	display:none;
+}
+.vis_h{
+	visibility: hidden;
+}
+.cursur_p{
+	cursor:pointer;
+}
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	display:none;
+	opacity: 1;
+}
+.popup {
+	margin: 70px auto;
+	margin-top: 10%;
+	background: #fff;
+	background-color: #EBFBFF; 
+	border-radius: 10px;
+	width: 507px;
+	position: relative;
+	transition: all 5s ease-in-out;
+	
+}
+
+.popup .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
 }

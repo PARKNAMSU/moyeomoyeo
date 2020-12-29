@@ -7,7 +7,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <style>
  	#ray_01{
- 		color:black;text-align:left;margin-top:190px
+ 		color:black;text-align:left;margin-top:190px;
  	}
 </style>
 <div id="main_1" class="container-fluid" style="padding-top:90px;">
@@ -16,7 +16,7 @@
 		<p class="font_50" style="">시크릿 모임</p>
 		<p class="font_20">추억은 함께하면 배가됩니다.<br>지금 시크릿 모임을 생성하여<br>함께하고 싶은 친구들을 초대해 보세요!</p><br><br>
 		<button class="btn_01" style="margin-right:20px;" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/secret_meeting_create'"><span class="font_30">시크릿 모임 생성</span></button>
-		<button class="btn_01" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/secret_meeting'"><span class="font_30">내 모임 목록</span></button>
+		<button class="btn_01" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/my_meeting'"><span class="font_30">내 모임 목록</span></button>
 		
 	</div>
 </div>

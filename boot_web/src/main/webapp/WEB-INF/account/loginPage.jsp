@@ -29,7 +29,8 @@
 			<div style="width:430px;">
 				 <span style="margin-left: 80px;">비밀번호를 잊어버리셨습니까?</span><a href="/get_temp_pw">&nbsp;비밀번호 발급</a>
 				 <hr>
-				 <span style="margin-left: 120px;">계정이 없으십니까?</span><a href="/sign_up_page">&nbsp;회원가입</a>
+				 <span style="margin-left: 10px;">계정이 없으십니까?</span><a href="/sign_up_page">&nbsp;회원가입</a>
+				 <span style="margin-left: 30px;">계정이 비활성화 상태입니까?</span><a href="#">&nbsp;활성화</a>
 			</div>
 		</div>
 	</div>
