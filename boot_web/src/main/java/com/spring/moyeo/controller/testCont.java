@@ -48,4 +48,16 @@ public class testCont {
 		mv.addObject("jsp_page", "../member/my/my_inval_account_pop");
 		return mv;
 	}
+	@RequestMapping("/test1")
+	public ModelAndView my_friends(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_friends");
+		return mv;
+	}
+	@RequestMapping("/invite_pop")
+	public ModelAndView invite_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/invite_pop");
+		return mv;
+	}
 }

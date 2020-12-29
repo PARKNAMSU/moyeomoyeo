@@ -7,29 +7,11 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 
-<style>
 
-#chg_pass_div::-webkit-scrollbar {
-	width: 15px;
-}
 
-#chg_pass_div::-webkit-scrollbar-track {
-	background-color: transparent;
-}
-
-#chg_pass_div::-webkit-scrollbar-thumb {
-	border-radius: 5px;
-	background-color: #bebebe;
-}
-
-#chg_pass_div::-webkit-scrollbar-button {
-	width: 0;
-	height: 0;
-}
-</style>
-
-<div style="overflow: scroll;" id="chg_pass_div">
+<div  id="chg_pass_div">
 	<h2 style="text-align: center;">비밀번호 변경</h2>
+	<div class="line_01" style="height:2px;"></div><br>
 	<div class="div_01">
 		<aside class="aside_01 fl" style="width: 10%;">
 			<p class="font_15">현재 비밀번호</p>
@@ -78,5 +60,5 @@
 			<button class="btn_01_01 font_20 margin_left_10">취소</button>
 		</div>
 	</div>
+	<div class="clear" style="margin-bottom:30px"></div>
 </div >
-<div class="clear"></div>

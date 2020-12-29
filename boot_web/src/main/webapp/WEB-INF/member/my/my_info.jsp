@@ -17,10 +17,7 @@
 	text-align: right;
 	width: 90px;
 }
-.a_btn{
-	color: #007BFF;
-	cursor: pointer;
-}
+
 .div_01_01 {
 	width: 630px;
 }
@@ -33,7 +30,7 @@
 	style="padding-top: 90px; padding-bottom: 90px;">
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50">내정보</p>
-		<div style="height: 1px; width: 100%; background-color: black;"></div>
+		<div class="line_01"></div>
 		<br> <br>
 		<div class="div_01">
 			<aside class="aside_01 fl">
@@ -113,15 +110,15 @@
 </div>
 
 
-		<div id="popup1" class="overlay" style="">
-			<div class="popup" style="">
-				<a class="close" href="#" onclick="closePopup()">&times;</a>
-				<br><br><br>
-				<div id="field">
-				
-				</div>
-			</div>
+<div id="popup1" class="overlay" style="">
+	<div class="popup" style="">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
+		
 		</div>
+	</div>
+</div>
 		
 <script>
 	function openPopup(url){
