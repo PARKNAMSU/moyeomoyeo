@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     .and() // 로그인 설정
                         .formLogin()
         .loginPage("/login_page")
-        .defaultSuccessUrl("/login_access.do").usernameParameter("id")  // 로그인 요청시 id용 파라미터 (메소드 이름이 usernameParameter로 무조건 써야하지만, 파라미터는 email이든 id이든 name이든 상관없다.)
+        .defaultSuccessUrl("/login_access.do").usernameParameter("email")  // 로그인 요청시 id용 파라미터 (메소드 이름이 usernameParameter로 무조건 써야하지만, 파라미터는 email이든 id이든 name이든 상관없다.)
         .passwordParameter("password")
         .permitAll()
     .and() // 로그아웃 설정

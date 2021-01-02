@@ -115,6 +115,9 @@ body{
 .line_01{
 	height:1px;width:100%;background-color:#3063C2;
 }
+.line_02{
+	height:2px;width:100%;background-color:black;
+}
 .dis_n{
 	display:none;
 }

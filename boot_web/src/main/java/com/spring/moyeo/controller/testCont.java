@@ -51,7 +51,9 @@ public class testCont {
 	@RequestMapping("/test1")
 	public ModelAndView my_friends(ModelAndView mv) {
 		mv.setViewName("root/main");
-		mv.addObject("jsp_page", "../member/my/my_friends");
+		//mv.addObject("jsp_page", "../member/my/my_friends");
+		//mv.addObject("jsp_page", "../member/meeting/meeting_page");
+		mv.addObject("jsp_page", "../member/meeting/find_friends");
 		return mv;
 	}
 	@RequestMapping("/invite_pop")

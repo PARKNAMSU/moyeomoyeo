@@ -73,7 +73,7 @@ public class LoginCont {
 	@RequestMapping("/test")
 	public String test() {
 		MemberEntity m = new MemberEntity();
-		m.setId("slsl");
+		m.setEmail("slsl");
 		m.setPassword("1234");
 		m.setName("김");
 		m.setAuth("ROLE_USER");

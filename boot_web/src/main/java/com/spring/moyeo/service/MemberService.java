@@ -37,9 +37,9 @@ public class MemberService implements UserDetailsService{
 		MemberEntity member = dao.findById(username)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + username));
 		if(member.getAuth().equals("ADMIN")) {
-			return new User(member.getId(),member.getPassword(),getAuthorities(Role.ADMIN.getValue()));
+			return new User(member.getEmail(),member.getPassword(),getAuthorities(Role.ADMIN.getValue()));
 		}else {
-			return new User(member.getId(),member.getPassword(),getAuthorities(Role.USER.getValue()));
+			return new User(member.getEmail(),member.getPassword(),getAuthorities(Role.USER.getValue()));
 		}
 		
 	}

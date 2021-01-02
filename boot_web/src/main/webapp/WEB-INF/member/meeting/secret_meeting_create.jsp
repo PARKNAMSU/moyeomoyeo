@@ -26,7 +26,7 @@
 <div id="main_1" class="container-fluid" style="padding-top:90px;padding-bottom:90px;">
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50">시크릿 모임 생성</p>
-		<div style="height:1px;width:100%;background-color:black;"></div><br><br>
+		<div class="line_01"></div><br><br>
 
 		<div class="div_01">
 			<aside class="aside_01 fl">
