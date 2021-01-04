@@ -34,7 +34,8 @@
 	width: 40px;
 	height: 40px;
 	cursor:pointer;
-}.friends_div_01 {
+}
+.friends_div_01 {
 	width: 420px;
 }
 

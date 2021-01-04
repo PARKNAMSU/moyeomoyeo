@@ -53,9 +53,18 @@ public class testCont {
 		mv.setViewName("root/main");
 		//mv.addObject("jsp_page", "../member/my/my_friends");
 		//mv.addObject("jsp_page", "../member/meeting/meeting_page");
-		mv.addObject("jsp_page", "../member/meeting/find_friends");
+		//mv.addObject("jsp_page", "../member/meeting/find_friends");
+		mv.addObject("jsp_page", "../member/open/open_meeting_create");
+		
 		return mv;
 	}
+	@RequestMapping("/test2")
+	public ModelAndView test2(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/open/find_open_meeting");
+		
+		return mv;
+	}	
 	@RequestMapping("/invite_pop")
 	public ModelAndView invite_pop(ModelAndView mv) {
 		mv.setViewName("root/main");
