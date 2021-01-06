@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +21,9 @@
 <title>모여모여 로그인</title>
 </head>
 <body>
+	<c:if test="${user_id != null}">
+		<script>location.href='/'</script>
+	</c:if>
 	<div class=".container-md" >
 		<div class="" style="margin-top:100px;margin-left:40%;" id="login_main" >
 			<img alt="" src="/resource/img/logo.png" style="width: 350px; height: 350px;margin-left:20px;cursor:pointer;"  onclick="location.href='/'"><br>

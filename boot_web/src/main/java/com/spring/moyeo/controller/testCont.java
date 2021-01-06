@@ -62,13 +62,24 @@ public class testCont {
 	public ModelAndView test2(ModelAndView mv) {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../member/open/find_open_meeting");
-		
+		return mv;
+	}
+	@RequestMapping("/test3")
+	public ModelAndView test3(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../info/oto_content");
 		return mv;
 	}	
 	@RequestMapping("/invite_pop")
 	public ModelAndView invite_pop(ModelAndView mv) {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../member/my/invite_pop");
+		return mv;
+	}
+	@RequestMapping("/profile_pop")
+	public ModelAndView profile_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_profile_img_pop");
 		return mv;
 	}
 }

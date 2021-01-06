@@ -13,7 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.spring.moyeo.service.MemberService;
+import com.spring.moyeo.service.login.LoginService;
 
 
 @Configuration
@@ -21,7 +21,7 @@ import com.spring.moyeo.service.MemberService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
-	MemberService service;
+	LoginService service;
 
 
     @Override

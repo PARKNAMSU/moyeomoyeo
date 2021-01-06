@@ -1,4 +1,4 @@
-package com.spring.moyeo.dao;
+package com.spring.moyeo.dao.login;
 
 
 import org.springframework.data.repository.CrudRepository;

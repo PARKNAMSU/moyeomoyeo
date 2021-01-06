@@ -40,7 +40,7 @@
 			<div class="fl margin_left_50 div_01_01 sub_div">
 				<div>
 					<p class="font_20">박남수</p>
-					<a style="font-size: 15px;" onclick="openPopup('/my_profile_img_pop')" class="a_btn">프로필 사진 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a style="font-size: 15px;" onclick="openPopup('/profile_pop')" class="a_btn">프로필 사진 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<a style="font-size: 15px;" onclick="openPopup('/my_password_chg_pop')" class="a_btn">비밀번호 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<a style="font-size: 15px;" onclick="openPopup('/my_inval_account_pop')" class="a_btn">계정 비활성화</a>
 				</div>

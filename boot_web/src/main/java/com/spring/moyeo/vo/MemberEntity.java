@@ -10,8 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.sun.istack.Nullable;
-
 import lombok.Data;
 
 @Data
@@ -22,17 +20,28 @@ public class MemberEntity {
 	@Id
 	@Column(name = "email")
 	private String email;
+	
 	@Column(nullable = false)
 	private String password;
+	
 	@Column(nullable = false)
 	private String name;
+	
 	@Column(nullable = false)
 	private String nick_name;
+	
+	private String introduce;
+	
 	private String stop_yn;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date stop_date;
+	
+	private String profile_url;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date regDate;
+	
 	private String auth;
 	
 	@PrePersist

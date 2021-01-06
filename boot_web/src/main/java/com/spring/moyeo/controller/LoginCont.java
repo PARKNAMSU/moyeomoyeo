@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.Role;
-import com.spring.moyeo.service.LoginService;
-import com.spring.moyeo.service.MemberService;
+import com.spring.moyeo.service.login.LoginService;
+import com.spring.moyeo.service.login.LoginService;
 import com.spring.moyeo.vo.MemberEntity;
 
 @SessionAttributes("user_id")
@@ -29,7 +29,7 @@ public class LoginCont {
 	@Autowired
 	LoginService service;
 	@Autowired
-	MemberService memberService;
+	LoginService memberService;
 	
 
 	@RequestMapping("/login_page")
@@ -67,16 +67,17 @@ public class LoginCont {
 		return mv;
 	}
 	@RequestMapping("/logout")
-	public String logout() {
+	public String logout(HttpSession session) {
+		session.invalidate();
 		return "redirect:/login_page";
 	}
 	@RequestMapping("/test")
 	public String test() {
 		MemberEntity m = new MemberEntity();
-		m.setEmail("slsl");
+		m.setEmail("skatn7979");
 		m.setPassword("1234");
-		m.setName("김");
-		m.setAuth("ROLE_USER");
+		m.setName("홍길동");
+		m.setNick_name("slsl");
 		memberService.createUser(m);
 		return "test";
 	}

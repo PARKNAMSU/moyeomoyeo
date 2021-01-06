@@ -161,3 +161,9 @@ body{
 	color: #333;
 	cursor: pointer;
 }
+.t_align_c{
+	text-align:center;
+}
+.t_align_r{
+	text-align:right;
+}

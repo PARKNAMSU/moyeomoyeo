@@ -1,4 +1,4 @@
-package com.spring.moyeo.service;
+package com.spring.moyeo.service.login;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,11 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.Role;
-import com.spring.moyeo.dao.LoginDao;
+import com.spring.moyeo.dao.login.LoginDao;
 import com.spring.moyeo.vo.MemberEntity;
 
 @Service
-public class MemberService implements UserDetailsService{
+public class LoginService implements UserDetailsService{
 
 	@Autowired
 	LoginDao dao;
@@ -27,11 +27,23 @@ public class MemberService implements UserDetailsService{
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	public String emailCheck(String email,String passoward) {
+		MemberEntity member = dao.findById(email)
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + email));
+		if(member == null) return "id_false";
+		else {
+			if(passoward.equals("")) return "true";
+			else {
+				if(passwordEncoder.matches(passoward,member.getPassword())) return "true";
+				else return "pass_false";
+			}
+		}
+	}
+	
 	public void createUser(MemberEntity member) {
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
 		dao.save(member);
 	}
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		MemberEntity member = dao.findById(username)
@@ -42,6 +54,20 @@ public class MemberService implements UserDetailsService{
 			return new User(member.getEmail(),member.getPassword(),getAuthorities(Role.USER.getValue()));
 		}
 		
+	}
+	public void updateUser(MemberEntity member) {
+		MemberEntity get_member = dao.findById(member.getEmail())
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + member.getEmail()));
+		get_member.setNick_name(member.getNick_name());
+		get_member.setIntroduce(member.getIntroduce());
+		get_member.setName(member.getName());
+		dao.save(get_member);
+	}
+	public void updateUserPassword(String email,String password) {
+		MemberEntity get_member = dao.findById(email)
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + email));
+		get_member.setPassword(passwordEncoder.encode(password));
+		dao.save(get_member);
 	}
 	public Collection<? extends GrantedAuthority> getAuthorities(String role) {
 		// TODO Auto-generated method stub

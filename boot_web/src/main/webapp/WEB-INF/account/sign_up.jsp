@@ -22,7 +22,9 @@
 			<img alt="" src="/resource/img/logo.png" style="width: 350px; height: 350px;margin-left:20px;"><br>
 			<b style="font-size: 50px;margin-left:50px;margin-left:120px;" class="g_text">회원가입</b>
 			<form action="#" method="post" style="width: 430px;">
-				<input type="text" name="email" id="email" placeholder="이메일" class="form-control fl" style="width:77%;margin-right:3%;"><button class="btn btn-primary" style="width:20%;font-size:12px;height:38px">중복확인</button>
+				<input type="text" name="email" id="email" placeholder="이메일" class="form-control fl" style="width:57%;margin-right:3%;">
+				<input type="button" class="btn btn-primary" style="width:19%;font-size:12px;height:38px" onclick="emailCk()" value="중복확인">
+				<input type="button" class="btn btn-primary" style="width:19%;font-size:12px;height:38px" onclick="emailCk()" value="인증번호" disabled="disabled">
 				<br><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호" class="form-control"><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호 확인" class="form-control"><br>
@@ -47,6 +49,9 @@ function chkWindowWidth(){
 	}else{
 		$("#sign_up_main").css("margin-left","40%");
 	}
+}
+function emailCk(){
+	alert("aa")
 }
 </script>
 </html>

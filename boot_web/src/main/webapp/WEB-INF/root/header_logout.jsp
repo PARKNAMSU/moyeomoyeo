@@ -58,16 +58,8 @@
 				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">자주묻는 질문</span></div>
 			</div>
 		</div>
-		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" onclick="location.href='/logout'">
-			<span class="h_text">로그아웃</span><div class="h_line" id="h_line3"></div>
-		</div>
-		<div class="h_menu" style="padding-top:18px;">
-			<img src="/resource/img/user.svg" style="width:50px; height: 50px;margin-left:0px;border-radius:70%" onclick="visibleEl(3,'sub_menu')">
-			<div class="h_sub_menu" id="h_sub_menu_3">
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;">내정보</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">나의 모임</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">친구 목록</span></div>
-			</div>			
+		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" onclick="location.href='/login_page'">
+			<span class="h_text">로그인</span><div class="h_line" id="h_line3"></div>
 		</div>
 	</div>
 	
