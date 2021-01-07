@@ -34,6 +34,8 @@ public class MemberEntity {
 	
 	private String stop_yn;
 	
+	private String activate_yn;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date stop_date;
 	
@@ -49,5 +51,6 @@ public class MemberEntity {
 		this.regDate = this.regDate == null ? new Date():this.regDate;
 		this.auth = this.auth == null ? "USER":this.auth;
 		this.stop_yn = this.stop_yn == null ? "n":this.stop_yn;
+		this.activate_yn = this.activate_yn == null ? "y":this.activate_yn;
 	}
 }

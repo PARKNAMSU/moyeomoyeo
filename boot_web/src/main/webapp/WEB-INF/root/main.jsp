@@ -10,6 +10,7 @@
 <head>
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 <!-- jquery, bootstrap -->
+<script src="/resource/js/common.js"></script>
 <script src="/resource/js/jquery-3.5.1.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="/resource/css/datatables.min.css">

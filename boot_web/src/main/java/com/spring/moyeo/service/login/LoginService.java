@@ -28,8 +28,7 @@ public class LoginService implements UserDetailsService{
 	PasswordEncoder passwordEncoder;
 	
 	public String emailCheck(String email,String passoward) {
-		MemberEntity member = dao.findById(email)
-				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + email));
+		MemberEntity member = dao.getMemberById(email);
 		if(member == null) return "id_false";
 		else {
 			if(passoward.equals("")) return "true";
@@ -39,7 +38,17 @@ public class LoginService implements UserDetailsService{
 			}
 		}
 	}
-	
+	public void setActive(String email, String active_yn) {
+		MemberEntity member = dao.findById(email)
+				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + email));
+		member.setActivate_yn(active_yn);
+		System.out.println(member.getActivate_yn());
+		dao.save(member);
+	}
+	public MemberEntity getUser(String email) {
+		MemberEntity member = dao.getMemberById(email);
+		return member;
+	}
 	public void createUser(MemberEntity member) {
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
 		dao.save(member);

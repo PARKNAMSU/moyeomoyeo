@@ -39,7 +39,7 @@
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
 				<div>
-					<p class="font_20">박남수</p>
+					<p class="font_20">${member.name}</p>
 					<a style="font-size: 15px;" onclick="openPopup('/profile_pop')" class="a_btn">프로필 사진 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<a style="font-size: 15px;" onclick="openPopup('/my_password_chg_pop')" class="a_btn">비밀번호 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
 					<a style="font-size: 15px;" onclick="openPopup('/my_inval_account_pop')" class="a_btn">계정 비활성화</a>
@@ -53,7 +53,7 @@
 				<p class="font_20">이름</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" value="${member.name}">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -63,7 +63,7 @@
 				<p class="font_20">닉네임</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" value="${member.nick_name}">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -73,7 +73,7 @@
 				<p class="font_20">소개</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<textarea rows="10" cols="" class="form-control"></textarea>
+				<textarea rows="10" cols="" class="form-control">${member.introduce}</textarea>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -120,7 +120,9 @@
 	</div>
 </div>
 		
-<script>
+<script> 
+	var member = '${member}'
+	console.log("member: "+ member)
 	function openPopup(url){
 		$("#popup1").css("display","initial")
 		$("#field").load(url)		

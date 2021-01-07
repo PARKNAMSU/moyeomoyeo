@@ -45,9 +45,9 @@
 		<div class="h_menu" id="h_menu_1" style="" onmouseover="visibleEl(1,'line')" onmouseleave="hiddenEl(1,'line')" >
 			<span class="h_text" onclick="visibleEl(1,'sub_menu')">서비스</span><div class="h_line" id="h_line1"></div>
 			<div class="h_sub_menu" id="h_sub_menu_1">
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;">시크릿 모임</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">오픈 모임</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">친구 찾기</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;" onclick="location.href='/member/secret_meeting'"><span class="h_text" style="font-size:20px;margin-left:0;">시크릿 모임</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;" onclick="location.href='/member/open_meeting'"><span class="h_text" style="font-size:20px;margin-left:0;">오픈 모임</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;" onclick="location.href='/member/find_friends'">친구 찾기</span></div>
 			</div>
 		</div>
 		<div class="h_menu" id="h_menu_2" style="" onmouseover="visibleEl(2,'line')" onmouseleave="hiddenEl(2,'line')" >
@@ -64,7 +64,7 @@
 		<div class="h_menu" style="padding-top:18px;">
 			<img src="/resource/img/user.svg" style="width:50px; height: 50px;margin-left:0px;border-radius:70%" onclick="visibleEl(3,'sub_menu')">
 			<div class="h_sub_menu" id="h_sub_menu_3">
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;">내정보</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;" onclick="location.href='/member/my_info'"><span class="h_text" style="font-size:20px;margin-left:0;">내정보</span></div>
 				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">나의 모임</span></div>
 				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">친구 목록</span></div>
 			</div>			

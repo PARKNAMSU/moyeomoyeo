@@ -28,28 +28,54 @@
 		<div class="" style="margin-top:100px;margin-left:40%;" id="login_main" >
 			<img alt="" src="/resource/img/logo.png" style="width: 350px; height: 350px;margin-left:20px;cursor:pointer;"  onclick="location.href='/'"><br>
 			<b style="font-size: 100px" class="g_text">Welcome!!</b>
-			<form action="#" method="post" style="width: 430px;">
+			<form action="#" method="post" style="width: 430px;" id="login_form">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token" />
 				<input type="text" name="email" id="email" placeholder="email" class="form-control"><br>
 				<input type="password" name="password" id="password" placeholder="password" class="form-control"><br>
-				<input type="submit" class="btn btn-primary" value="Login" style="width: 430px;">
+				<input type="button" class="btn btn-primary" value="Login" style="width: 430px;" onclick="loginCk($('#login_form'))" >
 			</form><br>
 			<div style="width:430px;">
 				 <span style="margin-left: 80px;">비밀번호를 잊어버리셨습니까?</span><a href="/get_temp_pw">&nbsp;비밀번호 발급</a>
 				 <hr>
 				 <span style="margin-left: 10px;">계정이 없으십니까?</span><a href="/sign_up_page">&nbsp;회원가입</a>
-				 <span style="margin-left: 30px;">계정이 비활성화 상태입니까?</span><a href="#">&nbsp;활성화</a>
+				 <span style="margin-left: 30px;">계정이 비활성화 상태입니까?</span><a href="/active_setting">&nbsp;활성화</a>
+				 
 			</div>
 		</div>
 	</div>
 </body>
 <script>
+	const emailRegExp = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
+	//const passwordRegExp = /^[a-zA-z0-9]{8,16}$/;
+	let error = "${error}"
+	console.log(error)
 	$(document).ready(function(){
 		chkWindowWidth()
+		errorCk()
 		$(window).resize(function(){
 			chkWindowWidth()
 		})
 	})
+
+	function errorCk(){
+		if(error === 'deactive'){
+			alert("계정이 비활성화 상태입니다.")
+		}
+		if(error === 'login_fail'){
+			alert("아이디 또는 비밀번호를 확인하세요.")
+		}
+		if(error === 'stop'){
+			alert("계정이 정지 상태입니다.")
+		}
+	}
+	function loginCk(form){
+		var email = $("#email").val()
+		if(!emailRegExp.test(email) && email != 'admin'){
+			alert("이메일 형식이 올바르지 않습니다.")
+			return false;
+		}
+		form.submit()
+	}
 	function chkWindowWidth(){
 		if($(window).width()< 900){
 			$("#login_main").css("margin-left","6%");
