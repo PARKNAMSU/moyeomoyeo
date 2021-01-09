@@ -67,14 +67,14 @@ public class LoginService implements UserDetailsService{
 	public void updateUser(MemberEntity member) {
 		MemberEntity get_member = dao.findById(member.getEmail())
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + member.getEmail()));
-		get_member.setNick_name(member.getNick_name());
 		get_member.setIntroduce(member.getIntroduce());
 		get_member.setName(member.getName());
+		get_member.setPhone_corp(member.getPhone_corp());
+		get_member.setPhone_number(member.getPhone_number());
 		dao.save(get_member);
 	}
 	public void updateUserPassword(String email,String password) {
-		MemberEntity get_member = dao.findById(email)
-				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + email));
+		MemberEntity get_member = dao.getMemberById(email);
 		get_member.setPassword(passwordEncoder.encode(password));
 		dao.save(get_member);
 	}
@@ -82,6 +82,10 @@ public class LoginService implements UserDetailsService{
 		// TODO Auto-generated method stub
 		return Arrays.asList(new SimpleGrantedAuthority(role));
 	}
-
+	public void updateProfileUrl(String img_url,String email) {
+		MemberEntity member = dao.getMemberById(email);
+		member.setProfile_url(img_url);
+		dao.save(member);
+	}
 
 }

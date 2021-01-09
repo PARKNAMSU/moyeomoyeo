@@ -53,7 +53,7 @@
 				<p class="font_20">이름</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control" value="${member.name}">
+				<input type="text" class="form-control" value="${member.name}" id="name">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -63,7 +63,7 @@
 				<p class="font_20">닉네임</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control" value="${member.nick_name}">
+				<input type="text" class="form-control" value="${member.nick_name}" id="nick_name">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -73,17 +73,32 @@
 				<p class="font_20">소개</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<textarea rows="10" cols="" class="form-control">${member.introduce}</textarea>
+				<textarea rows="10" cols="" class="form-control" id="intro">${member.introduce}</textarea>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<br>
 		<div class="div_01">
 			<aside class="aside_01 fl">
+				<p class="font_20">휴대폰 번호</p>
+			</aside>
+			<div class="fl margin_left_50 div_01_01 sub_div">
+				<select class="form-control fl" id="phone_corp" style="width:19%;margin-right:3%;">
+					<option value="SKT" id="sk">SKT</option>
+					<option value="KTF" id="kt">KT</option>
+					<option value="LGT" id="lg">LGU+</option>
+					<option value="MVNO" id="mv">알뜰폰</option>
+				</select>
+				<input style="width:77%;" type="text" class="form-control fl" id="phone_number" value="${member.phone_number}">
+			</div>
+			<div class="clear"></div>
+		</div><br>
+		<div class="div_01">
+			<aside class="aside_01 fl">
 				<p class="font_20">비밀번호</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input type="password" class="form-control" id="pass">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -93,7 +108,7 @@
 				<p class="font_20">비밀번호 확인</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input type="password" class="form-control" id="pass_ck">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -102,7 +117,9 @@
 			<aside class="aside_01 fl" style="height: 1px;"></aside>
 			<div class="fl margin_left_50 div_01_01 sub_div"
 				style="text-align: right;">
-				<button class="btn_01_01 font_30 ">변경</button>
+				<button class="btn_01_01 font_30 " 
+					onclick="chgInfo($('#pass').val(),$('#intro').val(),$('#name').val(),$('#nick_name').val(),$('#phone_number').val(),$('#phone_corp').val())"
+				>변경</button>
 				<button class="btn_01_01 font_30 margin_left_20">취소</button>
 			</div>
 		</div>
@@ -120,14 +137,118 @@
 	</div>
 </div>
 		
-<script> 
-	var member = '${member}'
-	console.log("member: "+ member)
+<script>
+	const phone_corp = "${member.phone_corp}"
+	const email = "${member.email}"
+	
+	phoneCorpCk()
+	
+	function phoneCorpCk(){
+		if(phone_corp === 'KTF'){
+			$("#kt").attr("selected","selected")
+		}else if(phone_corp === 'LGT'){
+			$("#lg").attr("selected","selected")
+		}else if(phone_corp === 'MVNO'){
+			$("#mv").attr("selected","selected")
+		}
+	}
 	function openPopup(url){
 		$("#popup1").css("display","initial")
 		$("#field").load(url)		
 	}
 	function closePopup(){
 		$("#popup1").css("display","none")
+	}
+	function chgInfo(password,intro,name,nick_name,phone_number,phone_corp){
+		console.log(phone_number)
+		if(!passwordRegExp.test(password)){
+			alert("비밀번호는 8~16자리입니다.")
+			return false;
+		}
+		if(password != $('#pass_ck').val()){
+			alert("비밀번호가 일치하지 않습니다.")
+			return false;
+		}
+		if(!phoneRegExp.test($.trim(phone_number))){
+			alert("휴대폰 형식이 맞지 않습니다.")
+			return false;
+		}
+		if(!nameRegExp.test(name)){
+			alert("이름형식이 맞지 않습니다.")
+			return false;
+		}
+		if(!n_nameRegExp.test(nick_name)){
+			alert("닉네임 형식이 맞지 않습니다.")
+			return false;
+		}
+		$.ajax({
+			 type:"POST",
+			 url:"/member/chg_account",
+			 dataType:"text",
+			 data:{
+				 email:email,
+				 password:password,
+				 name:name,
+				 nick_name:nick_name,
+				 introduce:intro,
+				 phone_number:phone_number,
+				 phone_corp:phone_corp,
+				 "${_csrf.parameterName}":"${_csrf.token}"
+			 },
+			 async : true,
+			 success: function(data){
+				if(data === "true"){
+					alert("변경완료");
+					location.reload()
+				}else{
+					alert("비밀번호가 일치하지 않습니다.")
+				}
+			 },
+			 error: function(){
+				 alert("error")
+			 }
+		})
+	}
+	function chgPass(pass,pass_ck,chg_pass,chg_pass_ck){
+		if(pass != pass_ck){
+			alert("비밀번호가 일치하지 않습니다.")
+			return false;
+		}
+		if(chg_pass != chg_pass_ck){
+			alert("비밀번호가 일치하지 않습니다.")
+			return false;
+		}
+		if(!passwordRegExp.test(pass)){
+			alert("비밀번호 형식이 맞지 않습니다.")
+			return false;
+		}
+		if(!passwordRegExp.test(chg_pass)){
+			alert("비밀번호 형식이 맞지 않습니다.")
+			return false;
+		}
+		$.ajax({
+			 type:"POST",
+			 url:"/member/chg_account",
+			 dataType:"text",
+			 data:{
+				 email:email,
+				 password:pass,
+				 chg_pass:chg_pass,
+				 type:"chg_pass",
+				 "${_csrf.parameterName}":"${_csrf.token}"
+			 },
+			 async : true,
+			 success: function(data){
+				if(data === "true"){
+					closePopup()
+					alert("변경완료")
+				}else{
+					alert("비밀번호가 일치하지 않습니다.")
+				}
+			 },
+			 error: function(){
+				 alert("error")
+			 }
+		})
 	}
 </script>

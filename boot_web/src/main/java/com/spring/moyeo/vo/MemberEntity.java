@@ -36,6 +36,10 @@ public class MemberEntity {
 	
 	private String activate_yn;
 	
+	private String phone_number;
+	
+	private String phone_corp;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date stop_date;
 	

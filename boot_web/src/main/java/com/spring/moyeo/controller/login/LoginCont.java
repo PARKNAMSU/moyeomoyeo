@@ -1,15 +1,26 @@
 package com.spring.moyeo.controller.login;
 
+import java.awt.PageAttributes.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.TempKey;
@@ -17,7 +28,8 @@ import com.spring.moyeo.config.MailConfig;
 import com.spring.moyeo.service.login.LoginService;
 import com.spring.moyeo.vo.MemberEntity;
 
-@SessionAttributes("user_id")
+
+@SessionAttributes({"user_id","user_img"})
 @Controller
 public class LoginCont {
 	
@@ -56,7 +68,7 @@ public class LoginCont {
 	}	
 
 	@RequestMapping("/login_access.do")
-	public ModelAndView getMember(@AuthenticationPrincipal User user,ModelAndView mv) {
+	public ModelAndView getMemberCont(@AuthenticationPrincipal User user,ModelAndView mv) {
 		MemberEntity member = loginService.getUser(user.getUsername());
 		if(member.getActivate_yn().equals("n")) {
 			mv.setViewName("account/loginPage");
@@ -67,6 +79,9 @@ public class LoginCont {
 			mv.setViewName("account/loginPage");
 			mv.addObject("error", "stop");
 			return mv;
+		}
+		if(member.getProfile_url() != null && !member.getProfile_url().equals("")) {
+			mv.addObject("user_img",member.getProfile_url());
 		}
 		mv.addObject("user_id",user.getUsername());
 		mv.setViewName("root/main");
@@ -83,7 +98,7 @@ public class LoginCont {
 		else return "sucess";
 	}
 	@RequestMapping(value = "/email_identify",produces = "application/text; charset=utf8")
-	public @ResponseBody String signupProcessController(@RequestParam String email) {
+	public @ResponseBody String signupProcessCont(@RequestParam String email) {
 		String authCode = new TempKey().generateKey(8);
 		String subject = "모여모여 회원가입 인증코드 발급 안내";
 		String text = "귀하의 인증코드는 "+authCode+"입니다.\n모여모여를 이용해주셔서 감사합니다.";
@@ -91,22 +106,64 @@ public class LoginCont {
 		return authCode;
 	}
 	@RequestMapping(value = "/create_user",produces = "application/text; charset=utf8")
-	public @ResponseBody String createUser(MemberEntity member) {
+	public @ResponseBody String createUserCont(MemberEntity member) {
 		loginService.createUser(member);
 		return "sucess";
 	}
 	@RequestMapping(value = "/active_account",produces = "application/text; charset=utf8")
-	public @ResponseBody String activeAccount(
+	public @ResponseBody String activeAccountCont(
 			@RequestParam("email") String email,
 			@RequestParam("password") String password,
-			@RequestParam("active_yn") String yn
+			@RequestParam("active_yn") String yn,
+			HttpSession session
 		) {
 		String ck = loginService.emailCheck(email, password);
 		if(ck.equals("true")) {
 			loginService.setActive(email,yn);
+			if(yn.equals("n")) return "inval";
 		}
 		return ck;
 	}
+	@RequestMapping(value = "/member/chg_account",produces = "application/text; charset=utf8")
+	public @ResponseBody String chgAccountCont(
+			MemberEntity member
+			,@RequestParam(value = "chg_pass",required = false) String chg_pass,
+			@RequestParam(value = "type",required = false) String type
+		) {
+		String ck = loginService.emailCheck(member.getEmail(), member.getPassword());
+		if(ck.equals("true")) {
+			if(type != null) {
+				loginService.updateUserPassword(member.getEmail(), chg_pass);
+			}else {
+				loginService.updateUser(member);	
+			}
+		}
+
+		return ck;
+	}
+	
+	@PostMapping("/uploadProfile")
+	public ModelAndView uploadProfile(
+			@RequestPart("profile") MultipartFile profile,
+			HttpSession session
+			,HttpServletRequest request,
+			ModelAndView mv
+		) throws IllegalStateException, IOException {
+		String uploadPath = request.getSession().getServletContext().getRealPath("/resource/img/member/");
+		MultipartFile uploadImg = profile;
+		String fileName = null;
+		if(!uploadImg.isEmpty()) {
+			fileName = uploadImg.getOriginalFilename();
+			UUID uuid = UUID.randomUUID();
+			fileName = uuid.toString()+"_"+fileName;
+			uploadImg.transferTo(new File(uploadPath+fileName));
+			loginService.updateProfileUrl(fileName, (String)session.getAttribute("user_id"));
+		}
+		session.setAttribute("user_img",fileName);
+		mv.setViewName("redirect:/member/my_info");
+		return mv;
+	}
+	
 	@RequestMapping("/member/my_info")
 	public ModelAndView memberPage(ModelAndView mv, HttpSession session) {
 		MemberEntity member = loginService.getUser((String)session.getAttribute("user_id"));

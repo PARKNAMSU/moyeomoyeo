@@ -14,6 +14,9 @@
 <!-- 구글 폰트  css : font-family: 'Do Hyeon', sans-serif-->
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+<!-- import -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <title>모여모여 회원가입</title>
 </head>
 <body>
@@ -29,6 +32,15 @@
 				<input type="text" name="email_code" id="email_code" placeholder="인증코드" class="form-control" ><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호" class="form-control"><br>
 				<input type="password" name="password_ck" id="password_ck" placeholder="비밀번호 확인" class="form-control"><br>
+				<select id="phone_corp" name="phone_corp" class="form-control fl" style="width:19%;margin-right:3%;">
+					<option value="SKT">SKT</option>
+					<option value="KTF">KT</option>
+					<option value="LGT">LGU+</option>
+					<option value="MVNO">알뜰폰</option>
+				</select>
+				<input type="text" class="form-control fl" name="phone_number" id="phone_number" placeholder="'-'제외" style="width:78%;">
+				<div class="clear"></div>
+				<br>
 				<input type="text" name="name" id="name" placeholder="이름" class="form-control"><br>
 				<input type="text" name="nick_name" id="nick_name" placeholder="닉네임" class="form-control"><br>
 				<input type="button" class="btn btn-primary" value="회원가입" style="width: 200px;margin-right:23px;" onclick="signUpCk('password','password_ck','name','nick_name')">
@@ -42,6 +54,8 @@ const emailRegExp = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]
 const passwordRegExp = /^[a-zA-z0-9]{8,16}$/;
 const nameRegExp = /^[a-zA-z가-힣]{2,12}$/;
 const n_nameRegExp = /^[a-zA-z0-9]{3,15}$/;
+const phoneRegExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[0-9]{3,4}[0-9]{4}$/;
+
 let email_ck_yn = 'n';
 let email_code = 'fkdslgrejgiregjoregjoilerjkjm31212312fjeiwsofjw';
 $(document).ready(function(){
@@ -70,6 +84,10 @@ function signUpCk(pass,pass_ck,name,n_name){
 		alert("비밀번호가 일치하지 않습니다.")
 		return false;
 	}
+	if(!phoneRegExp.test($("#phone_number").val())){
+		alert("휴대폰 형식이 맞지 않습니다.")
+		return false;
+	}
 	if(!nameRegExp.test(_name)){
 		alert("이름형식이 맞지 않습니다.")
 		return false;
@@ -91,6 +109,8 @@ function signUpCk(pass,pass_ck,name,n_name){
 			 password:_pass,
 			 name:_name,
 			 nick_name:_n_name,
+			 phone_number:$("#phone_number").val(),
+			 phone_corp:$("#phone_corp").val(),
 			 "${_csrf.parameterName}":"${_csrf.token}"
 		 },
 		 async : true,
@@ -154,5 +174,7 @@ function emailIdentify(email,node){
 		 }
 	 })
 }
+
+
 </script>
 </html>

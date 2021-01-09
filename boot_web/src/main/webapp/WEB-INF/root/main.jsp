@@ -22,6 +22,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/resource/css/common.css">
+
+<!-- import -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
 <title>${jsp_page}</title>
 </head>
 <body>
@@ -33,6 +37,7 @@
 			<%@ include file="header.jsp"%>
 		</c:if>
 	</header>
+	<%@ include file="common_js.jsp" %>
 	<jsp:include page="${jsp_page}.jsp" flush="true"/>
 </body>
 </html>

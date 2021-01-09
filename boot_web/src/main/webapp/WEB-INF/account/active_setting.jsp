@@ -26,7 +26,8 @@
 				<input type="text" name="email" id="email" placeholder="이메일" class="form-control"><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호" class="form-control"><br>
 				<input type="password" name="password_ck" id="password_ck" placeholder="비밀번호 확인" class="form-control"><br>
-				<input type="button" class="btn btn-primary" value="이메일로 발급" style="width: 200px;margin-right:23px;" onclick="setActive()">
+				<input type="button" class="btn btn-primary" value="이메일로 발급" style="width: 200px;margin-right:23px;" 
+				onclick='setActive($("#email").val(),$("#password").val(),$("#password_ck").val(),"y")'>
 				<input type="button" class="btn btn-primary" value="뒤로" style="width: 200px;" onclick="location.href='/login_page'">
 			</form><br>
 		</div>
@@ -48,44 +49,6 @@ function chkWindowWidth(){
 		$("#get_temp_main").css("margin-left","40%");
 	}
 }
-function setActive(){
-	if(!emailRegExp.test($("#email").val())){
-		alert("이메일 형식이 아닙니다.")
-		return false;
-	}
-	if(!passwordRegExp.test($("#password").val())){
-		alert("비밀번호는 8~16자리입니다.")
-		return false;
-	}
-	if($("#password").val() != $("#password_ck").val()){
-		alert("비밀번호가 일치하지 않습니다.")
-		return false;
-	}
-	 $.ajax({
-		 type:"POST",
-		 url:"/active_account",
-		 dataType:"text",
-		 data:{
-			 email:$("#email").val(),
-			 password:$("#password").val(),
-			 active_yn:'y',
-			 "${_csrf.parameterName}":"${_csrf.token}"
-		 },
-		 async : true,
-		 success: function(data){
-			 if(data === 'id_false'){
-				 alert("존재하지 않는 이메일입니다.")
-			 }else if(data === 'pass_false'){
-				 alert("비밀번호가 일치하지 않습니다.")
-			 }else{
-				 location.href='/login_page'
-				 alert("계정설정 완료")
-			 }
-		 },error: function(error){
-			console.log(error)	 
-		 }
-	})
-	
-}
+
 </script>
 </html>
