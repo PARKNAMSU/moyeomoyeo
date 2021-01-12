@@ -1,20 +1,15 @@
 package com.spring.moyeo.vo;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -24,9 +19,8 @@ import lombok.Data;
 public class MeetingEntity {
 	
 	@Id
-	@Column(name = "meeting_seq")
-	@GeneratedValue(generator = "meeting_seq_gen")
-	private int meeting_seq;
+	@Column(name = "meeting_code")
+	private String meeting_code;
 	
 	@Column(nullable = false)
 	private String meeting_type;
@@ -51,14 +45,14 @@ public class MeetingEntity {
 	@Column(nullable = false)
 	private String finish_yn;
 	
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date end_date;
+	
+	@Transient
+	private String end_date_str;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date reg_date;
 	
-	@OneToMany(mappedBy = "meetingEntity",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<MeetingMembrEntity> meetingMemberEntity = new ArrayList<MeetingMembrEntity>();
 	
 	@PrePersist
 	public void prePersist() {

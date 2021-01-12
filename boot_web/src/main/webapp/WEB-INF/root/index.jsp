@@ -1,4 +1,4 @@
-a<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -13,7 +13,7 @@ a<%@ page language="java" contentType="text/html; charset=UTF-8"
 }
 
 #main_1 {
-	margin-top: 65px;
+	margin-top: 85px;
 	position: relative;
 	z-index: 1;
 }

@@ -1,8 +1,9 @@
 package com.spring.moyeo.service.login;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.spring.Role;
+import com.spring.moyeo.dao.login.FriendsDao;
 import com.spring.moyeo.dao.login.LoginDao;
+import com.spring.moyeo.vo.FriendsEntity;
 import com.spring.moyeo.vo.MemberEntity;
 
 @Service
@@ -24,6 +27,9 @@ public class LoginService implements UserDetailsService{
 	@Autowired
 	LoginDao dao;
 
+	@Autowired
+	FriendsDao friends_dao;
+	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
@@ -87,5 +93,24 @@ public class LoginService implements UserDetailsService{
 		member.setProfile_url(img_url);
 		dao.save(member);
 	}
-
+	
+	public ArrayList<Map<String, Object>> searchMember(String search, String opt,String email) {
+		if(opt.equals("email")) return dao.getMemberBySearchEmail(search,email);
+		if(opt.equals("name")) return dao.getMemberBySearchName(search,email);
+		else return dao.getMemberBySearchNickName(search,email);
+	}
+	
+	public ArrayList<Map<String, Object>> recommendMember(String email){
+		return friends_dao.getRecommendFriends(email);
+	}
+	public void setFollowMember(FriendsEntity entity, String follow_yn) {
+		System.out.println(entity.getFollow_email());
+		if(follow_yn.equals("y")) friends_dao.save(entity);
+		else friends_dao.unfollowMember(entity.getFollower_email(), entity.getFollow_email());
+	}
+	
+	public ArrayList<Map<String, Object>> getFollowMember(String email, String followOrFollower) {
+		if(followOrFollower.equals("follow")) return friends_dao.getMyFollow(email);
+		else return friends_dao.getMyFollower(email);
+	}
 }

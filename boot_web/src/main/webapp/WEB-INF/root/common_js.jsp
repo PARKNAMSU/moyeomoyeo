@@ -1,4 +1,4 @@
-a<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -80,5 +80,13 @@ function postForm(path, keys, values ,method) {
     }
     document.body.appendChild(form);
     form.submit();
+}
+
+function getImgUrl(img_url_val){
+	if(img_url_val != null && img_url_val != ""){
+		return "/img/"+img_url_val;
+	}else{
+		return "/resource/img/user.svg";
+	}
 }
 </script>

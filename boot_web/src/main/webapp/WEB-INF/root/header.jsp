@@ -62,11 +62,11 @@
 			<span class="h_text">로그아웃</span><div class="h_line" id="h_line3"></div>
 		</div>
 		<div class="h_menu" style="padding-top:18px;">
-			<img id="user_img" style="width:50px; height: 50px;margin-left:0px;border-radius:70%" onclick="visibleEl(3,'sub_menu')">
+			<img id="user_img" src="" style="width:50px; height: 50px;margin-left:0px;border-radius:70%" onclick="visibleEl(3,'sub_menu')">
 			<div class="h_sub_menu" id="h_sub_menu_3">
 				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;" onclick="location.href='/member/my_info'"><span class="h_text" style="font-size:20px;margin-left:0;">내정보</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">나의 모임</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">친구 목록</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;" onclick="location.href='/member/my_meeting'"><span class="h_text" style="font-size:20px;margin-left:0;">나의 모임</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;" onclick="location.href='/member/my_friends'"><span class="h_text" style="font-size:20px;margin-left:0;">친구 목록</span></div>
 			</div>			
 		</div>
 	</div>
@@ -74,14 +74,8 @@
 </div>
 <div class="clear"></div>
 <script>
-	var img_url_val = '${user_img}'
-	
-	if(img_url_val != null && img_url_val != ""){
-		$("#user_img").attr("src","/resource/img/member/"+img_url_val)
-	}else{
-		$("#user_img").attr("src","/resource/img/user.svg")
-	}
-	
+	var url = getImgUrl('${user_img}')
+	$("#user_img").attr("src",url)
 	function visibleEl(idx,type){
 		if(type === 'line'){
 			$("#h_line"+idx).css("visibility","visible");

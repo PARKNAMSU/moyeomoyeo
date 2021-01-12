@@ -31,13 +31,6 @@ public class CommentsEntity {
 	
 	private Date comments_reg_date;
 	
-	@ManyToOne
-	@JoinColumn(name = "meeting_seq",referencedColumnName = "meeting_seq", insertable = false,updatable = false)
-	private MeetingEntity meetingEntity;
-	
-	@ManyToOne
-	@JoinColumn(name = "email", referencedColumnName = "email" , insertable = false,updatable = false)
-	private MemberEntity memberEntity;
 	
 	@PrePersist
 	public void prePersist() {

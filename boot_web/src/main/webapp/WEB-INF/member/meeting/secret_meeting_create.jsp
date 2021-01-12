@@ -24,16 +24,18 @@
  	}
 </style>
 <div id="main_1" class="container-fluid" style="padding-top:90px;padding-bottom:90px;">
+	<form id="create_form" method="post" >
+	<input type="hidden" name="meeting_type" value="secret" >
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token" />
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50">시크릿 모임 생성</p>
 		<div class="line_01"></div><br><br>
-
 		<div class="div_01">
 			<aside class="aside_01 fl">
 				<p class="font_20">모임명</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" id="meeting_name" name="meeting_name">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -43,7 +45,7 @@
 				<p class="font_20">모임 목적</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="text" class="form-control">
+				<input name="meeting_goal" type="text" class="form-control" id="meeting_goal">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -53,13 +55,9 @@
 				<p class="font_20">모임 타입</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<select class="form-control fl" style="width:49%;margin-right:10px;">
-					<option>무기한</option>
-					<option>기한</option>
-				</select>
-				<select class="form-control fl" style="width:49%;" onclick="setMaxPrice($(this).val())">
-					<option value="common" onclick="setMaxPrice('individual')">공통금액 설정</option>
-					<option value="spec" onclick="setMaxPrice('together')">개인별 특정금액 설정</option>
+				<select name="end_date_yn"  class="form-control fl" style="width:49%;margin-right:10px;" onclick="set_date_node($(this))">
+					<option value="y" >기한</option>
+					<option value="n" >무기한</option>
 				</select>
 			</div>
 			<div class="clear"></div>
@@ -70,19 +68,19 @@
 				<p class="font_20">최대인원</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<select class="form-control" style="width:49%;" id="number">
+				<select name="meeting_num" class="form-control" style="width:49%;" id="number">
 
 				</select>
 			</div>
 			<div class="clear"></div>
 		</div>
 		<br>
-		<div class="div_01">
+		<div class="div_01" id="meeting_date">
 			<aside class="aside_01 fl">
 				<p class="font_20">날짜</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input id="finish_date" type="text" class="form-control fl" disabled="disabled" style="width:49%;">
+				<input id="end_date" name="end_date_str" type="text" class="form-control fl" readonly="readonly" style="width:49%;">
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -102,7 +100,7 @@
 				<p class="font_20" id="price_text">개인별 금액</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<input type="range" class="form-control"  min="0" value="0" onchange="getRangeVal(this)" id="goal_price">
+				<input type="range" class="form-control"  min="0" value="0" onchange="getRangeVal(this)" id="goal_price" name="meeting_fee">
 				<input type="text" class="form-control fl" style="width:200px;text-align:right;" onkeyup="setRangeVal(this)" id="range_val"><b class="font_20">&nbsp;￦</b><br>
 			</div>
 			<div class="clear"></div>
@@ -110,12 +108,14 @@
 		<div class="div_01">
 			<aside class="aside_01 fl" style="height:1px;"></aside>
 			<div class="fl margin_left_50 div_01_01 sub_div" style="text-align:right;">
-				<button class="btn_01_01 font_30 " >생성</button>
-				<button class="btn_01_01 font_30 margin_left_20" >취소</button>
+				<input type="button" value="생성" class="btn_01_01 font_30 " 
+				onclick="createRoom($('#meeting_name').val(),$('#meeting_goal').val(),$('#goal_price').val(),$('#create_form'))">
+				<button class="btn_01_01 font_30 margin_left_20" onclick="history.back()">취소</button>
 			</div>
 		</div>
 		<br>
 	</div>
+	</form>
 </div>
 
 <script>
@@ -130,7 +130,7 @@
 	})
 	
 	function setDatePicker(){
-		$("#finish_date").datepicker({
+		$("#end_date").datepicker({
 			dateFormat: 'yy-mm-dd',
 			minDate: "+1D",
 			showOn: "button",
@@ -194,5 +194,40 @@
 		console.log(max_price)
 		$("#goal_price").val(0)
 		$("#range_val").val("0")
+	}
+	function set_date_node(node){
+		if(node.val() === 'n'){
+			$("#meeting_date").val("")
+			$("#meeting_date").css("display","none");
+			return false;
+		}
+		$("#meeting_date").css("display","initial");
+	}
+	function createRoom(name,goal,fee,form){
+		if(name.length <6){
+			alert("제목은 6글자 이상입니다.")
+			return false;
+		}
+		if(goal == null || goal == ''){
+			alert("목적은 반드시 입력해야 합니다.")
+			return false;
+		}
+		if(fee < 1000){
+			alert("금액은 1000원 이상입니다.")
+			return false;
+		}
+		console.log(form.serialize())
+
+		$.ajax({
+			type:"POST",
+			dataType:"text",
+			url:"/member/create_meeting",
+			data:form.serialize(),
+			sucess:function(data){},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			alert("성공")
+		})
+			
 	}
 </script>

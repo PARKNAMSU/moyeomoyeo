@@ -19,14 +19,14 @@ import lombok.Data;
 @Entity
 @Table(name = "meeting_member")
 @Data
-public class MeetingMembrEntity {
+public class MeetingMemberEntity {
 	
 	@Id
 	@GeneratedValue(generator = "meeting_member_seq")
 	private int meeting_member_seq;
 	
-	@Column(insertable = false, updatable = false)
-	private int meeting_seq;
+	@Column(updatable = false)
+	private String meeting_code;
 	
 	private String meeting_member_email;
 	
@@ -35,16 +35,9 @@ public class MeetingMembrEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date meeting_member_reg_date;
 	
-	@ManyToOne
-	@JoinColumn(name = "meeting_seq", referencedColumnName = "meeting_seq")
-	private MeetingEntity meetingEntity;
-	
-	@ManyToOne
-	@JoinColumn(name = "meeting_member_email",referencedColumnName = "email",insertable = false, updatable = false)
-	private MemberEntity memberEntity;
-	
 	@PrePersist
 	private void prePersist() {
 		this.meeting_member_reg_date = this.meeting_member_reg_date == null ? new Date():this.meeting_member_reg_date;
+		this.meeting_member_role = this.meeting_member_role == null ? "member":this.meeting_member_role;
 	}
 }

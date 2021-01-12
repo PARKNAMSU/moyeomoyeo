@@ -25,21 +25,14 @@ public class FriendsEntity {
 	@GeneratedValue(generator = "friends_seq_gen")
 	private int friends_seq;
 	
-	@Column(nullable = false,insertable = false, updatable = false)
+	@Column(nullable = false, updatable = false)
 	private String follow_email;
 	
-	@Column(nullable = false,insertable = false, updatable = false)
+	@Column(nullable = false, updatable = false)
 	private String follower_email;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date friends_reg_date;
-	
-	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "follow_email",referencedColumnName = "email"),
-		@JoinColumn(name = "follower_email",referencedColumnName = "email")
-	})
-	private MemberEntity memberEntity;
 	
 	@PrePersist
 	private void prePersist() {

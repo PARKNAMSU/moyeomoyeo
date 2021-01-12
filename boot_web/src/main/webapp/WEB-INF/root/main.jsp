@@ -25,19 +25,20 @@
 
 <!-- import -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-
+<%@ include file="common_js.jsp" %>
 <title>${jsp_page}</title>
 </head>
 <body>
 	<header>
 		<c:if test="${user_id == null}">
 			<%@ include file="header_logout.jsp"%>
+			<script type="text/javascript">location.href="/logout"</script>
 		</c:if>
 		<c:if test="${user_id != null}">
 			<%@ include file="header.jsp"%>
 		</c:if>
 	</header>
-	<%@ include file="common_js.jsp" %>
+	<div class="clear"></div>
 	<jsp:include page="${jsp_page}.jsp" flush="true"/>
 </body>
 </html>

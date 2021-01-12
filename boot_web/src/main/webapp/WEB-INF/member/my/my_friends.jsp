@@ -20,7 +20,8 @@
 .friends_div_01_01 {
 	width: 100%;
 	height: 600px;
-	border: solid #3063C2 1.5px;
+	background-color: #B9E2FA;
+	box-shadow: 2px 2px 2px 2px #3063C2;
 	overflow: scroll;
 	border-radius: 5px;
 }
@@ -47,7 +48,7 @@
 	width: 100%;
 	height: 100px;
 	padding: 20px;
-	border-bottom: solid 0.2px gray;
+	border-bottom: solid 1.5px #3063C2;
 }
 
 .img_div_01 {
@@ -68,17 +69,7 @@
 			<div style="width: 100%">
 				<b class="font_30">팔로잉</b>
 			</div>
-			<div style="" class="friends_div_01_01">
-				<div class="friends_div_01_02">
-					<div class="fl img_div_01 margin_right_20" >
-						<img alt="" src="/resource/img/my1.jpg" style="width:100%;height:100%">
-					</div>
-					<div class="fl" style="width:270px;height:100%;">
-						<div style="text-align:right;width:100%;"><a onclick="invite('test')" class="margin_right_20 a_btn">초대</a><a onclick="" class="a_btn">언팔로우</a></div>
-						<div><p>뎀바바와드록바 (홍길동)</p></div>
-					</div>
-					<div class="clear"></div>
-				</div>
+			<div style="" class="friends_div_01_01" id="my_follow_div">
 			</div>
 			<div></div>
 		</div>
@@ -87,23 +78,14 @@
 			<div style="width: 100%">
 				<b class="font_30">팔로워</b>
 			</div>
-			<div style="" class="friends_div_01_01">
-				<div class="friends_div_01_02">
-					<div class="fl img_div_01 margin_right_20" >
-						<img alt="" src="/resource/img/my1.jpg" style="width:100%;height:100%">
-					</div>
-					<div class="fl" style="width:270px;height:100%;">
-						<div style="text-align:right;width:100%;"><a href="#">팔로우</a></div>
-						<div><p>뎀바바와드록바 (홍길동)</p></div>
-					</div>
-					<div class="clear"></div>
-				</div>
+			<div style="" class="friends_div_01_01" id="my_follower_div">
+
 			</div>
 		</div>
 		<div class="clear" style="margin-bottom:20px;"></div>
 		<div style="width:91.5%;text-align:right;">
-			<button class="btn_01_01 font_30 margin_right_20">친구검색</button>
-			<button class="btn_01_01 font_30">내정보</button>
+			<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/member/find_friends'">친구검색</button>
+			<button class="btn_01_01 font_30" onclick="location.href='/member/my_info'">내정보</button>
 		</div>
 	</div>
 </div>
@@ -120,6 +102,7 @@
 <script>
 $(document).ready(function(){
 	chkWindowWidth()
+	getFollowMember()
 	$(window).resize(function(){
 		chkWindowWidth()
 	})
@@ -137,5 +120,92 @@ function invite(email){
 }
 function closePopup(){
 	$("#popup1").css("display","none")
+}
+function getFollowMember(){
+	$("#my_follower_div").empty()
+	$("#my_follow_div").empty()
+	$.ajax({
+		type:"GET",
+		url:"/member/get_follow",
+		dataType:"text",
+		async:false,
+		sucess:function(data){},
+		error:function(data){alert("error")}
+	}).done(function(data){
+		var data_obj = JSON.parse(data);
+		console.log(data_obj)
+		var a = 0;
+		data_obj.forEach(function(item){
+			item.forEach(function(val){
+				var p_el = null;
+				var a_bt = null;
+				if(a === 0){
+					p_el = $("#my_follower_div")
+					if(val.res === 'n'){
+						a_bt = '<a class="a_btn" onclick="followMember(\''+val.email+'\',this)">팔로우</a>'
+					}else{
+						a_bt = '<a class="margin_right_20 a_btn">초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'follower\')" class="a_btn">언팔로우</a>'
+					}
+				}else{
+					p_el = $("#my_follow_div")
+					a_bt = '<a class="margin_right_20 a_btn">초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'following\')" class="a_btn">언팔로우</a>'
+				}
+				var el = '<div class="friends_div_01_02">'
+				+'<div class="fl img_div_01 margin_right_20" >'
+				+	'<img alt="" src="'+getImgUrl(val.profile_url)+'" style="width:100%;height:100%">'
+				+'</div>'
+				+'<div class="fl" style="width:270px;height:100%;">'
+				+	'<div style="text-align:right;width:100%;">'+a_bt+'</div>'
+				+	'<div><p>'+val.nick_name+' ('+val.name+')</p></div>'
+				+'</div>'
+				+'<div class="clear"></div>'
+				+'</div>';
+				p_el.append(el)
+			})
+			a++;
+		})
+	})
+}
+
+function unfollowMember(email,t,field){
+	var el = $(t);
+	console.log(email)
+	$.ajax({
+		 type:"post",
+		 url:"/member/set_follow",
+		 dataType:"text",
+		 data:{
+			 follow_email:email,
+			 follow_yn:"n",
+			 "${_csrf.parameterName}":"${_csrf.token}"
+		 },
+		 async:false,
+		 sucess:function(data){},
+		 error:function(error){alert("error")}
+	}).done(function(data) {
+		if(field === 'follower'){
+			getFollowMember()
+		}else{
+			getFollowMember()
+		}
+	})
+}
+function followMember(email,t){
+	var el = $(t);
+	$.ajax({
+		type:"post",
+		 url:"/member/set_follow",
+		 dataType:"text",
+		 data:{
+			 follow_email:email,
+			 follow_yn:"y",
+			 "${_csrf.parameterName}":"${_csrf.token}"
+		 },
+		 async:false,
+		 sucess:function(data){},
+		 error:function(error){alert("error")}
+	}).done(function(data) {
+		getFollowMember()
+	})
 }
 </script>

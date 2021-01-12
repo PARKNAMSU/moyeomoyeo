@@ -1,8 +1,10 @@
 package com.spring.moyeo.controller.login;
 
-import java.awt.PageAttributes.MediaType;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,18 +16,19 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.common.TempKey;
+import com.spring.common.Utils;
 import com.spring.moyeo.config.MailConfig;
 import com.spring.moyeo.service.login.LoginService;
+import com.spring.moyeo.vo.FriendsEntity;
 import com.spring.moyeo.vo.MemberEntity;
 
 
@@ -39,6 +42,12 @@ public class LoginCont {
 	@Autowired
 	MailConfig mailConfig;
 
+	@Autowired
+	Utils utils;
+	
+	
+	static public  String uploadPath = "C://image/moyeo/member";
+	
 	@RequestMapping("/login_page")
 	public ModelAndView loginPage(String error,ModelAndView mv) {
 		if(error != null) {
@@ -66,7 +75,24 @@ public class LoginCont {
 		mv.addObject("jsp_page","index");
 		return mv;
 	}	
-
+	@RequestMapping("/my_profile_img_pop")
+	public ModelAndView myProfile_img_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_profile_img_pop");
+		return mv;
+	}
+	@RequestMapping("/my_password_chg_pop")
+	public ModelAndView my_password_chg_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_password_chg_pop");
+		return mv;
+	}
+	@RequestMapping("/my_inval_account_pop")
+	public ModelAndView my_inval_account_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_inval_account_pop");
+		return mv;
+	}
 	@RequestMapping("/login_access.do")
 	public ModelAndView getMemberCont(@AuthenticationPrincipal User user,ModelAndView mv) {
 		MemberEntity member = loginService.getUser(user.getUsername());
@@ -149,14 +175,14 @@ public class LoginCont {
 			,HttpServletRequest request,
 			ModelAndView mv
 		) throws IllegalStateException, IOException {
-		String uploadPath = request.getSession().getServletContext().getRealPath("/resource/img/member/");
+		utils.mkDir(uploadPath);
 		MultipartFile uploadImg = profile;
 		String fileName = null;
 		if(!uploadImg.isEmpty()) {
 			fileName = uploadImg.getOriginalFilename();
 			UUID uuid = UUID.randomUUID();
 			fileName = uuid.toString()+"_"+fileName;
-			uploadImg.transferTo(new File(uploadPath+fileName));
+			uploadImg.transferTo(new File(uploadPath+"/"+fileName));
 			loginService.updateProfileUrl(fileName, (String)session.getAttribute("user_id"));
 		}
 		session.setAttribute("user_img",fileName);
@@ -177,14 +203,54 @@ public class LoginCont {
 		session.invalidate();
 		return "redirect:/login_page";
 	}
-	@RequestMapping("/test")
-	public String test() {
-		MemberEntity m = new MemberEntity();
-		m.setEmail("skatn7979@naver.com");
-		m.setPassword("1234");
-		m.setName("홍길동");
-		m.setNick_name("slsl");
-		loginService.createUser(m);
-		return "test";
+
+	
+	@RequestMapping("/member/my_friends")
+	public ModelAndView myFriends(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_friends");
+		return mv;
 	}
+	@RequestMapping(value = "/member/search_friend",produces = "application/text; charset=utf8")
+	public @ResponseBody String searchFriendsAjax(
+			@RequestParam("search") String search,
+			@RequestParam("search_opt") String opt,
+			HttpSession session
+	) throws JsonProcessingException {
+		ArrayList<Map<String, Object>> entity = loginService.searchMember(search, opt,(String)session.getAttribute("user_id"));
+		System.out.println("ss");
+		if(entity.size() == 0) return "na";
+		return utils.jsonParse(entity);
+
+	}
+	
+	@RequestMapping(value = "/member/set_follow", produces = "application/text; charset=utf8")
+	public @ResponseBody String followSettingAjax(
+			@RequestParam("follow_yn") String follow_yn,
+			HttpSession session,
+			FriendsEntity entity
+	) {
+		entity.setFollower_email((String)session.getAttribute("user_id"));
+		loginService.setFollowMember(entity,follow_yn);
+		return "s";
+	}
+	
+	@RequestMapping(value = "/member/recommend_friend", produces = "application/text; charset=utf8")
+	public @ResponseBody String recommendFriendAjax(HttpSession session) throws JsonProcessingException {
+		ArrayList<Map<String, Object>> members = loginService.recommendMember((String)session.getAttribute("user_id"));
+		if(members.size() == 0) return "na";
+		return utils.jsonParse(members);
+	}
+	
+	@RequestMapping(value = "/member/get_follow", produces = "application/text; charset=utf8")
+	public @ResponseBody Object getFollowAjax(
+			HttpSession session,
+			@RequestParam(value = "follow_or_follower", required = false) String fof
+	) throws JsonProcessingException {
+		List<ArrayList<Map<String, Object>>> list = new ArrayList<ArrayList<Map<String, Object>>>();
+		list.add(loginService.getFollowMember((String)session.getAttribute("user_id"),"follow"));
+		list.add(loginService.getFollowMember((String)session.getAttribute("user_id"),"follower"));
+		return utils.jsonParse(list);
+	}
+	
 }

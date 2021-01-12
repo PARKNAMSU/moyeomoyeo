@@ -120,7 +120,7 @@
 				<button class="btn_01_01 font_30 " 
 					onclick="chgInfo($('#pass').val(),$('#intro').val(),$('#name').val(),$('#nick_name').val(),$('#phone_number').val(),$('#phone_corp').val())"
 				>변경</button>
-				<button class="btn_01_01 font_30 margin_left_20">취소</button>
+				<button class="btn_01_01 font_30 margin_left_20" onclick="location.href='/'">취소</button>
 			</div>
 		</div>
 	</div>
