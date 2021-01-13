@@ -45,6 +45,8 @@ public class MeetingEntity {
 	@Column(nullable = false)
 	private String finish_yn;
 	
+	private String admin_email;
+	
 	private Date end_date;
 	
 	@Transient

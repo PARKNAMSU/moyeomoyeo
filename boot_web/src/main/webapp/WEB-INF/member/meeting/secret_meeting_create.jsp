@@ -90,7 +90,7 @@
 				<p class="font_20">모임 설명</p>
 			</aside>
 			<div class="fl margin_left_50 div_01_01 sub_div">
-				<textarea rows="10" cols="" class="form-control"></textarea>	
+				<textarea rows="10" cols="" name="meeting_info" class="form-control"></textarea>	
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -226,7 +226,8 @@
 			sucess:function(data){},
 			error:function(data){alert("error")}
 		}).done(function(data){
-			alert("성공")
+			alert("시크릿 모임이 생성되었습니다.")
+			history.back ()
 		})
 			
 	}

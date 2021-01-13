@@ -124,7 +124,7 @@
 		<div class="fl friends_div_01 ">
 			<div class="clear"></div>
 			<div style="width: 100%">
-				<b class="font_30">추천친구</b>
+				<b class="font_30">내친구</b>
 			</div>
 			<div style="" class="friends_div_01_01" id="result_reco">
 			</div>
@@ -185,13 +185,7 @@
 			for(var i=0 ; i<data_obj.length; i++){
 				var img_url = getImgUrl(data_obj[i].profile_url)
 				var a_btn = '';
-				if(data_obj[i].res === 'f'){
-					a_btn = '<a class="a_btn" onclick="followMember(\''+data_obj[i].email+'\',this)">'
-					+'팔로우</a>'
-				}else{
-					a_btn = '<a class="a_btn" onclick="unfollowMember(\''+data_obj[i].email+'\',this)">'
-					+'언팔로우</a>'
-				}
+				a_btn = '<a class="a_btn" onclick="">초대</a>'
 				var friends_el = '	<div class="friends_div_01_02">'
 					+'<div class="fl img_div_01 margin_right_20">'
 						+'<img alt="" src="'+img_url+'" style="width: 100%; height: 100%">'
@@ -208,51 +202,6 @@
 				+'</div>'
 				$("#result_sc").append(friends_el)
 			}	  
-		})
-	}
-	function followMember(email,t){
-		var el = $(t);
-		console.log(el)
-		console.log(email)
-		$.ajax({
-			type:"post",
-			 url:"/member/set_follow",
-			 dataType:"text",
-			 data:{
-				 follow_email:email,
-				 follow_yn:"y",
-				 "${_csrf.parameterName}":"${_csrf.token}"
-			 },
-			 async:false,
-			 sucess:function(data){},
-			 error:function(error){alert("error")}
-		}).done(function(data) {
-			if(search_start === "on"){
-				findFriend($("#searchbox").val(),$("#search_opt").val())
-			}
-			recommendFriend()
-		})
-	}
-	function unfollowMember(email,t){
-		var el = $(t);
-		console.log(email)
-		$.ajax({
-			 type:"post",
-			 url:"/member/set_follow",
-			 dataType:"text",
-			 data:{
-				 follow_email:email,
-				 follow_yn:"n",
-				 "${_csrf.parameterName}":"${_csrf.token}"
-			 },
-			 async:false,
-			 sucess:function(data){},
-			 error:function(error){alert("error")}
-		}).done(function(data) {
-			if(search_start === "on"){
-				findFriend($("#searchbox").val(),$("#search_opt").val())
-			}
-			recommendFriend()
 		})
 	}
 	function recommendFriend(){
@@ -275,7 +224,7 @@
 					+'</div>'
 					+'<div class="fl" style="width: 270px; height: 100%;">'
 						+'<div style="text-align: right; width: 100%;">'
-						+'<a class="a_btn" onclick="followMember(\''+data_obj[i].email+'\',this)">팔로우</a>'
+						+'<a class="a_btn" onclick="">초대</a>'
 						+'</div>'
 					+'<div>'
 					+	'<p>'+data_obj[i].name+'('+data_obj[i].nick_name+')'+'</p>'

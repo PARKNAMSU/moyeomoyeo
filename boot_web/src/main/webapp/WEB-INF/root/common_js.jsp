@@ -81,6 +81,13 @@ function postForm(path, keys, values ,method) {
     document.body.appendChild(form);
     form.submit();
 }
+function returnConditionObj(obj,condition,rt_obj,otr_obj){
+	if(obj === condition){
+		return rt_obj;
+	}else{
+		return otr_obj
+	}
+}
 
 function getImgUrl(img_url_val){
 	if(img_url_val != null && img_url_val != ""){

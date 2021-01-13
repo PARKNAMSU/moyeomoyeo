@@ -25,6 +25,7 @@ public class MeetingService {
 	
 	@Transactional
 	public void createMeetingRoom(MeetingEntity meeting,String email) {
+		meeting.setAdmin_email(email);
 		MeetingMemberEntity member = new MeetingMemberEntity();
 		UUID uuid = null;
 		while(true) {
@@ -40,6 +41,17 @@ public class MeetingService {
 		member.setMeeting_member_email(email);
 		member.setMeeting_member_role("admin");
 		meeting_member_dao.save(member);
+	}
+	
+	public ArrayList<Map<String, Object>> getMyMeetingRoom(String email, String type){
+		return meeting_dao.getMyMeetingRoom(email,type);
+	}
+	
+	public ArrayList<Object> getMeetingRoomAllInfo(String code,String email){
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(meeting_dao.getMeetingUseCode(code));
+		list.add(meeting_member_dao.getMemberByMeetingCode(code,email));
+		return list;
 	}
 	
 }

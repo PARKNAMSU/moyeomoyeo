@@ -32,6 +32,10 @@ public class MeetingMemberEntity {
 	
 	private String meeting_member_role;
 	
+	private String pay_yn;
+	
+	private String accept_yn;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date meeting_member_reg_date;
 	
@@ -39,5 +43,7 @@ public class MeetingMemberEntity {
 	private void prePersist() {
 		this.meeting_member_reg_date = this.meeting_member_reg_date == null ? new Date():this.meeting_member_reg_date;
 		this.meeting_member_role = this.meeting_member_role == null ? "member":this.meeting_member_role;
+		this.pay_yn = this.pay_yn == null ? "n":this.pay_yn;
+		this.accept_yn = this.meeting_member_role.equals("admin") ? "y":"n";
 	}
 }
