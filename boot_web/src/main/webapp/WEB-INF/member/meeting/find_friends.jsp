@@ -181,7 +181,6 @@
 				return false;
 			}
 			var data_obj = JSON.parse(data)
-			console.log(data_obj[0].res)
 			for(var i=0 ; i<data_obj.length; i++){
 				var img_url = getImgUrl(data_obj[i].profile_url)
 				var a_btn = '';

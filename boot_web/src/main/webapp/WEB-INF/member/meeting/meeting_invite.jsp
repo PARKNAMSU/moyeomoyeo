@@ -38,6 +38,8 @@
 
 .friends_div_01 {
 	width: 420px;
+	text-align: center;
+	margin-top: 10px;
 }
 
 .friends_div_01_01 {
@@ -85,7 +87,7 @@
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
 	<div class="ray_20" id="ray_01" style="">
-		<p class="font_50">친구찾기</p>
+		<p class="font_50">친구초대</p>
 		<div class="line_01"></div>
 		<br>
 		<br>
@@ -129,15 +131,28 @@
 			<div style="" class="friends_div_01_01" id="result_reco">
 			</div>
 		</div>
+		
+		<div class="fl friends_div_01 invite_div" style="">
+			<div class="clear"></div>
+			<div style="width: 100%">
+				<b class="font_30">초대목록</b>
+			</div>
+			<div style="" class="friends_div_01_01" id="invite_div">
+			</div>
+		</div>
 		<div class="clear"></div>
 		<div style="width:91.5%;text-align:right;margin-top:20px;">
-			<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/member/my_friends'">내친구</button>
-			<button class="btn_01_01 font_30" onclick="location.href='/'">메인</button>
+			<button class="btn_01_01 font_30 margin_right_20" onclick="inviteMemberAjax()">초대</button>
+			<button class="btn_01_01 font_30" onclick="postForm('/member/meeting_page',['meeting_code','${_csrf.parameterName}'],['${code}','${_csrf.token}'] ,'post')">취소</button>
 		</div>
 	</div>
 </div>
 <script>
+
 	var search_start = "off";
+	var meeting_code = "${code}"
+		console.log(meeting_code)
+	let invite_email = []
 	$(document).ready(function() {
 		chkWindowWidth()
 		recommendFriend()
@@ -150,14 +165,18 @@
 			$("#ray_01").css("margin-left", "3%");
 			$("#ray_01").css("width", "95%");
 			$(".friends_div_01_01").css("margin-left","3%")
+			$(".invite_div").css("margin-left","3%")
 		} else {
 			$("#ray_01").css("margin-left", "20%");
 			$("#ray_01").css("width", "58%");
 			$(".friends_div_01_01").css("margin-left","0%")
+			$(".invite_div").css("margin-left","24%")
 		}
 	}
 	function findFriend(search,search_opt){
 		$("#result_sc").empty()
+		$("#invite_div").empty()
+		invite_email = []
 		search_start = "on"
 		$.ajax({
 			 type:"post",
@@ -167,6 +186,7 @@
 			 data:{
 				 search:search,
 				 search_opt:search_opt,
+				 code:meeting_code,
 				 "${_csrf.parameterName}":"${_csrf.token}"
 			 },
 			 beforeSend:function(xhr){
@@ -181,53 +201,58 @@
 				return false;
 			}
 			var data_obj = JSON.parse(data)
-			console.log(data_obj[0].res)
 			for(var i=0 ; i<data_obj.length; i++){
-				var img_url = getImgUrl(data_obj[i].profile_url)
-				var a_btn = '';
-				a_btn = '<a class="a_btn" onclick="">초대</a>'
-				var friends_el = '	<div class="friends_div_01_02">'
-					+'<div class="fl img_div_01 margin_right_20">'
-						+'<img alt="" src="'+img_url+'" style="width: 100%; height: 100%">'
-					+'</div>'
-					+'<div class="fl" style="width: 270px; height: 100%;">'
-						+'<div style="text-align: right; width: 100%;">'
-						+a_btn
+				if(data_obj[i].res == 'f'){
+					var img_url = getImgUrl(data_obj[i].profile_url)
+					var a_btn = '';
+					console.log(data_obj[i].res)
+					a_btn = '<a class="a_btn" onclick="inviteMember($(this).parent().parent().parent(),\'search\',\''+data_obj[i].email+'\')">초대</a>'
+					var friends_el = '	<div class="friends_div_01_02">'
+						+'<div class="fl img_div_01 margin_right_20">'
+							+'<img alt="" src="'+img_url+'" style="width: 100%; height: 100%">'
 						+'</div>'
-					+'<div>'
-					+	'<p>'+data_obj[i].name+'('+data_obj[i].nick_name+')'+'</p>'
+						+'<div class="fl a_div" style="width: 270px; height: 100%;">'
+							+'<div style="text-align: right; width: 100%;">'
+							+a_btn
+							+'</div>'
+						+'<div>'
+						+	'<p>'+data_obj[i].name+'('+data_obj[i].nick_name+')'+'</p>'
+						+'</div>'
 					+'</div>'
-				+'</div>'
-				+'<div class="clear"></div>'
-				+'</div>'
-				$("#result_sc").append(friends_el)
-			}	  
+					+'<div class="clear"></div>'
+					+'</div>'
+					$("#result_sc").append(friends_el)
+				}
+			}
 		})
+		recommendFriend()
 	}
 	function recommendFriend(){
 		$("#result_reco").empty()
 		$.ajax({
 			type:"GET",
-			url:"/member/recommend_friend",
+			url:"/member/get_follow",
 			dataType:"text",
 			async:false,
+			data:{
+				code:meeting_code
+			},
 			sucess:function(data){},
 			error:function(data){alert("error")}
 		}).done(function(data){
 			var data_obj = JSON.parse(data)
-			console.log(data_obj)
-			for(var i = 0; i < data_obj.length; i++){
-				var img_url = getImgUrl(data_obj[i].profile_url)
-				var friends_el = '	<div class="friends_div_01_02">'
+			for(var i = 0; i < data_obj[1].length; i++){
+				var img_url = getImgUrl(data_obj[1][i].profile_url)
+				var friends_el = '<div class="friends_div_01_02">'
 					+'<div class="fl img_div_01 margin_right_20">'
 						+'<img alt="" src="'+img_url+'" style="width: 100%; height: 100%">'
 					+'</div>'
-					+'<div class="fl" style="width: 270px; height: 100%;">'
+					+'<div class="fl a_div" style="width: 270px; height: 100%;">'
 						+'<div style="text-align: right; width: 100%;">'
-						+'<a class="a_btn" onclick="">초대</a>'
+						+'<a class="a_btn" onclick="inviteMember($(this).parent().parent().parent(),\'friends\',\''+data_obj[1][i].email+'\')">초대</a>'
 						+'</div>'
 					+'<div>'
-					+	'<p>'+data_obj[i].name+'('+data_obj[i].nick_name+')'+'</p>'
+					+	'<p>'+data_obj[1][i].name+'('+data_obj[1][i].nick_name+')'+'</p>'
 					+'</div>'
 				+'</div>'
 				+'<div class="clear"></div>'
@@ -235,5 +260,50 @@
 				$("#result_reco").append(friends_el)	
 			}
 		})	
+	}
+	function inviteMember(el,type,email){
+		invite_email.push(email)
+		console.log(invite_email)
+		var el_a_btn = el.children(".a_div").children(":first").children(".a_btn");
+		$("#invite_div").append(el)
+		el_a_btn.text("삭제")
+		el_a_btn.attr("onclick","rmInviteMember($(this).parent().parent().parent(),'"+type+"','"+email+"')")
+	}
+	function rmInviteMember(el,type,email){
+		invite_email.splice(invite_email.indexOf(email),1)
+		console.log(invite_email)
+		var el_a_btn = el.children(".a_div").children(":first").children(".a_btn");
+		el_a_btn.text("초대")
+		el_a_btn.attr("onclick","inviteMember($(this).parent().parent().parent(),'"+type+"','"+email+"')")
+		if(type === 'friends'){
+			$("#result_reco").append(el)
+		}else{
+			$("#result_sc").append(el)
+		}
+	}
+	
+	function inviteMemberAjax(){
+		console.log(meeting_code)
+		if(invite_email.length == 0){
+			return false;
+		}
+		$.ajax({
+			type:"POST",
+			url:"/member/invite_member_ajax",
+			async:false,
+			data:{
+				'member_list':invite_email,
+				code:meeting_code,
+				"${_csrf.parameterName}":"${_csrf.token}"
+			},
+			sucess:function(data){},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			if(data === "f"){
+				alert("인원수가 초과되었습니다.")
+				return false;
+			}
+			postForm('/member/meeting_page',['meeting_code','${_csrf.parameterName}'],['${code}','${_csrf.token}'],"post")
+		})
 	}
 </script>

@@ -3,6 +3,9 @@ package com.spring.moyeo.dao.meeting;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,7 +20,28 @@ public interface MeetingMemberDao extends CrudRepository<MeetingMemberEntity, In
 			"	when 0 then 'n' " + 
 			"	else 'y' end follow_yn"
 			+ " FROM member m INNER JOIN am m2 on m.email = m2.meeting_member_email " + 
-			"	WHERE email in(select meeting_member_email from am) "
+			"	WHERE email in(select meeting_member_email from am) and m2.accept_yn = 'y' "
 			+ "ORDER BY m2.meeting_member_role ASC, m.name ASC ",nativeQuery = true)
 	ArrayList<Map<String, Object>> getMemberByMeetingCode(String code, String email);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "update meeting_member set pay_yn = ?3 where meeting_code = ?2 and meeting_member_email = ?1", nativeQuery = true)
+	void setPayYn(String email, String code, String pay_yn);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "update meeting_member set accept_yn = ?3 where meeting_code = ?2 and meeting_member_email = ?1", nativeQuery = true)
+	void setAcceptYn(String email, String code, String accept_yn);
+	
+	@Query(value = "select * from meeting_member where meeting_member_email = ?1 and meeting_code = ?2",nativeQuery = true)
+	MeetingMemberEntity getMemberByEmailAndCode(String email, String code);
+	
+	@Query(value = "SELECT count(*) FROM meeting_member where meeting_code = ?1", nativeQuery = true)
+	int getMemberNumByCode(String code);
+	
+	@Query(value = "SELECT meeting_member_email FROM meeting_member WHERE meeting_code = ?1",nativeQuery = true)
+	ArrayList<String>  getMemberEmailByCode(String code);
+	
+
 }

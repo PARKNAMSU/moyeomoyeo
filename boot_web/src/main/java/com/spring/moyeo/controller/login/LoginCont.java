@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +29,7 @@ import com.spring.common.TempKey;
 import com.spring.common.Utils;
 import com.spring.moyeo.config.MailConfig;
 import com.spring.moyeo.service.login.LoginService;
+import com.spring.moyeo.service.meeting.MeetingService;
 import com.spring.moyeo.vo.FriendsEntity;
 import com.spring.moyeo.vo.MemberEntity;
 
@@ -38,6 +40,9 @@ public class LoginCont {
 	
 	@Autowired
 	LoginService loginService;
+
+	@Autowired
+	MeetingService meetingService;
 	
 	@Autowired
 	MailConfig mailConfig;
@@ -215,11 +220,15 @@ public class LoginCont {
 	public @ResponseBody String searchFriendsAjax(
 			@RequestParam("search") String search,
 			@RequestParam("search_opt") String opt,
+			@RequestParam(value = "code",required = false) String code,
 			HttpSession session
 	) throws JsonProcessingException {
 		ArrayList<Map<String, Object>> entity = loginService.searchMember(search, opt,(String)session.getAttribute("user_id"));
-		System.out.println("ss");
 		if(entity.size() == 0) return "na";
+		if(code != null) {
+			ArrayList<String> email_list = meetingService.getMemberEmails(code);
+			entity = (ArrayList<Map<String, Object>>)entity.stream().filter(item -> !email_list.contains(item.get("email"))).collect(Collectors.toList());
+		}
 		return utils.jsonParse(entity);
 
 	}
@@ -239,17 +248,24 @@ public class LoginCont {
 	public @ResponseBody String recommendFriendAjax(HttpSession session) throws JsonProcessingException {
 		ArrayList<Map<String, Object>> members = loginService.recommendMember((String)session.getAttribute("user_id"));
 		if(members.size() == 0) return "na";
+
 		return utils.jsonParse(members);
 	}
 	
 	@RequestMapping(value = "/member/get_follow", produces = "application/text; charset=utf8")
 	public @ResponseBody Object getFollowAjax(
 			HttpSession session,
-			@RequestParam(value = "follow_or_follower", required = false) String fof
+			@RequestParam(value = "follow_or_follower", required = false) String fof,
+			@RequestParam(value = "code",required = false) String code
 	) throws JsonProcessingException {
 		List<ArrayList<Map<String, Object>>> list = new ArrayList<ArrayList<Map<String, Object>>>();
 		list.add(loginService.getFollowMember((String)session.getAttribute("user_id"),"follow"));
 		list.add(loginService.getFollowMember((String)session.getAttribute("user_id"),"follower"));
+		System.out.println(code);
+		if(code != null) {
+			ArrayList<String> email_list = meetingService.getMemberEmails(code);
+			list.set(1,(ArrayList<Map<String, Object>>)list.get(1).stream().filter(item -> !email_list.contains(item.get("email"))).collect(Collectors.toList()));
+		}
 		return utils.jsonParse(list);
 	}
 	

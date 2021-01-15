@@ -54,16 +54,21 @@
 	<div class="ray_20" id="ray_01" style="">
 		<b class="font_50">나의 모임</b>
 		<div class="line_01"></div>
-		<div><b>T: 합산 금액</b> <b>I: 개인별 금액</b> <b>O: 오픈 모임</b></div>
+		<div><b>S: 시크릿 모임</b><b>O: 오픈 모임</b></div>
 		<br><br>
-		<div class="fl margin_right_20 cursur_p" onclick="chgFinishYn('n',$('#during_txt'),$('#finish_txt'))" onmouseover="overMenu(1,'over')" onmouseleave="overMenu(1,'leave')">
+		<div class="fl margin_right_20 cursur_p" onclick="chgFinishYn('n','y',$('#during_txt'),$('#finish_txt'),$('#invite_txt'))" onmouseover="overMenu(1,'over')" onmouseleave="overMenu(1,'leave')">
 			<span class="font_30" style="color: #3063C2" id="during_txt">진행중</span>
 			<div class="line_01 vis_h" style="height:2px;" id="main_line_1"></div>
 		</div>
-		<div class="fl cursur_p" onclick="chgFinishYn('y',$('#finish_txt'),$('#during_txt'))" onmouseover="overMenu(2,'over')" onmouseleave="overMenu(2,'leave')">
+		<div class="fl margin_right_20 cursur_p" onclick="chgFinishYn('y','y',$('#finish_txt'),$('#during_txt'),$('#invite_txt'))" onmouseover="overMenu(2,'over')" onmouseleave="overMenu(2,'leave')">
 			<span class="font_30" style="color: black" id="finish_txt">완료</span>
 			<div class="line_01 vis_h" style="height:2px;" id="main_line_2"></div>
-		</div><div class="clear"></div>
+		</div>
+			<div class="fl cursur_p" onclick="chgFinishYn('n','n',$('#invite_txt'),$('#during_txt'),$('#finish_txt'))" onmouseover="overMenu(3,'over')" onmouseleave="overMenu(3,'leave')">
+			<span class="font_30" style="color: black" id="invite_txt">미확인</span>
+			<div class="line_01 vis_h" style="height:2px;" id="main_line_3"></div>
+		</div>
+		<div class="clear" style="margin-bottom:20px;"></div>
 		<div id="room_main_div">
 		</div>
 	</div>
@@ -71,6 +76,7 @@
 </div>
 <script>
 	var finish_yn = "n";
+	var accept_yn = "y";
 	$(".meet_el").css("height",$(".meet_el").width()+50+"px")
 	$(document).ready(function(){
 		chkWindowWidth()
@@ -110,11 +116,16 @@
 			 url:"/member/my_room",
 			 dataType:"text",
 			 data:{
-				 type:finish_yn
+				 type:finish_yn,
+				 accept_type:accept_yn
 			 },
 			 error:function(data){alert("error")}
 		}).done(function(data){
-			var data_obj = JSON.parse(data);
+			if(data != "na"){
+				var data_obj = JSON.parse(data);
+			}else{
+				return false;
+			}
 			console.log(data_obj)	
 			data_obj.forEach(function(data){
 				var type = null;
@@ -123,7 +134,8 @@
 				}else{
 					type = "O"
 				}
-				var el = '<div class="meet_el fl" onclick="mvMeetingDetail(\''+data.meeting_code+'\')" onmouseover="overMeet(this,\'over\',1)" onmouseleave="overMeet(this,\'leave\',1)" onclick="">'
+				var on_click = returnConditionObj(accept_yn,'y',"mvMeetingDetail('"+data.meeting_code+"')","acceptMeetingInvite('"+data.meeting_code+"')")
+				var el = '<div class="meet_el fl" onclick="'+on_click+'" onmouseover="overMeet(this,\'over\',1)" onmouseleave="overMeet(this,\'leave\',1)" onclick="">'
 				+'<div style="width:78%;overflow:hidden;height:40px;" class="fl"><span class="font_30">'+data.meeting_name+'</span></div>'
 				+'<div class="fl cycle_01" style="">'+type+'</div><div class="clear"></div>'
 				+'<div style="width:95%;height:2px;background-color:#EBFBFF"></div>'
@@ -138,13 +150,49 @@
 			})
 		})
 	}
-	function chgFinishYn(yn,c_el,el){
+	function chgFinishYn(yn,nc_yn,c_el,el,el2){
 		finish_yn = yn
+		accept_yn = nc_yn
 		c_el.css("color","color: #3063C2")
 		el.css("color","black")
+		el2.css("color","black")
 		getMyRoom()
 	}
 	function mvMeetingDetail(code){
 		postForm("/member/meeting_page", ["meeting_code","${_csrf.parameterName}"], [code,"${_csrf.token}"] ,'post')
+	}
+	function acceptMeetingInvite(code){
+		if(confirm("초대를 수락하시겠습니까?")){
+            $.ajax({
+                type: "POST", 
+                url: "/member/set_meeting_member", //충전 금액값을 보낼 url 설정
+                data: {
+                    type:"accept",
+                    yn:"y",
+                    code:code,
+                    "${_csrf.parameterName}":"${_csrf.token}"
+                },
+                error:function(data){alert("에러")}
+            }).done(function(data){
+            	getMyRoom()
+            })
+		}else{
+			if(confirm("해당 초대를 삭제하시겠습니까?")){
+	            $.ajax({
+	                type: "POST", 
+	                url: "/member/set_meeting_member", //충전 금액값을 보낼 url 설정
+	                data: {
+	                    type:"delete",
+	                    code:code,
+	                    "${_csrf.parameterName}":"${_csrf.token}"
+	                },
+	                error:function(data){alert("에러")}
+	            }).done(function(data){
+	            	
+	            	alert()
+	            	getMyRoom()
+	            })
+			}
+		}
 	}
 </script>

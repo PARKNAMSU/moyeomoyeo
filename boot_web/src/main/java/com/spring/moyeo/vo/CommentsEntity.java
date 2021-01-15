@@ -22,7 +22,7 @@ public class CommentsEntity {
 	@GeneratedValue(generator = "comments_seq_gen")
 	private int comments_seq;
 	
-	private int meeting_seq;
+	private String meeting_code;
 	
 	private String email;
 	

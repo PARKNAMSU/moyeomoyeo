@@ -11,6 +11,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.spring.Role;
 import com.spring.moyeo.service.login.LoginService;
 
 
@@ -36,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         // 페이지 권한 설정
         .antMatchers("/").permitAll()
         .antMatchers("/member/**").authenticated()
-        .antMatchers("/admin/**").hasRole("ADMIN")
+        .antMatchers("/admin/**").hasRole(Role.ADMIN.getValue())
         
     .and() // 로그인 설정
                         .formLogin()

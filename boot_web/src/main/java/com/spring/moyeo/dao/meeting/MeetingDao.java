@@ -22,8 +22,10 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 			"	to_char(m.reg_date,'yyyy-mm-dd') as reg_date, m.admin_email," + 
 			"	m2.meeting_member_role from meeting m "
 			+ "inner join m_member m2 on m.meeting_code = m2.meeting_code " + 
-			"where m.meeting_code in(select meeting_code from m_member) and m.finish_yn = ?2", nativeQuery = true)
-	ArrayList<Map<String, Object>> getMyMeetingRoom(String email,String type);
+			"where m.meeting_code in(select meeting_code from m_member) and m.finish_yn = ?2"
+			+ " and (select accept_yn from meeting_member "
+			+ "where meeting_member_email = ?1 and meeting_code = m.meeting_code) = ?3", nativeQuery = true)
+	ArrayList<Map<String, Object>> getMyMeetingRoom(String email,String type, String type2);
 	
 	@Query(value = "SELECT meeting_name, meeting_code, meeting_goal, meeting_fee, " + 
 			"  end_date_yn, finish_yn, meeting_num, meeting_type, " + 
@@ -31,4 +33,6 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 			" to_char(reg_date,'yyyy-mm-dd') as reg_date, admin_email, meeting_info " +
 			" FROM meeting WHERE meeting_code = ?1",nativeQuery = true)
 	ArrayList<Map<String, Object>> getMeetingUseCode(String code);
+	
+	
 }

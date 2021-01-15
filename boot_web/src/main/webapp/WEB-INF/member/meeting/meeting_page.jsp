@@ -116,34 +116,16 @@
 		<div class="clear"></div>
 		<hr>
 		<p class="font_30">코멘츠</p>
-		<textarea rows="" cols="" class="form-control"></textarea><br>
+		<textarea rows="" cols="" class="form-control" id="content"></textarea><br>
 		<div style="width:100%;text-align:right;margin-bottom:30px;">
-			<button class="btn_01">입력</button>
-			<input type="reset" value="취소" class="btn_01_01">
+			<button class="btn_01" onclick="addComment($('#content').val())">입력</button>
+			<input type="button" value="취소" class="btn_01_01" onclick="$('#content').val('')">
 		</div>
 		
 		<div class="comments_div">
-			<div class="comments_div_01">
-				<div class="fl" style="width:50px;height:50px;border-radius:70%;overflow:hidden;">
-					<img src="/resource/img/my1.jpg" style="width:100%;height:100%;">
-				</div>
-				<div class="fl" style="width:70%;margin-left:30px;">
-					<p style="color:gray;">박남수  2020/01/01</p>
-					<p>안녕하세요</p>
-				</div>
-				<div class="clear"></div>
-			</div>
 
-			<div class="comments_div_01" >
-				<div class="fl" style="width:50px;height:50px;border-radius:70%;overflow:hidden;">
-					<img src="/resource/img/my1.jpg" style="width:100%;height:100%;">
-				</div>
-				<div class="fl" style="width:70%;margin-left:30px;">
-					<p style="color:gray;">박남수  2020/01/01</p>
-					<p>하이항</p>
-				</div>
-				<div class="clear"></div>
-			</div>
+		</div>
+		<div style="width:100%;text-align:center;" id="more_comments">
 		</div>
 		<hr>
 		<div style="width:100%;">
@@ -153,7 +135,8 @@
 		</div>
 		<hr>
 		<div style="width:100%;margin-top:30px;text-align:right;" >
-			<button class="btn_01_01 font_30 margin_right_20">모임 나가기</button><button class="btn_01_01 font_30">뒤로</button>
+			<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/'">홈으로</button>
+			<button class="btn_01_01 font_30" onclick="history.back()">뒤로</button>
 		</div>
 		
 	</div>
@@ -163,13 +146,15 @@
 let money = 1000
 let room_code = '${code}'
 let pay_obj = new Object();
-
+let df_comments_num = 5;
+let comments_num = df_comments_num;
 let top_a_btn_member = '<a class="a_btn" onclick="">신고</a>&nbsp;&nbsp;<a class="a_btn" onclick="">나가기</a>'
-let top_a_btn_admin = '<a class="a_btn" onclick="">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="">삭제</a>'
+let top_a_btn_admin = '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="">삭제</a>'
 
 $(document).ready(function(){
 	chkWindowWidth()
 	settingContent()
+	settingComments()
 	$(window).resize(function(){
 		chkWindowWidth()
 	})
@@ -271,28 +256,161 @@ function importPay(){
         buyer_addr: '',
         buyer_postcode:''
     }, function (rsp) {
-        console.log(rsp);
         if (rsp.success) {
             var msg = '결제가 완료되었습니다.';
             msg += '고유ID : ' + rsp.imp_uid;
             msg += '상점 거래ID : ' + rsp.merchant_uid;
             msg += '결제 금액 : ' + rsp.paid_amount;
             msg += '카드 승인번호 : ' + rsp.apply_num;
-            /*
             $.ajax({
-                type: "GET", 
-                url: "", //충전 금액값을 보낼 url 설정
+                type: "POST", 
+                url: "/member/set_meeting_member", //충전 금액값을 보낼 url 설정
                 data: {
-                    "amount" : money
+                    type:"pay",
+                    yn:"y",
+                    code:room_code,
+                    "${_csrf.parameterName}":"${_csrf.token}"
                 },
-            });
-            */
-            console.log(msg)
+                error:function(data){alert("에러")}
+            }).done(function(data){
+                alert("결제가 완료되었습니다.")
+                settingContent()
+            })
         } else {
             var msg = '결제에 실패하였습니다.';
             msg += '에러내용 : ' + rsp.error_msg;
         }
-        alert(msg);
     });
+}
+
+function addComment(content){
+	if(content === "" || content == null){
+		alert("내용을 입력하세요.")
+		return false;
+	}
+    $.ajax({
+        type: "POST", 
+        url: "/member/add_comment", //충전 금액값을 보낼 url 설정
+        data: {
+            meeting_code:room_code,
+            comments_content:content,
+            "${_csrf.parameterName}":"${_csrf.token}"
+        },
+        error:function(data){alert("에러")}
+    }).done(function(data){
+    	$('#content').val('')
+    	settingComments()
+    })
+}
+
+function settingComments(){
+	$(".comments_div").empty();
+	$("#more_comments").empty();
+	 $.ajax({
+        type: "POST", 
+        url: "/member/get_comments", //충전 금액값을 보낼 url 설정
+        data: {
+            code:room_code,
+            comments_num:comments_num,
+            "${_csrf.parameterName}":"${_csrf.token}"
+        },
+        error:function(data){alert("에러")}
+    }).done(function(data){
+    	if(data === "na"){
+			return false;
+    	}
+        var data_obj = JSON.parse(data)
+        console.log(data_obj)
+        var sub_el = "<b style='color:gray;cursor:pointer;' onclick='setCommentsNum(\"more\")'>더보기..</b>"
+        var sub_el2 = "<b style='color:gray;cursor:pointer;' onclick='setCommentsNum(\"rm\")'>접기..</b>"
+    	if(data_obj.length > comments_num){
+    		for(var i=0; i<comments_num; i++){
+    			setCommentsEl(data_obj[i])
+    		}
+    		$("#more_comments").append(sub_el)
+    	}else{
+    		if(data_obj.length > df_comments_num){
+    			$("#more_comments").append(sub_el2)
+    		}
+    		data_obj.forEach(function(item){
+    			setCommentsEl(item)
+    		})
+    	}
+    })
+}
+function setCommentsEl(data){
+	var a_btn = returnConditionObj(data.email,'${user_id}',
+			'<a class="a_btn margin_right_10" onclick="setUpdate($(this),'+data.comments_seq+')">수정</a><a class="a_btn margin_right_10" onclick="rmComment('+data.comments_seq+')">삭제</a>','<a class="a_btn margin_right_10">신고</a>')
+	var el = '<div class="comments_div_01">'
+		+'<div class="fl" style="width:50px;height:50px;border-radius:70%;overflow:hidden;">'
+			+'<img src="'+getImgUrl(data.profile_url)+'" style="width:100%;height:100%;">'
+		+'</div>'
+		+'<div class="fl" id="comment_contents" style="width:70%;margin-left:30px;">'
+			+'<div class="fl font_20" style="width:20%;"><p style="">'+data.name+'</p></div>'
+			+'<div class="fl" style="width:49%;"><span style="color:gray;text-align:right">'+data.reg_date+'</span></div>'
+			+'<div class="clear"></div>'
+			+'<p id="content">'+data.comments_content+'</p>'
+		+'</div>'
+		+'<div class="clear"></div>'
+		+'<div style="width:100%;text-align:right;">'+a_btn+'</div>'
+	+'</div>'
+	$(".comments_div").append(el)
+}
+
+function setCommentsNum(type){
+	if(type === "rm"){
+		comments_num = 5;
+	}else{
+		comments_num += 5;
+	}
+	settingComments()
+}
+function followMember(){
+	postForm('/member/meeting_invite',["code","${_csrf.parameterName}"],[room_code,"${_csrf.token}"] ,"POST");
+}
+function rmComment(seq){
+	if(!confirm("삭제하시겠습니까?")){
+		return false;
+	}
+	$.ajax({
+		type:"GET",
+		dataType:"text",
+		url:"/member/set_comment",
+		data:{
+			seq:seq,
+			type:"delete"
+		},
+		error:function(data){alert("에러")}
+	}).done(function(data){
+		settingComments()
+	})
+}
+function setUpdate(node,seq){
+	var p_el = node.parent()
+	var el = node.parent().siblings('#comment_contents').children("#content")
+	el.html("<input type='text' style='width:100%;background-color:#B9E2FA;' value='"+el.text()+"' id='temp_"+seq+"'>")
+	p_el.empty()
+	p_el.append('<a class="a_btn margin_right_10" onclick="updateComment('+seq+',$(\'#temp_'+seq+'\').val())">수정</a><a class="a_btn margin_right_10" onclick="settingComments()">취소</a>')
+	
+}
+function updateComment(seq,content){
+	console.log(content)
+	if(content === "" || content == null){
+		alert("수정하실 댓글을 입력해주세요.")
+		return false;
+	}
+	$.ajax({
+		type:"GET",
+		dataType:"text",
+		url:"/member/set_comment",
+		data:{
+			seq:seq,
+			content:content,
+			type:"update"
+		},
+		error:function(data){alert("에러")}
+	}).done(function(data){
+		settingComments()
+	})
 }
 </script>

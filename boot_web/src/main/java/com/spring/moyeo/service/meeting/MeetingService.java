@@ -1,7 +1,9 @@
 package com.spring.moyeo.service.meeting;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -9,8 +11,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.moyeo.dao.meeting.CommentsDao;
 import com.spring.moyeo.dao.meeting.MeetingDao;
 import com.spring.moyeo.dao.meeting.MeetingMemberDao;
+import com.spring.moyeo.vo.CommentsEntity;
 import com.spring.moyeo.vo.MeetingEntity;
 import com.spring.moyeo.vo.MeetingMemberEntity;
 
@@ -22,6 +26,9 @@ public class MeetingService {
 	
 	@Autowired
 	MeetingMemberDao meeting_member_dao;
+	
+	@Autowired
+	CommentsDao comments_dao;
 	
 	@Transactional
 	public void createMeetingRoom(MeetingEntity meeting,String email) {
@@ -42,9 +49,26 @@ public class MeetingService {
 		member.setMeeting_member_role("admin");
 		meeting_member_dao.save(member);
 	}
+	@Transactional
+	public boolean inviteMeetingMember(String code, List<String> email_list) {
+		MeetingEntity meeting = meeting_dao.findById(code).get();
+		int now_num = meeting_member_dao.getMemberNumByCode(code);
+		System.out.println(meeting.getMeeting_num());
+		System.out.println(email_list.size());
+		System.out.println(now_num);
+		if(meeting.getMeeting_num() < email_list.size()+now_num) return false;
+
+		for(String item: email_list) {
+			MeetingMemberEntity entity = new MeetingMemberEntity();
+			entity.setMeeting_code(code);
+			entity.setMeeting_member_email(item);
+			meeting_member_dao.save(entity);
+		}
+		return true;
+	}
 	
-	public ArrayList<Map<String, Object>> getMyMeetingRoom(String email, String type){
-		return meeting_dao.getMyMeetingRoom(email,type);
+	public ArrayList<Map<String, Object>> getMyMeetingRoom(String email, String type, String type2){
+		return meeting_dao.getMyMeetingRoom(email,type,type2);
 	}
 	
 	public ArrayList<Object> getMeetingRoomAllInfo(String code,String email){
@@ -53,5 +77,32 @@ public class MeetingService {
 		list.add(meeting_member_dao.getMemberByMeetingCode(code,email));
 		return list;
 	}
+	public void setMeetingMemberInfo(String email, String code, String type, String yn) {
+		if(type.equals("accept"))meeting_member_dao.setAcceptYn(email, code, yn);
+		else if(type.equals("pay"))meeting_member_dao.setPayYn(email, code, yn);
+		else if(type.equals("delete")) {
+			MeetingMemberEntity entity = meeting_member_dao.getMemberByEmailAndCode(email, code);
+			meeting_member_dao.delete(entity);
+		}
+	}
+	public void setCommentsInfo(String email, CommentsEntity entity) {
+		entity.setEmail(email);
+		comments_dao.save(entity);
+	}
+	public ArrayList<Map<String, Object>> getCommentsByCode(String code){
+		return comments_dao.getCommentsByCode(code);
+	}
 	
+	public ArrayList<String> getMemberEmails(String code){
+		return meeting_member_dao.getMemberEmailByCode(code);
+	}
+	
+	public void setComment(int seq, String type, String content) {
+		CommentsEntity entity = comments_dao.findById(seq).get();
+		if(type.equals("delete")) comments_dao.delete(entity);
+		else {
+			entity.setComments_content(content);
+			comments_dao.save(entity);
+		}
+	}
 }
