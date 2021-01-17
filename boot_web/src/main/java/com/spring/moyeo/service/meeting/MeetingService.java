@@ -136,4 +136,17 @@ public class MeetingService {
 		MeetingMemberEntity entity = meeting_member_dao.getMemberByEmailAndCode(email, code);
 		meeting_member_dao.delete(entity);
 	}
+	
+	public boolean removeRoom(String code,String email) {
+		MeetingMemberEntity entity = meeting_member_dao.getMemberByEmailAndCode(email, code);
+		if(!entity.getMeeting_member_role().equals("admin")) return false;
+		MeetingEntity meeting = meeting_dao.findById(code).get();
+		meeting_dao.delete(meeting);
+		meeting_member_dao.deleteMeetingMemberByCode(code);
+		comments_dao.deleteCommentsByCode(code);
+		return true;
+	}
+	public void finishDateCk() {
+		meeting_dao.finishDateCk();
+	}
 }

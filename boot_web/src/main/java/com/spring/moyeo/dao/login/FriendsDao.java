@@ -25,13 +25,13 @@ public interface FriendsDao extends CrudRepository<FriendsEntity, Integer>{
 			+ "AND email != ?1 ORDER BY name asc LIMIT 8", nativeQuery = true)
 	ArrayList<Map<String, Object>> getRecommendFriends(String email);
 	
-	@Query(value = "SELECT email,name,nick_name FROM member "
+	@Query(value = "SELECT email,name,nick_name,profile_url FROM member "
 			+ "WHERE email in(select follow_email from friends where follower_email = ?1) ORDER BY name", nativeQuery = true)
 	ArrayList<Map<String, Object>> getMyFollower(String email);
 	
 	@Query(value = "with fw as("
 			+ "select follow_email,follower_email from friends"
-			+ ")SELECT email,name,nick_name,"
+			+ ")SELECT email,name,nick_name,profile_url,"
 			+ "CASE (select count(*) from fw where follow_email = m.email and follower_email = ?1)"
 			+ " WHEN 0 then 'n'"
 			+ "ELSE 'y' END as res"
@@ -39,4 +39,7 @@ public interface FriendsDao extends CrudRepository<FriendsEntity, Integer>{
 			+ "WHERE email in(select follower_email from friends where follow_email = ?1) ORDER BY name", nativeQuery = true)
 	ArrayList<Map<String, Object>> getMyFollow(String email);
 	
+	@Query(value = "select count(*) "
+			+ "from friends where follower_email = ?1 and follow_email = ?2",nativeQuery = true)
+	int getFollowYn(String my_email, String email);
 }

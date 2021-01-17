@@ -49,6 +49,7 @@
 	height: 100px;
 	padding: 20px;
 	border-bottom: solid 1.5px #3063C2;
+	cursor: pointer;
 }
 
 .img_div_01 {
@@ -100,6 +101,7 @@
 </div>
 
 <script>
+let event_ck = 1;
 $(document).ready(function(){
 	chkWindowWidth()
 	getFollowMember()
@@ -107,13 +109,20 @@ $(document).ready(function(){
 		chkWindowWidth()
 	})
 })
+
+function sleep(delay) {
+   var start = new Date().getTime();
+   while (new Date().getTime() < start + delay);
+}
 function chkWindowWidth(){
 	if($(window).width()< 900){
-		$("#ray_01").css("margin-left","3%");
-		$("#ray_01").css("width","95%");
+		$("#ray_01").css("margin-left","0%");
+		$("#ray_01").css("width","100%");
+		$("#ray_01").css("text-align","center");
 	}else{
 		$("#ray_01").css("margin-left","20%");
 		$("#ray_01").css("width","58%");
+		$("#ray_01").css("text-align","left");
 	}
 }
 function invite(email){
@@ -135,7 +144,6 @@ function getFollowMember(){
 		error:function(data){alert("error")}
 	}).done(function(data){
 		var data_obj = JSON.parse(data);
-		console.log(data_obj)
 		var a = 0;
 		data_obj.forEach(function(item){
 			item.forEach(function(val){
@@ -146,18 +154,19 @@ function getFollowMember(){
 					if(val.res === 'n'){
 						a_bt = '<a class="a_btn" onclick="followMember(\''+val.email+'\',this)">팔로우</a>'
 					}else{
-						a_bt = '<a class="margin_right_20 a_btn">초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'follower\')" class="a_btn">언팔로우</a>'
+						a_bt = '<a class="margin_right_20 a_btn" >초대</a><a  onclick="unfollowMember(\''+val.email+'\',this,\'follower\')" class="a_btn">언팔로우</a>'
 					}
 				}else{
 					p_el = $("#my_follow_div")
-					a_bt = '<a class="margin_right_20 a_btn">초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'following\')" class="a_btn">언팔로우</a>'
+					a_bt = '<a class="margin_right_20 a_btn"  >초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'following\')" class="a_btn">언팔로우</a>'
 				}
-				var el = '<div class="friends_div_01_02">'
-				+'<div class="fl img_div_01 margin_right_20" >'
+				var el_click= 'mvUserInfo(\''+val.email+'\')'
+				var el = '<div class="friends_div_01_02" onclick="'+el_click+'" style="z-index:0">'
+				+'<div class="fl img_div_01 margin_right_20">'
 				+	'<img alt="" src="'+getImgUrl(val.profile_url)+'" style="width:100%;height:100%">'
 				+'</div>'
 				+'<div class="fl" style="width:270px;height:100%;">'
-				+	'<div style="text-align:right;width:100%;">'+a_bt+'</div>'
+				+	'<div style="text-align:right;width:100%;" style="z-index:10">'+a_bt+'</div>'
 				+	'<div><p>'+val.nick_name+' ('+val.name+')</p></div>'
 				+'</div>'
 				+'<div class="clear"></div>'
@@ -169,9 +178,20 @@ function getFollowMember(){
 	})
 }
 
+function mvUserInfo(email){
+	console.log(event_ck)
+	if(event_ck == 0){
+		console.log("fs")
+		return false;
+	}else{
+		postForm('/member/user_info',["email","${_csrf.parameterName}"],[email,"${_csrf.token}"],'post')
+	}
+	
+	
+}
+
 function unfollowMember(email,t,field){
-	var el = $(t);
-	console.log(email)
+	event_ck = 0;
 	$.ajax({
 		 type:"post",
 		 url:"/member/set_follow",
@@ -190,10 +210,13 @@ function unfollowMember(email,t,field){
 		}else{
 			getFollowMember()
 		}
+		setTimeout(function(){
+			event_ck = 1;
+		},1000)
 	})
 }
 function followMember(email,t){
-	var el = $(t);
+	event_ck = 0;
 	$.ajax({
 		type:"post",
 		 url:"/member/set_follow",
@@ -208,6 +231,9 @@ function followMember(email,t){
 		 error:function(error){alert("error")}
 	}).done(function(data) {
 		getFollowMember()
+		setTimeout(function(){
+			event_ck = 1;
+		},1000)
 	})
 }
 </script>

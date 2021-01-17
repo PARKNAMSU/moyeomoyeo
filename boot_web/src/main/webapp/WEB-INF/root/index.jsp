@@ -10,6 +10,7 @@
 .main {
 	height: 600px;
 	padding-top: 90px;
+	width:100%;
 }
 
 #main_1 {
@@ -89,10 +90,12 @@
 	function chkWindowWidth(){
 		if($(window).width()<900){
 			$("#ray_20_02").css("text-align","left")
-			$(".ray_20").css("margin-left","10%")
+			$(".ray_20").css("margin-left","5%")
+
 		}else{
 			$("#ray_20_02").css("text-align","right")
 			$(".ray_20").css("margin-left","20%")
+
 		}
 	}
 	

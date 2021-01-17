@@ -150,12 +150,15 @@
 		if($(window).width()<900){
 			$(".sub_div").removeClass("div_01_01")
 			$(".sub_div").addClass("div_01_02")
+			$("#ray_01").css("width","100%")
 			$("#ray_01").css("margin-left","0%")
-			
+			$("#ray_01").css("text-align","center")
 		}else{
 			$(".sub_div").removeClass("div_01_02")
 			$(".sub_div").addClass("div_01_01")
+			$("#ray_01").css("width","58%")
 			$("#ray_01").css("margin-left","20%")
+			$("#ray_01").css("text-align","left")
 		}
 	}
 	

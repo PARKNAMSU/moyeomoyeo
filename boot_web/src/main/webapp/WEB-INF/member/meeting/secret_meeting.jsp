@@ -11,7 +11,7 @@
  	}
 </style>
 <div id="main_1" class="container-fluid" style="padding-top:90px;">
-	<img alt="" src="/resource/img/secret/friends1.svg" style="position:absolute;width:500px;height:500px;left:1000px;top:200px;">
+	<img alt="" id="main_img" src="/resource/img/secret/friends1.svg" style="position:absolute;width:500px;height:500px;left:1000px;top:200px;">
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50" style="">시크릿 모임</p>
 		<p class="font_20">추억은 함께하면 배가됩니다.<br>지금 시크릿 모임을 생성하여<br>함께하고 싶은 친구들을 초대해 보세요!</p><br><br>
@@ -26,4 +26,24 @@
 		$(selector).removeClass(rm_class);
 		$(selector).addClass(add_class);
 	}
+	
+	$(document).ready(function(){
+		chkWindowWidth()
+		$(window).resize(function(){
+			chkWindowWidth()
+		})
+	})
+function chkWindowWidth(){
+	if($(window).width()< 900){
+		$("#ray_01").css("margin-left","0%");
+		$("#ray_01").css("width","100%");
+		$("#ray_01").css("text-align","center")
+		$("#main_img").css("display","none")
+	}else{
+		$("#ray_01").css("margin-left","20%");
+		$("#ray_01").css("width","58%");
+		$("#ray_01").css("text-align","left")
+		$("#main_img").css("display","initial")
+	}
+}
 </script>

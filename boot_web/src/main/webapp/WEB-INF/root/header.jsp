@@ -41,7 +41,7 @@
 </style>
 <div class="container-fluid header" style="top:0px;z-index:2;">
 	<img src="/resource/img/logo.png" style="width:80px; height: 80px;margin-top:5px;cursor:pointer;" onclick="location.href='/'">
-	<div style="left:1150px;position: absolute;top:0px;width:550px;" class="fl">
+	<div style="left:1150px;position: absolute;top:0px;width:550px;" class="fl top_menu_div">
 		<div class="h_menu" id="h_menu_1" style="" onmouseover="visibleEl(1,'line')" onmouseleave="hiddenEl(1,'line')" >
 			<span class="h_text" onclick="visibleEl(1,'sub_menu')">서비스</span><div class="h_line" id="h_line1"></div>
 			<div class="h_sub_menu" id="h_sub_menu_1">
@@ -70,12 +70,40 @@
 			</div>			
 		</div>
 	</div>
-	
+	<img alt="" src="/resource/img/menubar.png" style="margin-left:60%;width:48px;height: 48px; " id="menu_bar_sm" onclick="visibleSmMenu()">
+	<div class="sm_menu" style="width:100%;display:none;color:white;cursor: pointer;">
+		<div style="background-color: #EBFBFF;" class="line_01"></div>
+		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/secret_meeting'">
+			<p class="font_20" style="vertical-align:middle;">시크릿모임</p>
+		</div>
+		<div style="background-color: #EBFBFF;" class="line_01"></div>
+		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/open_meeting'">
+			
+			<p class="font_20">오픈모임</p>
+		</div>
+		<div style="background-color: #EBFBFF;" class="line_01"></div>
+		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/my_info'">
+			
+			<p class="font_20">내정보</p>
+		</div>
+	</div>
 </div>
+
 <div class="clear"></div>
 <script>
 	var url = getImgUrl('${user_img}')
 	$("#user_img").attr("src",url)
+	
+	function visibleSmMenu(){
+		/*
+		if($(".sm_menu").css("display") === "none"){
+			$(".sm_menu").css("display","initial") 
+		}else{
+			$(".sm_menu").css("display","none") 
+		}*/
+		$(".sm_menu").slideToggle()
+	}
+	
 	function visibleEl(idx,type){
 		if(type === 'line'){
 			$("#h_line"+idx).css("visibility","visible");
@@ -93,4 +121,22 @@
 			$("#h_line"+idx).css("visibility","hidden");
 		}
 	}
+	
+	$(document).ready(function(){
+		menuchkWindowWidth()
+		$(window).resize(function(){
+			menuchkWindowWidth()
+		})
+	})
+	function menuchkWindowWidth(){
+		if($(window).width()<900){
+			$(".top_menu_div").css("visibility","hidden")
+			$("#menu_bar_sm").css("visibility","visible")
+		}else{
+			$(".top_menu_div").css("visibility","visible")
+			$("#menu_bar_sm").css("visibility","hidden")
+			$(".sm_menu").css("display","none") 
+		}
+	}
+	
 </script>

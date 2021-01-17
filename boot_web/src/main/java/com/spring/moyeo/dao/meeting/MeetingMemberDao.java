@@ -43,5 +43,10 @@ public interface MeetingMemberDao extends CrudRepository<MeetingMemberEntity, In
 	@Query(value = "SELECT meeting_member_email FROM meeting_member WHERE meeting_code = ?1",nativeQuery = true)
 	ArrayList<String>  getMemberEmailByCode(String code);
 	
+	@Transactional
+	@Modifying
+	@Query(value = "delete from meeting_member where meeting_code = ?1", nativeQuery = true)
+	void deleteMeetingMemberByCode(String code);
+	
 
 }

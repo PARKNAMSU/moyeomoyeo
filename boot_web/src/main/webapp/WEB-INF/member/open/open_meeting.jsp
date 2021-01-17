@@ -25,4 +25,22 @@
 		$(selector).removeClass(rm_class);
 		$(selector).addClass(add_class);
 	}
+	
+	$(document).ready(function(){
+		chkWindowWidth()
+		$(window).resize(function(){
+			chkWindowWidth()
+		})
+	})
+function chkWindowWidth(){
+	if($(window).width()< 900){
+		$("#ray_01").css("margin-left","0%");
+		$("#ray_01").css("width","100%");
+		$("#ray_01").css("text-align","center")
+	}else{
+		$("#ray_01").css("margin-left","20%");
+		$("#ray_01").css("width","58%");
+		$("#ray_01").css("text-align","left")
+	}
+}
 </script>

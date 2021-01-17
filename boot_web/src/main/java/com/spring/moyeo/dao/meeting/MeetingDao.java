@@ -3,6 +3,9 @@ package com.spring.moyeo.dao.meeting;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -53,4 +56,10 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 			+ "from meeting where meeting_code not in (select meeting_code from mm) and meeting_goal like concat('%',?1,'%')"
 			+ " and finish_yn = 'n' and meeting_type = 'open'", nativeQuery = true)
 	ArrayList<Map<String, Object>> getMeetingForSearchGoal(String search,String email);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "update meeting set finish_yn = 'y' "
+			+ "where end_date_yn = 'y' and end_date <= now() + '-1days';",nativeQuery = true)
+	void finishDateCk();
 }

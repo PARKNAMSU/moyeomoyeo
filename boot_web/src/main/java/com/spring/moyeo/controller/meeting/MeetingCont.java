@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -190,9 +191,19 @@ public class MeetingCont {
 	@RequestMapping(value = "/member/exit_room", produces = "application/text; charset=utf8")
 	public @ResponseBody String exitRoom(
 			HttpSession session,
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam("code") String code
 	) {
-		service.exitRoom(code, (String)utils.getSessionAttr(session, "user_id"));
+		if(type.equals("remove")) {
+			service.removeRoom(code,(String)utils.getSessionAttr(session, "user_id"));
+		}
+		else service.exitRoom(code, (String)utils.getSessionAttr(session, "user_id"));
 		return "";
+	}
+ 
+	
+	@Scheduled(cron = " 0 0 1 * * *")
+	public void finishDateCk() {
+		service.finishDateCk();
 	}
 }

@@ -59,6 +59,11 @@ public class LoginService implements UserDetailsService{
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
 		dao.save(member);
 	}
+	
+	public int getFollowYn(String my_email,String email) {
+		return friends_dao.getFollowYn(my_email, email);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		MemberEntity member = dao.findById(username)
@@ -113,4 +118,5 @@ public class LoginService implements UserDetailsService{
 		if(followOrFollower.equals("follow")) return friends_dao.getMyFollow(email);
 		else return friends_dao.getMyFollower(email);
 	}
+
 }

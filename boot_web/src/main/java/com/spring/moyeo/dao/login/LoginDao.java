@@ -42,5 +42,5 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			"FROM member m WHERE nick_name like concat('%',?1,'%') and email != ?2", nativeQuery = true)
 	ArrayList<Map<String, Object>>  getMemberBySearchNickName(String name,String email);
 	
-
+	
 }

@@ -169,6 +169,7 @@ function exitRoom(){
 		url:"/member/exit_room",
 		data:{
 			code:room_code,
+			type:"exit",
 			"${_csrf.parameterName}":"${_csrf.token}"
 		},
 		error:function(data){alert('error')}
@@ -195,23 +196,26 @@ function settingContent(){
 		$("#now_num").text(data_obj[1].length)
 		data_obj[1].forEach(function(item){
 			var pnum = item.phone_number
-			var follow_a = '<a onclick="" class="a_btn">언팔로우</a>'
-			var unfollow_a = '<a onclick="" class="a_btn">팔로우</a>'
+			var follow_a = '<a onclick="" class="a_btn">언팔로우</a><a onclick="" class="margin_left_20 a_btn">신고</a>'
+			var unfollow_a = '<a onclick="" class="a_btn">팔로우</a><a onclick="" class="margin_left_20 a_btn">신고</a>'
 			var pay_yn = returnConditionObj(item.pay_yn,'y',['지불','#3063C2'],['미지불','red']);
 			var a_btn = returnConditionObj(item.follow_yn,'y',follow_a,unfollow_a);
 			var name = returnConditionObj(item.email,'${user_id}','나',item.name);
 			if(name === '나'){
 				var pay_btn = returnConditionObj(item.pay_yn,'y','','결제')
 				$("#top_a_btn").append(returnConditionObj(item.meeting_member_role,'admin',top_a_btn_admin,top_a_btn_member));
+				a_btn = '<br>'
 			}
 			if(item.meeting_member_role === 'admin'){
 				pay_yn = ['',''];
-				$("#admin_connect_phone").text(pnum.substring(0,3)+"-"+pnum.substring(3,7)+"-"+pnum.substring(7,11))
+				if(pnum != null && pnum != ''){
+					$("#admin_connect_phone").text(pnum.substring(0,3)+"-"+pnum.substring(3,7)+"-"+pnum.substring(7,11))
+					pay_obj.phone = pnum.substring(0,3)+"-"+pnum.substring(3,7)+"-"+pnum.substring(7,11)
+				}
 				$("#admin_connect_email").text(item.email)
 				$("#admin_connect_email").attr("href","mailto:"+item.email)
 				pay_obj.name = item.name;
 				pay_obj.email = item.email;
-				pay_obj.phone = pnum.substring(0,3)+"-"+pnum.substring(3,7)+"-"+pnum.substring(7,11)
 				name = returnConditionObj(item.email,'${user_id}','나',item.name) + " (총무)"
 				pay_btn = ''
 			}
@@ -224,7 +228,6 @@ function settingContent(){
 						+'<div class="fl" style="width: 270px; height: 100%;">'
 							+'<div style="text-align: right; width: 100%;">'
 								+'<div class="fl" style="color:'+pay_yn[1]+';">'+pay_yn[0]+'</div>'
-								+'<a onclick="" class="margin_right_20 a_btn">신고</a>'
 								+ a_btn
 							+'</div>'
 							+'<div style="text-align: left;">'
@@ -411,7 +414,7 @@ function settingComments(){
 }
 function setCommentsEl(data){
 	var a_btn = returnConditionObj(data.email,'${user_id}',
-			'<a class="a_btn margin_right_10" onclick="setUpdate($(this),'+data.comments_seq+')">수정</a><a class="a_btn margin_right_10" onclick="rmComment('+data.comments_seq+')">삭제</a>','<a class="a_btn margin_right_10">신고</a>')
+			'<a class="a_btn margin_right_10" onclick="setUpdate($(this),'+data.comments_seq+')">수정</a><a class="a_btn margin_right_10" onclick="rmComment('+data.comments_seq+')">삭제</a>','<a class="a_btn margin_right_10">신고</a>')	
 	var el = '<div class="comments_div_01">'
 		+'<div class="fl" style="width:50px;height:50px;border-radius:70%;overflow:hidden;">'
 			+'<img src="'+getImgUrl(data.profile_url)+'" style="width:100%;height:100%;">'

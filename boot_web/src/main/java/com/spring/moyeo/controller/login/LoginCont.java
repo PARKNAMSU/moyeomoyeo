@@ -98,6 +98,20 @@ public class LoginCont {
 		mv.addObject("jsp_page", "../member/my/my_inval_account_pop");
 		return mv;
 	}
+	@RequestMapping("/member/user_info")
+	public ModelAndView userPage(
+			ModelAndView mv,
+			@RequestParam("email") String email,
+			HttpSession session
+		) throws JsonProcessingException {
+		MemberEntity entity = loginService.getUser(email);
+		entity.setPassword(null);
+		mv.setViewName("root/main");
+		mv.addObject("user_info",utils.jsonParse(entity));
+		mv.addObject("follow_yn",loginService.getFollowYn((String)utils.getSessionAttr(session, "user_id"),email));
+		mv.addObject("jsp_page", "../member/user_page");
+		return mv;
+	}
 	@RequestMapping("/login_access.do")
 	public ModelAndView getMemberCont(@AuthenticationPrincipal User user,ModelAndView mv) {
 		MemberEntity member = loginService.getUser(user.getUsername());

@@ -15,16 +15,20 @@
 
 .aside_01 {
 	text-align: right;
-	width: 90px;
+	width: 10%;
 }
 
 .div_01_01 {
-	width: 630px;
-	margin-left: 50px;
+	width: 80%;
+	margin-left: 9%;
 }
 
 .div_01_02 {
 	width: 300px;
+}
+.div_01 {
+	width: 100%;
+
 }
 </style>
 <div id="main_1" class="container-fluid"
@@ -163,17 +167,16 @@ $(document).ready(function(){
 	
 	function chkWindowWidth(){
 		if($(window).width()< 900){
-			$("#ray_01").css("margin-left","3%");
-			$("#ray_01").css("width","95%");
-			$(".div_01_01").css("width","500")
-			$(".div_01_01").css("margin-left","0")
+			$("#ray_01").css("margin-left","0%");
+			$("#ray_01").css("width","100%");
+			$("#ray_01").css("text-align","center")
 		}else{
 			$("#ray_01").css("margin-left","20%");
 			$("#ray_01").css("width","58%");
-			$(".div_01_01").css("width","630")
-			$(".div_01_01").css("margin-left","50px")
+			$("#ray_01").css("text-align","left")
 		}
 	}
+	
 	function openPopup(url){
 		$("#popup1").css("display","initial")
 		$("#field").load(url)		
