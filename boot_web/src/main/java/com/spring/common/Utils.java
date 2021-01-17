@@ -2,6 +2,8 @@ package com.spring.common;
 
 import java.io.File;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +18,6 @@ public class Utils {
 		if (!Folder.exists()) {
 			try {
 				Folder.mkdirs();
-				System.out.println(path);
 			} catch (Exception e) {
 				e.getStackTrace();
 			}
@@ -29,5 +30,8 @@ public class Utils {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonStr = mapper.writeValueAsString(object);
 		return jsonStr;
+	}
+	public Object getSessionAttr(HttpSession session, String key) {
+		return session.getAttribute(key);
 	}
 }

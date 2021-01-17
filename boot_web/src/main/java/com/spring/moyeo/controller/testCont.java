@@ -14,29 +14,9 @@ public class testCont {
 	@Autowired
 	LoginService loginService;
 	
-	@RequestMapping("/secret_meeting_create")
-	public ModelAndView secretMeetingCreate(ModelAndView mv) {
-		mv.setViewName("root/main");
-		mv.addObject("jsp_page", "../member/meeting/secret_meeting_create");
-		return mv;
-	}
 
-	@RequestMapping("/test1")
-	public ModelAndView my_friends(ModelAndView mv) {
-		mv.setViewName("root/main");
-		
-		//mv.addObject("jsp_page", "../member/meeting/meeting_page");
-		
-		mv.addObject("jsp_page", "../member/open/open_meeting_create");
-		
-		return mv;
-	}
-	@RequestMapping("/test2")
-	public ModelAndView test2(ModelAndView mv) {
-		mv.setViewName("root/main");
-		mv.addObject("jsp_page", "../member/open/find_open_meeting");
-		return mv;
-	}
+
+
 	@RequestMapping("/test3")
 	public ModelAndView test3(ModelAndView mv) {
 		mv.setViewName("root/main");

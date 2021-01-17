@@ -32,7 +32,6 @@
 	<header>
 		<c:if test="${user_id == null}">
 			<%@ include file="header_logout.jsp"%>
-			<script type="text/javascript">location.href="/logout"</script>
 		</c:if>
 		<c:if test="${user_id != null}">
 			<%@ include file="header.jsp"%>

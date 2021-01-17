@@ -134,13 +134,15 @@
 				}else{
 					type = "O"
 				}
+				var end_date_div = returnConditionObj(data.end_date_yn,'y',
+						'<div class="meet_sub_div_01" style="text-align:right;" id="end_date_div"><span class="font_15">to: '+data.end_date+'</span></div>','');
 				var on_click = returnConditionObj(accept_yn,'y',"mvMeetingDetail('"+data.meeting_code+"')","acceptMeetingInvite('"+data.meeting_code+"')")
 				var el = '<div class="meet_el fl" onclick="'+on_click+'" onmouseover="overMeet(this,\'over\',1)" onmouseleave="overMeet(this,\'leave\',1)" onclick="">'
 				+'<div style="width:78%;overflow:hidden;height:40px;" class="fl"><span class="font_30">'+data.meeting_name+'</span></div>'
 				+'<div class="fl cycle_01" style="">'+type+'</div><div class="clear"></div>'
 				+'<div style="width:95%;height:2px;background-color:#EBFBFF"></div>'
 				+'<div class="meet_sub_div_01" style="text-align:right;"><span class="font_15">from: '+data.reg_date+'</span></div>'
-				+'<div class="meet_sub_div_01" style="text-align:right;"><span class="font_15">to: '+data.end_date+'</span></div>'
+				+ end_date_div
 				+'<div class="meet_sub_div_01" style="height:30px;"><span class="font_20">'+data.meeting_goal+'</span></div>'
 				+'<div class="meet_sub_div_01" style="height:30px;"><span class="font_20">금액: '+data.meeting_fee+'￦</span></div>'
 				+'<div class="meet_sub_div_01" style="height:30px;"><span class="font_20">생성자: '+data.admin_email+'</span></div>'

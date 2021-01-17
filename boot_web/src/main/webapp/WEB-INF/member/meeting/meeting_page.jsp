@@ -78,7 +78,7 @@
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
 	<div class="ray_20" id="ray_01" style="">
-		<p class="font_50" id="meeting_name">모임제목</p>
+		<p class="font_50" id="meeting_name"></p>
 		<div class="line_01"></div>
 		<br>
 		<div style="text-align: right;" id="top_a_btn">
@@ -89,7 +89,7 @@
 		<p class="font_30" id="meeting_goal">모임목적(모임부제목)</p>
 		<hr>
 		<p>
-			from: <span id="reg_date">2020/01/01</span><br>to: <span id="end_date">2021/01/01</span>
+			from: <span id="reg_date">2020/01/01</span><br><span id="end_date_div">to: <span id="end_date">2021/01/01</span></span>
 		</p>
 		<div style="width:100%;text-align:right;"><a class="a_btn" style="font-size:16px;" onclick="importPay()" id="pay_btn">결제</a></div>
 		<p class="font_30" style="text-align: right;">
@@ -145,11 +145,14 @@
 
 let money = 1000
 let room_code = '${code}'
+let room_end_date_yn = 'y'
 let pay_obj = new Object();
 let df_comments_num = 5;
 let comments_num = df_comments_num;
-let top_a_btn_member = '<a class="a_btn" onclick="">신고</a>&nbsp;&nbsp;<a class="a_btn" onclick="">나가기</a>'
-let top_a_btn_admin = '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="">삭제</a>'
+let top_a_btn_member = '<a class="a_btn" onclick="">신고</a>&nbsp;&nbsp;<a class="a_btn" onclick="exitRoom()">나가기</a>'
+let a_btn_end_date_y= '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="updateRoom($(this))">수정</a>';
+let a_btn_end_date_n = '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="updateRoom($(this))">수정</a>&nbsp;&nbsp;<a class="a_btn" onclick="">끝내기</a>';
+let top_a_btn_admin = null;
 
 $(document).ready(function(){
 	chkWindowWidth()
@@ -159,6 +162,20 @@ $(document).ready(function(){
 		chkWindowWidth()
 	})
 })
+function exitRoom(){
+	$.ajax({
+		type:"post",
+		dataType:"text",
+		url:"/member/exit_room",
+		data:{
+			code:room_code,
+			"${_csrf.parameterName}":"${_csrf.token}"
+		},
+		error:function(data){alert('error')}
+	}).done(function(data){
+		location.href='/member/my_meeting'
+	})
+}
 function settingContent(){
 	console.log(room_code)
 	$.ajax({
@@ -220,6 +237,54 @@ function settingContent(){
 		})
 	})
 }
+function updateRoom(node){
+	console.log(name)
+	$("#meeting_name").html("<input type='text' id='meeting_name_val' value='"+$("#meeting_name").text()+"' >")
+	$("#meeting_goal").html("<input type='text' id='meeting_goal_val' value='"+$("#meeting_goal").text()+"' >")
+	$("#end_date").html("<input type='text' id='end_date_val' value='"+$("#end_date").text()+"' x>")
+	$("#meeting_info").html("<textArea id='meeting_info_val' style='width:100%;height:550px;'>"+$("#meeting_info").text()+"</textArea>")
+	
+	$("#end_date_val").datepicker({
+		dateFormat: 'yy-mm-dd',
+		minDate: "+1D",
+		showOn: "button",
+		buttonText:"날짜",
+		yearSuffix: "년",
+	    monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+	    ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+	    ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+	    ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
+	})
+	$('#datepicker').datepicker('setDate', 'today');
+	$(".ui-datepicker-trigger").addClass("btn_01_01")
+	$(".ui-datepicker-trigger").height("28px")
+	
+	node.attr("onclick","setUpdateMeeting()")
+}
+function setUpdateMeeting(){
+	var name = $("#meeting_name_val").val();
+	var goal = $("#meeting_goal_val").val();
+	var end_date = returnConditionObj(room_end_date_yn,'y',$("#end_date_val").val(),null);
+	var info = $("#meeting_info_val").val();
+	$.ajax({
+		type:"post",
+		dataType:"text",
+		url:"/member/set_meeting_room",
+		data:{
+			meeting_code:room_code,
+			meeting_name:name,
+			meeting_goal:goal,
+			meeting_info:info,
+			end_date_str:end_date,
+			end_date_yn:room_end_date_yn,
+			"${_csrf.parameterName}":"${_csrf.token}"
+		},
+		error:function(data){alert("error")}
+	}).done(function(data){
+		location.reload();
+	})
+	
+}
 
 function settingMeetingInfo(data){
 	$("#meeting_goal").text(data.meeting_goal)
@@ -230,6 +295,12 @@ function settingMeetingInfo(data){
 	$("#meeting_info").text(data.meeting_info)
 	$("#max_num").text(data.meeting_num)
 	pay_obj.room_name = data.meeting_name
+	if(data.end_date_yn == 'n'){
+		console.log(data.end_date_yn)
+		$("span").remove("#end_date_div")
+		room_end_date_yn = 'n'
+	}
+	top_a_btn_admin = returnConditionObj(data.end_date_yn,'y',a_btn_end_date_y,a_btn_end_date_n)
 }
 
 function chkWindowWidth(){

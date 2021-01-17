@@ -25,10 +25,10 @@
 </style>
 <div id="main_1" class="container-fluid" style="padding-top:90px;padding-bottom:90px;">
 	<form id="create_form" method="post" >
-	<input type="hidden" name="meeting_type" value="secret" >
+	<input type="hidden" name="meeting_type" value="${type}" >
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token" />
 	<div class="ray_20" id="ray_01" style="">
-		<p class="font_50">시크릿 모임 생성</p>
+		<p class="font_50">${type} 모임 생성</p>
 		<div class="line_01"></div><br><br>
 		<div class="div_01">
 			<aside class="aside_01 fl">
@@ -119,7 +119,8 @@
 </div>
 
 <script>
-	let max_price = 10000000
+	let room_type = "${type}"
+	let max_price = 1000000
 	const priceRegEx = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
 	chkWindowWidth()
 	setDatePicker()
@@ -176,7 +177,8 @@
 		}
 	}
 	function setSelectNum(){
-		for(var i=2; i<21; i++){
+		var num = returnConditionObj(room_type,"secret",21,101)
+		for(var i=2; i<num; i++){
 			var node = "<option value="+i+">"+i+"명</option>"
 			$("#number").append(node);
 		}

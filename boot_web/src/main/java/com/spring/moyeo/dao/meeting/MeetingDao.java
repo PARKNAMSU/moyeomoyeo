@@ -34,5 +34,23 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 			" FROM meeting WHERE meeting_code = ?1",nativeQuery = true)
 	ArrayList<Map<String, Object>> getMeetingUseCode(String code);
 	
+	@Query(value = "with mm as(" + 
+			"	select meeting_code from meeting_member where meeting_member_email = ?2" + 
+			") select meeting_name, meeting_code, meeting_goal, meeting_fee," + 
+			" end_date_yn, finish_yn, meeting_num, meeting_type," + 
+			" to_char(end_date,'yyyy-mm-dd') as end_date," + 
+			" to_char(reg_date,'yyyy-mm-dd') as reg_date, admin_email, meeting_info "
+			+ "from meeting where meeting_code not in (select meeting_code from mm) and meeting_name like concat('%',?1,'%')"
+			+ " and finish_yn = 'n' and meeting_type = 'open'", nativeQuery = true)
+	ArrayList<Map<String, Object>> getMeetingForSearchName(String search,String email);
 	
+	@Query(value = "with mm as(" + 
+			"	select meeting_code from meeting_member where meeting_member_email = ?2" + 
+			") select meeting_name, meeting_code, meeting_goal, meeting_fee," + 
+			" end_date_yn, finish_yn, meeting_num, meeting_type," + 
+			" to_char(end_date,'yyyy-mm-dd') as end_date," + 
+			" to_char(reg_date,'yyyy-mm-dd') as reg_date, admin_email, meeting_info "
+			+ "from meeting where meeting_code not in (select meeting_code from mm) and meeting_goal like concat('%',?1,'%')"
+			+ " and finish_yn = 'n' and meeting_type = 'open'", nativeQuery = true)
+	ArrayList<Map<String, Object>> getMeetingForSearchGoal(String search,String email);
 }

@@ -110,8 +110,10 @@ $(document).ready(function(){
 function chkWindowWidth(){
 	if($(window).width()< 900){
 		$("#ray_01").css("margin-left","3%");
+		$("#ray_01").css("width","95%");
 	}else{
 		$("#ray_01").css("margin-left","20%");
+		$("#ray_01").css("width","58%");
 	}
 }
 function invite(email){

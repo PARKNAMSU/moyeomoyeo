@@ -96,4 +96,12 @@ function getImgUrl(img_url_val){
 		return "/resource/img/user.svg";
 	}
 }
+
+function setOpacity(node,type){
+	if(type === 'over'){
+		node.css('opacity',0.2);
+		return false;
+	}
+	node.css('opacity',1);
+}
 </script>

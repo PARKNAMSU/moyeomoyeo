@@ -20,6 +20,7 @@
 
 .div_01_01 {
 	width: 630px;
+	margin-left: 50px;
 }
 
 .div_01_02 {
@@ -34,10 +35,10 @@
 		<br> <br>
 		<div class="div_01">
 			<aside class="aside_01 fl">
-				<img alt="" src="/resource/img/user.svg"
-					style="width: 40px; height: 40px;">
+				<img alt="" src="" id="profile"
+					style="width: 40px; height: 40px;border-radius: 70%">
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<div>
 					<p class="font_20">${member.name}</p>
 					<a style="font-size: 15px;" onclick="openPopup('/profile_pop')" class="a_btn">프로필 사진 변경</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -52,7 +53,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">이름</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<input type="text" class="form-control" value="${member.name}" id="name">
 			</div>
 			<div class="clear"></div>
@@ -62,7 +63,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">닉네임</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<input type="text" class="form-control" value="${member.nick_name}" id="nick_name">
 			</div>
 			<div class="clear"></div>
@@ -72,7 +73,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">소개</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<textarea rows="10" cols="" class="form-control" id="intro">${member.introduce}</textarea>
 			</div>
 			<div class="clear"></div>
@@ -82,7 +83,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">휴대폰 번호</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<select class="form-control fl" id="phone_corp" style="width:19%;margin-right:3%;">
 					<option value="SKT" id="sk">SKT</option>
 					<option value="KTF" id="kt">KT</option>
@@ -97,7 +98,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">비밀번호</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<input type="password" class="form-control" id="pass">
 			</div>
 			<div class="clear"></div>
@@ -107,7 +108,7 @@
 			<aside class="aside_01 fl">
 				<p class="font_20">비밀번호 확인</p>
 			</aside>
-			<div class="fl margin_left_50 div_01_01 sub_div">
+			<div class="fl  div_01_01 sub_div">
 				<input type="password" class="form-control" id="pass_ck">
 			</div>
 			<div class="clear"></div>
@@ -115,7 +116,7 @@
 		<br>
 		<div class="div_01">
 			<aside class="aside_01 fl" style="height: 1px;"></aside>
-			<div class="fl margin_left_50 div_01_01 sub_div"
+			<div class="fl div_01_01 sub_div"
 				style="text-align: right;">
 				<button class="btn_01_01 font_30 " 
 					onclick="chgInfo($('#pass').val(),$('#intro').val(),$('#name').val(),$('#nick_name').val(),$('#phone_number').val(),$('#phone_corp').val())"
@@ -138,11 +139,18 @@
 </div>
 		
 <script>
+$(document).ready(function(){
+	chkWindowWidth()
+	phoneCorpCk()
+	$(window).resize(function(){
+		chkWindowWidth()
+	})
+})
 	const phone_corp = "${member.phone_corp}"
 	const email = "${member.email}"
+	var url = getImgUrl('${user_img}')
 	
-	phoneCorpCk()
-	
+	$("#profile").attr("src",url)
 	function phoneCorpCk(){
 		if(phone_corp === 'KTF'){
 			$("#kt").attr("selected","selected")
@@ -150,6 +158,20 @@
 			$("#lg").attr("selected","selected")
 		}else if(phone_corp === 'MVNO'){
 			$("#mv").attr("selected","selected")
+		}
+	}
+	
+	function chkWindowWidth(){
+		if($(window).width()< 900){
+			$("#ray_01").css("margin-left","3%");
+			$("#ray_01").css("width","95%");
+			$(".div_01_01").css("width","500")
+			$(".div_01_01").css("margin-left","0")
+		}else{
+			$("#ray_01").css("margin-left","20%");
+			$("#ray_01").css("width","58%");
+			$(".div_01_01").css("width","630")
+			$(".div_01_01").css("margin-left","50px")
 		}
 	}
 	function openPopup(url){

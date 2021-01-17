@@ -44,6 +44,7 @@ public class MeetingService {
 				break;
 			}	
 		}
+		member.setAccept_yn("y");
 		member.setMeeting_code(uuid.toString());
 		member.setMeeting_member_email(email);
 		member.setMeeting_member_role("admin");
@@ -104,5 +105,35 @@ public class MeetingService {
 			entity.setComments_content(content);
 			comments_dao.save(entity);
 		}
+	}
+	public void setMeetingRoom(MeetingEntity entity) {
+		MeetingEntity entity_get = meeting_dao.findById(entity.getMeeting_code()).get();
+		entity_get.setEnd_date(entity.getEnd_date());
+		entity_get.setMeeting_goal(entity.getMeeting_goal());
+		entity_get.setMeeting_info(entity.getMeeting_info());
+		entity_get.setMeeting_name(entity.getMeeting_name());
+		meeting_dao.save(entity_get);
+	}
+	
+	public ArrayList<Map<String, Object>> getMeetingRoomForSearch(String search, String email, String type){
+		if(type.equals("name")) return meeting_dao.getMeetingForSearchName(search, email);
+		return meeting_dao.getMeetingForSearchGoal(search, email);
+	}
+	
+	@Transactional
+	public boolean attendRoom(String code, String email) {
+		int now_num = meeting_member_dao.getMemberNumByCode(code);
+		MeetingEntity room = meeting_dao.findById(code).get();
+		if(now_num >= room.getMeeting_num()) return false;
+		MeetingMemberEntity entity = new MeetingMemberEntity();
+		entity.setMeeting_code(code);
+		entity.setMeeting_member_email(email);
+		entity.setAccept_yn("y");
+		meeting_member_dao.save(entity);
+		return true;
+	}
+	public void exitRoom(String code, String email) {
+		MeetingMemberEntity entity = meeting_member_dao.getMemberByEmailAndCode(email, code);
+		meeting_member_dao.delete(entity);
 	}
 }

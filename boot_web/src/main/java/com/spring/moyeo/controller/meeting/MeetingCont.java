@@ -30,6 +30,13 @@ public class MeetingCont {
 	
 	@Autowired
 	Utils utils;
+	@RequestMapping("/secret_meeting_create")
+	public ModelAndView secretMeetingCreate(ModelAndView mv,@RequestParam("type") String type) {
+		mv.setViewName("root/main");
+		mv.addObject("type",type);
+		mv.addObject("jsp_page", "../member/meeting/secret_meeting_create");
+		return mv;
+	}
 	
 	@RequestMapping("/member/secret_meeting")
 	public ModelAndView secretMeeting(ModelAndView mv) {
@@ -61,7 +68,7 @@ public class MeetingCont {
 			HttpSession session
 	) throws ParseException {
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(entity.getMeeting_type().equals("secret"))entity.setEnd_date(transFormat.parse(entity.getEnd_date_str()));
+		if(entity.getEnd_date_yn().equals("y")) {entity.setEnd_date(transFormat.parse(entity.getEnd_date_str()));}
 		service.createMeetingRoom(entity, (String)session.getAttribute("user_id"));
 		return "";
 	}
@@ -90,7 +97,12 @@ public class MeetingCont {
 		mv.addObject("jsp_page", "../member/meeting/meeting_invite");
 		return mv;
 	}
-	
+	@RequestMapping("/member/find_meeting")
+	public ModelAndView test2(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/open/find_open_meeting");
+		return mv;
+	}
 	@RequestMapping(value = "/member/room_info", produces = "application/text; charset=utf8")
 	public @ResponseBody String getMeetingRoomAllInfo(@RequestParam("code") String code,
 			HttpSession session
@@ -136,6 +148,14 @@ public class MeetingCont {
 		}
 		
 	}
+	@RequestMapping(value = "/member/attend_room", produces = "application/text; charset=utf8")
+	public @ResponseBody String attendRoom(
+			HttpSession session,
+			@RequestParam("code") String code
+	) {
+		if(service.attendRoom(code, (String)session.getAttribute("user_id")))return "sucess";
+		return "fail";
+	}
 	@RequestMapping(value = "/member/set_comment", produces = "application/text; charset=utf8")
 	public @ResponseBody String setComment(
 			@RequestParam("type") String type,
@@ -145,5 +165,34 @@ public class MeetingCont {
 		service.setComment(seq, type, content);
 		return "";
 	}
-	
+	@RequestMapping(value = "/member/set_meeting_room",produces = "application/text; charset=utf8")
+	public @ResponseBody String setMeetingRoomCont(MeetingEntity entity) throws ParseException {
+		if(entity.getEnd_date_yn().equals("y")) {
+			SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+			entity.setEnd_date(transFormat.parse(entity.getEnd_date_str()));
+		}
+		System.out.println("name"+entity.getMeeting_name());
+		System.out.println("date"+entity.getEnd_date_str());
+		service.setMeetingRoom(entity);
+		return "";
+	}
+	@RequestMapping(value = "/member/search_room",produces = "application/text; charset=utf8")
+	public @ResponseBody String searchMeetingRoom(
+			HttpSession session,
+			@RequestParam("search") String search,
+			@RequestParam("type") String type
+	) throws JsonProcessingException{
+		ArrayList<Map<String, Object>> list = 
+				service.getMeetingRoomForSearch(search,(String)utils.getSessionAttr(session, "user_id"), type);
+		if(list.size() == 0) return "na";
+		return utils.jsonParse(list);
+	}
+	@RequestMapping(value = "/member/exit_room", produces = "application/text; charset=utf8")
+	public @ResponseBody String exitRoom(
+			HttpSession session,
+			@RequestParam("code") String code
+	) {
+		service.exitRoom(code, (String)utils.getSessionAttr(session, "user_id"));
+		return "";
+	}
 }

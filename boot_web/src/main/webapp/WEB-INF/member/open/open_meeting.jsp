@@ -15,8 +15,8 @@
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50" style="">오픈 모임</p>
 		<p class="font_20">여러 사람들과 다양한 재미를 추구하세요.<br>지금 오픈 모임을 생성하여<br>원하시는 모임에 참가하세요!</p><br><br>
-		<button class="btn_01" style="margin-right:20px;" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/secret_meeting_create'"><span class="font_30">오픈 모임 생성</span></button>
-		<button class="btn_01" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/my_meeting'"><span class="font_30">모임 둘러보기</span></button>
+		<button class="btn_01" style="margin-right:20px;" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')"  onclick="location.href='/secret_meeting_create?type=open'"><span class="font_30">오픈 모임 생성</span></button>
+		<button class="btn_01" onmouseover=" overButton(this,'btn_01_01','btn_01')" onmouseleave="overButton(this,'btn_01','btn_01_01')" onclick="location.href='/member/find_meeting'"><span class="font_30">모임 둘러보기</span></button>
 	</div>
 </div>
 
