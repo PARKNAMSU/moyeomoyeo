@@ -53,8 +53,7 @@
 	</div>
 	<br>
 	<div >
-		<aside class="aside_01 fl" style="height: 1px;"></aside>
-		<div class="fl margin_left_50 div_01_01 sub_div"
+		<div class="fl div_01_01 sub_div"
 			style="text-align: right;width:80%">
 			<button class="btn_01_01 font_20"
 				 onclick="chgPass($('#pchg_now_pass').val(),$('#pchg_now_pass_ck').val(),$('#pchg_pass').val(),$('#pchg_pass_ck').val())"

@@ -31,8 +31,7 @@
 	</div>
 	<br>
 	<div>
-		<aside class="aside_01 fl" style="height: 1px;"></aside>
-		<div class="fl margin_left_50 div_01_01 sub_div"
+		<div class="fl div_01_01 sub_div"
 			style="text-align: right;width:80%">
 			<button class="btn_01_01 font_20 " onclick="setActive('${user_id}',$('#inval_pass').val(),$('#inval_pass_ck').val(),'n')">비활성화</button>
 			<button class="btn_01_01 font_20 margin_left_10" onclick="closePopup()">취소</button>

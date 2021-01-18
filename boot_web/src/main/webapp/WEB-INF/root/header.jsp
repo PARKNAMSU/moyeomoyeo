@@ -70,7 +70,7 @@
 			</div>			
 		</div>
 	</div>
-	<img alt="" src="/resource/img/menubar.png" style="margin-left:60%;width:48px;height: 48px; " id="menu_bar_sm" onclick="visibleSmMenu()">
+	<img alt="" src="/resource/img/menubar.png" style="margin-left:60%;width:48px;height: 48px;cursor:pointer" id="menu_bar_sm" onclick="visibleSmMenu()">
 	<div class="sm_menu" style="width:100%;display:none;color:white;cursor: pointer;">
 		<div style="background-color: #EBFBFF;" class="line_01"></div>
 		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/secret_meeting'">
@@ -83,8 +83,11 @@
 		</div>
 		<div style="background-color: #EBFBFF;" class="line_01"></div>
 		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/my_info'">
-			
 			<p class="font_20">내정보</p>
+		</div>
+		<div style="background-color: #EBFBFF;" class="line_01"></div>
+		<div style="width:100%;text-align:center;padding-top:13px;" onclick="location.href='/member/my_friends'">
+			<p class="font_20">친구목록</p>
 		</div>
 	</div>
 </div>

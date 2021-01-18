@@ -113,8 +113,14 @@ public class LoginCont {
 		return mv;
 	}
 	@RequestMapping("/login_access.do")
-	public ModelAndView getMemberCont(@AuthenticationPrincipal User user,ModelAndView mv) {
+	public Object getMemberCont(@AuthenticationPrincipal User user,ModelAndView mv) {
 		MemberEntity member = loginService.getUser(user.getUsername());
+		if(member.getAuth().equals("ADMIN")) {
+			mv.setViewName("root/main");
+			mv.addObject("jsp_page", "../admin/admin_index");
+			mv.addObject("user_id",user.getUsername());
+			return mv;
+		}
 		if(member.getActivate_yn().equals("n")) {
 			mv.setViewName("account/loginPage");
 			mv.addObject("error", "deactive");

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.Role;
 import com.spring.moyeo.service.login.LoginService;
 import com.spring.moyeo.vo.MemberEntity;
 
@@ -38,6 +39,7 @@ public class testCont {
 	
 	@RequestMapping("/test")
 	public String test() {
+		/*
 		String [] nm = {"박지성","호날두","아자르","풀리식","캉테"};
 		String [] em = {"park@naver.com","ronal@naver.com","hzr@google.com","puli@naver.com","kang@naver.com"};
 		String [] nnm = {"park","ronal","hzr","puli","kang"};
@@ -49,6 +51,14 @@ public class testCont {
 			m.setNick_name(nnm[i]);
 			loginService.createUser(m);
 		}
+		*/
+		MemberEntity m = new MemberEntity();
+		m.setEmail("admin");
+		m.setPassword("admin");
+		m.setName("관리자");
+		m.setNick_name("");
+		m.setAuth(Role.ADMIN.getValue());
+		loginService.createUser(m);
 		return "test";
 	}
 }

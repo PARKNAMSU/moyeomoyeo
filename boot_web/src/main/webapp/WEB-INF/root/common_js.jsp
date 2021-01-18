@@ -104,4 +104,24 @@ function setOpacity(node,type){
 	}
 	node.css('opacity',1);
 }
+
+function openPopup(url){
+	$("#popup1").css("display","initial")
+	$("#field").load(url)		
+}
+function closePopup(){
+	$("#popup1").css("display","none")
+}
+
+function stringToDate(str,split){
+    var str_arr = str.split('-');
+    var dateCompare = new Date(str_arr[0], parseInt(str_arr[1])-1, str_arr[2]);
+    return dateCompare;
+}
+function dateToString(date,split){
+	  var yyyy = date.getFullYear();
+	  var mm = date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1); 
+	  var dd  = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+	  return yyyy+split+mm+split+dd;
+}
 </script>

@@ -23,6 +23,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/resource/css/common.css">
 
+<script src="/resource/js/echarts.min.js"></script>
+
 <!-- import -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <%@ include file="common_js.jsp" %>
@@ -34,10 +36,25 @@
 			<%@ include file="header_logout.jsp"%>
 		</c:if>
 		<c:if test="${user_id != null}">
-			<%@ include file="header.jsp"%>
+			<c:if test="${user_id eq 'admin'}">
+				<%@ include file="admin_header.jsp"%>
+			</c:if>
+			<c:if test="${user_id != 'admin'}">
+				<%@ include file="header.jsp"%>
+			</c:if>
 		</c:if>
 	</header>
 	<div class="clear"></div>
 	<jsp:include page="${jsp_page}.jsp" flush="true"/>
+	
+	<div id="popup1" class="overlay" style="">
+	<div class="popup" style="">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
+		
+		</div>
+	</div>
+</div>
 </body>
 </html>

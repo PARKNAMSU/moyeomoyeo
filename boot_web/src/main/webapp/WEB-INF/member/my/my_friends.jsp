@@ -154,11 +154,11 @@ function getFollowMember(){
 					if(val.res === 'n'){
 						a_bt = '<a class="a_btn" onclick="followMember(\''+val.email+'\',this)">팔로우</a>'
 					}else{
-						a_bt = '<a class="margin_right_20 a_btn" >초대</a><a  onclick="unfollowMember(\''+val.email+'\',this,\'follower\')" class="a_btn">언팔로우</a>'
+						a_bt = '<a  onclick="unfollowMember(\''+val.email+'\',this,\'follower\')" class="a_btn">언팔로우</a>'
 					}
 				}else{
 					p_el = $("#my_follow_div")
-					a_bt = '<a class="margin_right_20 a_btn"  >초대</a><a onclick="unfollowMember(\''+val.email+'\',this,\'following\')" class="a_btn">언팔로우</a>'
+					a_bt = '<a onclick="unfollowMember(\''+val.email+'\',this,\'following\')" class="a_btn">언팔로우</a>'
 				}
 				var el_click= 'mvUserInfo(\''+val.email+'\')'
 				var el = '<div class="friends_div_01_02" onclick="'+el_click+'" style="z-index:0">'

@@ -89,7 +89,7 @@
 		<div class="line_01"></div>
 		<br>
 		<br>
-		<div class="fl" style="width: 450px;background-color: #B9E2FA;">
+		<div class="fl margin_right_20" style="width: 450px;background-color: #B9E2FA;">
 			<div style="" id="hsearchdiv">
 				<div class="fl" id="glass_div" onclick="findFriend($('#searchbox').val(),$('#search_opt').val())">
 					<img alt="" src="/resource/img/mglass.png"
@@ -100,7 +100,7 @@
 				</form>
 			</div>
 		</div>
-		<div class="fl " style="width: 200px;">
+		<div class="fl " style="width: 100px;">
 			<select class="form-control" id="search_opt">
 				<option value="email">이메일</option>
 				<option value="name">이름</option>

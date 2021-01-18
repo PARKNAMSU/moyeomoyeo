@@ -11,11 +11,7 @@
 	<div class="line_01" style="height: 2px;"></div>
 	<br>
 	<div class="div_01">
-		<aside class="aside_01 fl" style="width: 10%;">
-			<p class="font_15">프로필
-			<p>
-		</aside>
-		<div class="fl margin_left_10 div_01_01 sub_div" style="width: 80%;">
+		<div class="fl margin_left_10 div_01_01 sub_div" style="width: 95%;">
 			<form action="/uploadProfile" enctype="multipart/form-data" method="post" id="profileForm">
 				<input type="file" id="p_file" name="profile"
 					class="form-control-file border" accept=".gif, .jpg, .png"><br>
@@ -24,17 +20,16 @@
 		</div>
 		<div class="clear"></div>
 	</div>
-	<div class="div_01" style="display: none;" id="img_div">
+	<div class="div_01" style="display: none;margin-left: 126px;" id="img_div">
 		<img
-			style="width: 128px; height: 128px; border-radius: 70%; margin-left: 176px;"
+			style="width: 128px; height: 128px; border-radius: 70%; "
 			id="profile_img">
 	</div>
 	<div>
-		<aside class="aside_01 fl" style="height: 1px;"></aside>
-		<div class="fl margin_left_50 div_01_01 sub_div"
+		<div class="fl div_01_01 sub_div"
 			style="text-align: right; width: 80%">
 			<button class="btn_01_01 font_20" onclick="uploadProfile()">변경</button>
-			<button class="btn_01_01 font_20 margin_left_10">취소</button>
+			<button class="btn_01_01 font_20 margin_left_10" onclick="closePopup()">취소</button>
 		</div>
 	</div>
 	<div class="clear" style="margin-bottom: 30px"></div>
