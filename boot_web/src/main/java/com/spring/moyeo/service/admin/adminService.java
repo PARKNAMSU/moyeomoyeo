@@ -29,6 +29,8 @@ public class adminService {
 	
 	public ArrayList<Map<String, Object>> getStatistics(String from_date,String to_date,String type){
 		if(type.equals("sign_up")) return login_dao.getSignUpStatistics(from_date, to_date);
+		if(type.equals("meeting")) return meeting_dao.getStatisticsMeetingRoom(from_date, to_date);
+		if(type.equals("meeting_member")) return meeting_member_dao.getStatisticsMeetingMember(from_date, to_date);
 		else return null;
 	}
 }

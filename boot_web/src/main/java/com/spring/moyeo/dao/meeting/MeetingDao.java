@@ -62,4 +62,9 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 	@Query(value = "update meeting set finish_yn = 'y' "
 			+ "where end_date_yn = 'y' and end_date <= now() + '-1days';",nativeQuery = true)
 	void finishDateCk();
+	
+	@Query(value = "select meeting_type as unit,to_char(reg_date,'yyyy-mm-dd') as date,count(*) as num from meeting "
+			+ "where to_char(reg_date,'yyyy-mm-dd') between ?1 and ?2 "
+			+ "group by meeting_type, to_char(reg_date,'yyyy-mm-dd') order by meeting_type asc, to_char(reg_date,'yyyy-mm-dd') asc",nativeQuery = true)
+	ArrayList<Map<String, Object>> getStatisticsMeetingRoom(String from,String to);
 }

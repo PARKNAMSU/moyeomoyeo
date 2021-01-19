@@ -117,7 +117,7 @@ public class LoginCont {
 		MemberEntity member = loginService.getUser(user.getUsername());
 		if(member.getAuth().equals("ADMIN")) {
 			mv.setViewName("root/main");
-			mv.addObject("jsp_page", "../admin/admin_index");
+			mv.addObject("jsp_page", "../admin/statistics");
 			mv.addObject("user_id",user.getUsername());
 			return mv;
 		}

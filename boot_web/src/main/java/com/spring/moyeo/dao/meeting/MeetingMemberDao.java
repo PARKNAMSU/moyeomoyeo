@@ -48,5 +48,9 @@ public interface MeetingMemberDao extends CrudRepository<MeetingMemberEntity, In
 	@Query(value = "delete from meeting_member where meeting_code = ?1", nativeQuery = true)
 	void deleteMeetingMemberByCode(String code);
 	
+	@Query(value = "select 'number' as unit,to_char(meeting_member_reg_date,'yyyy-mm-dd') as date,count(*) as num from meeting_member "
+			+ "where to_char(meeting_member_reg_date,'yyyy-mm-dd') between ?1 and ?2 "
+			+ "group by to_char(meeting_member_reg_date,'yyyy-mm-dd') order by to_char(meeting_member_reg_date,'yyyy-mm-dd') asc",nativeQuery = true)
+	ArrayList<Map<String, Object>> getStatisticsMeetingMember(String from,String to);
 
 }

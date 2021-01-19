@@ -24,7 +24,7 @@
 	}
 	.chart_div{
 		width:95%;
-		height:300px;
+		height:65%;
 	}
 </style>
 <div style="margin-top:90px;"></div>
@@ -39,16 +39,18 @@
 <div class="admin_div_01 fl">
 	<p class="font_40">모임 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly"> ~ <input type="text" class="date_txt_end" readonly="readonly">   	
+		<input type="text" class="date_txt" readonly="readonly" onchange="ckSearchDate($('#to_meeting'),$(this))" id="from_meeting"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_meeting'))" id="to_meeting">   	
 		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"> 
 	</p>
+	<div id="meeting_chart" class="chart_div"></div>
 </div>
 <div class="admin_div_01 fl">
 	<p class="font_40">모임 참가인원 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly"> ~ <input type="text" class="date_txt_end" readonly="readonly">   	
+		<input type="text" class="date_txt" readonly="readonly" onchange="ckSearchDate($('#to_meeting_member'),$(this))" id="from_meeting_member"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_meeting_member'))" id="to_meeting_member">   	
 		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"> 
 	</p>
+	<div id="meeting_member_chart" class="chart_div"></div>
 </div>
 <div class="admin_div_01 fl">
 	<p class="font_40">신고 통계</p>
@@ -60,15 +62,53 @@
 <div class="clear"></div>
 
 <script>
+const color_array = ["black","green","skyblue"]
 let now = new Date()
 let def_to_date = dateToString(now,"-")
 now.setDate(now.getDate()-30)
 let def_from_date = dateToString(now,"-")
 setDatePicker()
-setChart(def_from_date,def_to_date,"sign_up")
+setChart(def_from_date,def_to_date,"sign_up","sign_up_chart")
+setChart(def_from_date,def_to_date,"meeting","meeting_chart")
+setChart(def_from_date,def_to_date,"meeting_member","meeting_member_chart")
+function chartOpt(xAxisData,series){
+	console.log(xAxisData)
+	var customOption = {
+			grid:{
+				top:'3%',
+				bottom:'10%',
+				right:'5%',
+				left:'5%',
+			},legend: {
+				type : 'scroll',
+				itemGap : 20,
+				itemHeight: 12,
+				textStyle:{
+					fontSize: 12
+				},
+				pageIconColor : '#C40452'
+			},
 
+			xAxis: {
+				type: 'category',
+		        data: xAxisData,
+		        boundaryGap: false
+		    },
+		    yAxis:{
+				type: 'value'
+			},
+			min: function(item){
+				 return 0;
+			 },
+			 max: function(item){
+				 return item.max+item.min;
+			 },
+			series: series
+		}
+	return customOption
+}
 
-function setChart(from,to,type){
+function setChart(from,to,type,dom){
 	console.log(from)
 	console.log(to)
 	$.ajax({
@@ -84,15 +124,46 @@ function setChart(from,to,type){
 	}).done(function(data){
 		var data_obj = JSON.parse(data)
 		console.log(data_obj)
+		var _dom = document.getElementById(dom)
+		chart = echarts.init(_dom);
 		var obj = setDataForUnit(data_obj);
 		var key_list = obj["key_list"]
-		for(var i=0;)
+		var series = []
+		var date_list = []
+		var temp = 0;
+		for(var i=0; i<key_list.length; i++){
+			var data_val = []
+			obj[key_list[i]].forEach(function(item){
+				if(i > 0){
+					if(obj[key_list[i]] > obj[key_list[i-1]]){
+						date_list.push(item.date)
+					}
+				}else{
+					date_list.push(item.date)
+				}
+				data_val.push(item.num)
+			})
+			series.push({
+				type: 'line',
+				name: key_list[i],
+				color: color_array[i],
+				data: data_val,
+		        hoverAnimation: false,
+		        lineStyle: {
+		        	width: 1
+		        }
+			})
+			temp++
+		}
+		var chart_opt= chartOpt(date_list,series);
+		chart.setOption(chart_opt);
 	})
 }
 function setDataForUnit(list){
 	var temp_unit = '';
 	var temp_list = [];
 	var temp_key_list = [];
+	var temp_date_list = [];
 	var obj = new Object();
 	var a = 0;
 	list.forEach(function(item){
