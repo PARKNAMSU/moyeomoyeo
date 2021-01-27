@@ -1,6 +1,7 @@
 package com.spring.moyeo.controller.admin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +30,31 @@ public class adminCont {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../admin/statistics");
 		return mv;
+	}
+	@RequestMapping(value = "/admin/board_main")
+	public ModelAndView adminBoard(ModelAndView mv) {
+		System.out.println("admin");
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../admin/board_manage");
+		return mv;
 	}	
 	
 	@RequestMapping(value = "/admin/statistics",produces = "application/text; charset=utf8")
 	public @ResponseBody String getStatisticsDateAjax(
 			@RequestParam("from_date") String from_date,
 			@RequestParam("to_date") String to_date,
-			@RequestParam("type") String type
+			@RequestParam("type") String type,
+			@RequestParam(value = "m_type[]",required = false) List<String> m_type
 	) throws JsonProcessingException {
-		ArrayList<Map<String, Object>> list = service.getStatistics(from_date, to_date, type);
+		if(type.equals("meeting")) {
+			System.out.println("mtype: "+m_type.get(0));
+		}
+		ArrayList<ArrayList<Map<String, Object>>> list = new ArrayList<ArrayList<Map<String, Object>>>();
+		if(type.equals("meeting")) {
+			list = service.getStatistics_dtype(from_date, to_date, type, m_type);
+		}else {
+			list = service.getStatistics(from_date, to_date, type);
+		}
 		if(list.size() == 0) return "na";
 		return utils.jsonParse(list);
 	}

@@ -1,6 +1,7 @@
 package com.spring.moyeo.service.admin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,19 @@ public class adminService {
 	CommentsDao comments_dao;
 
 	
-	public ArrayList<Map<String, Object>> getStatistics(String from_date,String to_date,String type){
-		if(type.equals("sign_up")) return login_dao.getSignUpStatistics(from_date, to_date);
-		if(type.equals("meeting")) return meeting_dao.getStatisticsMeetingRoom(from_date, to_date);
-		if(type.equals("meeting_member")) return meeting_member_dao.getStatisticsMeetingMember(from_date, to_date);
-		else return null;
+	public ArrayList<ArrayList<Map<String, Object>>> getStatistics(String from_date,String to_date,String type){
+		ArrayList<ArrayList<Map<String, Object>>> list_li = new ArrayList<ArrayList<Map<String,Object>>>();
+		if(type.equals("sign_up")) {
+			list_li.add(login_dao.getSignUpStatistics(from_date, to_date));
+		}
+		if(type.equals("meeting_member")) list_li.add(meeting_member_dao.getStatisticsMeetingMember(from_date, to_date));
+		return list_li;
+	}
+	public ArrayList<ArrayList<Map<String, Object>>> getStatistics_dtype(String from_date,String to_date,String type,List<String> type2){
+		ArrayList<ArrayList<Map<String, Object>>> list_li = new ArrayList<ArrayList<Map<String,Object>>>();
+		if(type.equals("meeting")) { 
+			for(int i=0;i<type2.size(); i++) list_li.add(meeting_dao.getStatisticsMeetingRoom(from_date, to_date,type2.get(i)));		
+		}
+		return list_li;
 	}
 }

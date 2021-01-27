@@ -42,9 +42,15 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			"FROM member m WHERE nick_name like concat('%',?1,'%') and email != ?2", nativeQuery = true)
 	ArrayList<Map<String, Object>>  getMemberBySearchNickName(String name,String email);
 	
-	@Query(value = "select 'number' as unit,to_char(reg_date,'yyyy-mm-dd') as date,count(*) as num from member "
-			+ "where to_char(reg_date,'yyyy-mm-dd') between ?1 and ?2 "
-			+ "group by to_char(reg_date,'yyyy-mm-dd') order by to_char(reg_date,'yyyy-mm-dd') asc",nativeQuery = true)
+	@Query(value = "with m_date as (" + 
+			"    select to_char(cast(d as date),'yyyy-mm-dd') as date" + 
+			"    from generate_series(cast(?1 as timestamp),cast(?2 as timestamp),'1 day') d" + 
+			"), m_data as (" + 
+			"select 'number' as unit,to_char(reg_date,'yyyy-mm-dd') as m_date,count(*) as num " + 
+			"from member" + 
+			"	group by to_char(reg_date,'yyyy-mm-dd') order by to_char(reg_date,'yyyy-mm-dd') asc" + 
+			") select dte.date as date,'number' as unit,"
+			+ "case when dta.num is null then 0 else dta.num end as num from m_date dte left outer join m_data dta on dte.date = dta.m_date",nativeQuery = true)
 	ArrayList<Map<String, Object>> getSignUpStatistics(String from_date, String to_date);
 	
 }

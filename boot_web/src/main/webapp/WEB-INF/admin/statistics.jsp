@@ -31,24 +31,31 @@
 <div class="admin_div_01 fl">
 	<p class="font_40">회원가입 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly" onchange="ckSearchDate($('#to_sign_up'),$(this))" id="from_sign_up"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_sign_up'))" id="to_sign_up">
-		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색">   	
+		<input type="text" class="date_txt" readonly="readonly" 
+		onchange="ckSearchDate($('#to_sign_up'),$(this))" id="from_sign_up"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_sign_up'))" id="to_sign_up">
+		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"  onclick="setChart($('#from_sign_up').val(),$('#to_sign_up').val(),'sign_up','sign_up_chart')" >   	
 	</p>
 	<div id="sign_up_chart" class="chart_div"></div>
 </div>
 <div class="admin_div_01 fl">
 	<p class="font_40">모임 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly" onchange="ckSearchDate($('#to_meeting'),$(this))" id="from_meeting"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_meeting'))" id="to_meeting">   	
-		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"> 
+		<input type="text" class="date_txt" readonly="readonly" 
+		onchange="ckSearchDate($('#to_meeting'),$(this))" id="from_meeting"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_meeting'))" id="to_meeting">   	
+		&nbsp;<input type="button" class="btn_01_01" style="height:31px" 
+		onclick="setChart($('#from_meeting').val(),$('#to_meeting').val(),'meeting','meeting_chart',['secret','open'])" value="검색"> 
 	</p>
 	<div id="meeting_chart" class="chart_div"></div>
 </div>
 <div class="admin_div_01 fl">
 	<p class="font_40">모임 참가인원 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly" onchange="ckSearchDate($('#to_meeting_member'),$(this))" id="from_meeting_member"> ~ <input type="text" class="date_txt_end" readonly="readonly" onchange="ckSearchDate($(this),$('#from_meeting_member'))" id="to_meeting_member">   	
-		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"> 
+		<input type="text" class="date_txt" readonly="readonly" 
+		onchange="ckSearchDate($('#to_meeting_member'),$(this))" id="from_meeting_member"> ~ 
+		<input type="text" class="date_txt_end" readonly="readonly" 
+		onchange="ckSearchDate($(this),$('#from_meeting_member'))" id="to_meeting_member">   	
+		&nbsp;<input type="button" class="btn_01_01" style="height:31px"
+		onclick="setChart($('#from_meeting_member').val(),$('#to_meeting_member').val(),'meeting_member','meeting_member_chart')" value="검색" > 
 	</p>
 	<div id="meeting_member_chart" class="chart_div"></div>
 </div>
@@ -69,10 +76,9 @@ now.setDate(now.getDate()-30)
 let def_from_date = dateToString(now,"-")
 setDatePicker()
 setChart(def_from_date,def_to_date,"sign_up","sign_up_chart")
-setChart(def_from_date,def_to_date,"meeting","meeting_chart")
+setChart(def_from_date,def_to_date,"meeting","meeting_chart",['secret','open'])
 setChart(def_from_date,def_to_date,"meeting_member","meeting_member_chart")
 function chartOpt(xAxisData,series){
-	console.log(xAxisData)
 	var customOption = {
 			grid:{
 				top:'3%',
@@ -88,7 +94,9 @@ function chartOpt(xAxisData,series){
 				},
 				pageIconColor : '#C40452'
 			},
-
+		    tooltip: {
+		        trigger: 'axis'
+		    },
 			xAxis: {
 				type: 'category',
 		        data: xAxisData,
@@ -108,9 +116,11 @@ function chartOpt(xAxisData,series){
 	return customOption
 }
 
-function setChart(from,to,type,dom){
-	console.log(from)
-	console.log(to)
+function setChart(from,to,type,dom,m_type){
+	if(from == '' || from == null || to == '' || to == null){
+		alert("날짜를 입력해 주세요.")
+		return false;
+	}
 	$.ajax({
 		type:"get",
 		dataType:"text",
@@ -118,7 +128,8 @@ function setChart(from,to,type,dom){
 		data:{
 			to_date:to,
 			from_date:from,
-			type:type
+			type:type,
+			m_type:m_type
 		},
 		error:function(data){alert("error")}
 	}).done(function(data){
@@ -126,26 +137,22 @@ function setChart(from,to,type,dom){
 		console.log(data_obj)
 		var _dom = document.getElementById(dom)
 		chart = echarts.init(_dom);
-		var obj = setDataForUnit(data_obj);
-		var key_list = obj["key_list"]
 		var series = []
 		var date_list = []
 		var temp = 0;
-		for(var i=0; i<key_list.length; i++){
+		for(var i=0; i<data_obj.length; i++){
 			var data_val = []
-			obj[key_list[i]].forEach(function(item){
-				if(i > 0){
-					if(obj[key_list[i]] > obj[key_list[i-1]]){
-						date_list.push(item.date)
-					}
-				}else{
+			var data_nm = null;
+			data_obj[i].forEach(function(item){
+				if(i == 0){
 					date_list.push(item.date)
 				}
 				data_val.push(item.num)
+				data_nm =item.unit
 			})
 			series.push({
 				type: 'line',
-				name: key_list[i],
+				name: data_nm,
 				color: color_array[i],
 				data: data_val,
 		        hoverAnimation: false,
@@ -153,8 +160,8 @@ function setChart(from,to,type,dom){
 		        	width: 1
 		        }
 			})
-			temp++
 		}
+		
 		var chart_opt= chartOpt(date_list,series);
 		chart.setOption(chart_opt);
 	})

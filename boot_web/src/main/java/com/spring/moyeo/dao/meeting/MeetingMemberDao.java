@@ -48,9 +48,15 @@ public interface MeetingMemberDao extends CrudRepository<MeetingMemberEntity, In
 	@Query(value = "delete from meeting_member where meeting_code = ?1", nativeQuery = true)
 	void deleteMeetingMemberByCode(String code);
 	
-	@Query(value = "select 'number' as unit,to_char(meeting_member_reg_date,'yyyy-mm-dd') as date,count(*) as num from meeting_member "
-			+ "where to_char(meeting_member_reg_date,'yyyy-mm-dd') between ?1 and ?2 "
-			+ "group by to_char(meeting_member_reg_date,'yyyy-mm-dd') order by to_char(meeting_member_reg_date,'yyyy-mm-dd') asc",nativeQuery = true)
+	@Query(value = "with m_date as (" + 
+			"    select to_char(cast(d as date),'yyyy-mm-dd') as date" + 
+			"    from generate_series(cast(?1 as timestamp),cast(?2 as timestamp),'1 day') d" + 
+			"), m_data as (" + 
+			"select 'number' as unit,to_char(meeting_member_reg_date,'yyyy-mm-dd') as m_date,count(*) as num " + 
+			"from meeting_member" + 
+			"	group by to_char(meeting_member_reg_date,'yyyy-mm-dd') order by to_char(meeting_member_reg_date,'yyyy-mm-dd') asc" + 
+			") select dte.date as date,'number' as unit,"
+			+ "case when dta.num is null then 0 else dta.num end as num from m_date dte left outer join m_data dta on dte.date = dta.m_date",nativeQuery = true)
 	ArrayList<Map<String, Object>> getStatisticsMeetingMember(String from,String to);
 
 }

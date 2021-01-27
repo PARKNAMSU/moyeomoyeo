@@ -63,8 +63,14 @@ public interface MeetingDao extends CrudRepository<MeetingEntity, String> {
 			+ "where end_date_yn = 'y' and end_date <= now() + '-1days';",nativeQuery = true)
 	void finishDateCk();
 	
-	@Query(value = "select meeting_type as unit,to_char(reg_date,'yyyy-mm-dd') as date,count(*) as num from meeting "
-			+ "where to_char(reg_date,'yyyy-mm-dd') between ?1 and ?2 "
-			+ "group by meeting_type, to_char(reg_date,'yyyy-mm-dd') order by meeting_type asc, to_char(reg_date,'yyyy-mm-dd') asc",nativeQuery = true)
-	ArrayList<Map<String, Object>> getStatisticsMeetingRoom(String from,String to);
+	@Query(value = "with m_date as (" + 
+			"    select to_char(cast(d as date),'yyyy-mm-dd') as date" + 
+			"    from generate_series(cast(?1 as timestamp),cast(?2 as timestamp),'1 day') d" + 
+			"), m_data as (" + 
+			"select meeting_type as unit,to_char(reg_date,'yyyy-mm-dd') as m_date,count(*) as num " + 
+			"from meeting where meeting_type = ?3" + 
+			"	group by meeting_type, to_char(reg_date,'yyyy-mm-dd') order by to_char(reg_date,'yyyy-mm-dd') asc" + 
+			") select dte.date as date,case when dta.unit is null then ?3 else dta.unit end as unit,"
+			+ "case when dta.num is null then 0 else dta.num end as num from m_date dte left outer join m_data dta on dte.date = dta.m_date",nativeQuery = true)
+	ArrayList<Map<String, Object>> getStatisticsMeetingRoom(String from,String to, String type);
 }
