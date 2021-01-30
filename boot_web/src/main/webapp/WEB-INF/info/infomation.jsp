@@ -24,7 +24,7 @@
 		<br>
 
 		<table class="table table-info table-hover table-striped t_align_c"
-			id="info">
+			id="board">
 			<thead class="table-primary ">
 				<tr>
 					<th scope="col" style="width: 10%;">no.</th>
@@ -33,7 +33,7 @@
 					<th scope="col" style="width: 20%;">날짜</th>
 				</tr>
 			</thead>
-			<tbody id="info_body">
+			<tbody id="board_body">
 			</tbody>
 		</table>
 		<div class="div_01" style="width:100%;margin-top:40px;">
@@ -45,7 +45,6 @@
 	</div>
 </div>
 <script>
-	let info = [["01","테스트제목","admin","2020/01/01"],["02","테스트제목2","admin","2020/01/01"],["03","테스트제목3","admin","2020/01/01"]]	
 	$(document).ready(function(){
 		chkWindowWidth()
 		setTable()
@@ -62,16 +61,74 @@ function chkWindowWidth(){
 		$("#ray_01").css("width","58%");
 	}
 }
-	function setTable(){
-		info.forEach(function(item){
-			var el = "<tr class='cursur_p'><td>"+item[0]+"</td>"
-			+"<td>"+item[1]+"</td>"
-			+"<td>"+item[2]+"</td>"
-			+"<td>"+item[3]+"</td>"
+	findBoard("/get_all_board","board")
+	
+	const url_param = {
+		"board":"/board_info_page",
+	}
+	let board_tb = null;
+
+	function setTable(tb,data,url){
+		data.forEach(function(item){
+			var el = "<tr class='cursur_p' onclick='location.href=\""+url+"?seq="+item.seq+"\"'>"
+			+"<td>"+item.seq+"</td>"
+			+"<td>"+item.title+"</td>"
+			+"<td>"+item.writer+"</td>"
+			+"<td>"+item.reg_date+"</td>"
 			+"</tr>"
-			$("#info_body").append(el)
+			$("#"+tb+"_body").append(el)
 		})
-		$("#info").DataTable();
+		
+	}
+	function findBoard(url,type){
+		$("#"+type+"_body").empty()
+		$.ajax({
+			type:"get",
+			url:url,
+			dataType:"text",
+			error:function(data){alert("error")}
+		}).done(function(data){
+			console.log(JSON.parse(data))
+			setTable(type,JSON.parse(data),url_param[type])
+			if(type === 'board'){
+				if(board_tb == null){
+					board_tb = setDataTable(type)
+				}
+			}
+			if(type === 'often'){
+				if(often_tb == null){
+					often_tb = setDataTable(type)
+				}
+			}
+		})
+	}
+
+	function setDataTable(type){
+		var el = $("#"+type).DataTable({
+			"scrollY":        "500px",
+	        "scrollCollapse": true,
+	        "paging":         false,
+	        "language": {
+	            "lengthMenu": "Display _MENU_ records per page",
+	            "zeroRecords": "Nothing found - sorry",
+	            "info": "",
+	            "infoEmpty": "No records available",
+	            "infoFiltered": "(filtered from _MAX_ total records)"
+	        }
+		});
+		return el;
+	}
+	function openPopup(url){
+		console.log(url)
+		$("#popup1").css("display","initial")
+		console.log(url)
+		$("#field").load(url)
+	}
+	function closePopup(){
+		$("#popup1").css("display","none")
+		$("#field").empty()
 	}
 	
+
+
 </script>

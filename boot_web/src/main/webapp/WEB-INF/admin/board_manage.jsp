@@ -14,6 +14,12 @@
 		padding:20px; 
 		margin-left:20px;
 	}
+	#manage_pop{
+		width:1000px;
+		padding:20px;
+		margin-top:10%;
+		background-color: #b8daff;
+	}
 </style>
 <div style="margin-top:110px;"></div>
 <div class="board_main1 fl">
@@ -33,7 +39,7 @@
 	</table>
 	<div class="div_01" style="width:100%;margin-top:20px;">
 		<div class="fl margin_left_40 div_01_01 sub_div" style="text-align:right;width:100%;">
-			<button class="btn_01_01 font_30 margin_right_40">게시판 생성</button>
+			<button class="btn_01_01 font_30 margin_right_40" onclick="openPopup('/admin/board_manage_pop')">게시판 생성</button>
 		</div>
 	</div>
 </div>
@@ -70,26 +76,69 @@
 	</table>
 	<div class="div_01" style="width:100%;margin-top:20px;">
 		<div class="fl margin_left_40 div_01_01 sub_div" style="text-align:right;width:100%;">
-			<button class="btn_01_01 font_30 margin_right_40">추가</button>
+			<button class="btn_01_01 font_30 margin_right_40" onclick="openPopup('/admin/often_manage_pop')">추가</button>
+		</div>
+	</div>
+</div>
+
+<div id="popup1" class="overlay" style="">
+	<div class="popup" id="manage_pop" style="">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
 		</div>
 	</div>
 </div>
 
 <script>
-let info = [["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["01","테스트제목","admin","2020/01/01"],["02","테스트제목2","admin","2020/01/01"],["03","테스트제목3","admin","2020/01/01"]]
-setTable("board")
-setTable("oto")
-setTable("often")
-function setTable(tb){
-	info.forEach(function(item){
-		var el = "<tr class='cursur_p'><td>"+item[0]+"</td>"
-		+"<td>"+item[1]+"</td>"
-		+"<td>"+item[2]+"</td>"
-		+"<td>"+item[3]+"</td>"
-		+"</tr>"
-		$("#"+tb+"_body").append(el)
+findBoard("/get_all_board","board")
+findBoard("/get_all_often","often")
+
+const url_param = {
+	"board":"/admin/board_manage_pop",
+	"often":"/admin/often_manage_pop"
+}
+
+
+let board_tb = null;
+let often_tb = null;
+function setTable(tb,data,url){
+	if(data.length >0){
+		data.forEach(function(item){
+			var el = "<tr class='cursur_p' onclick='openPopup(\""+url+"?seq="+item.seq+"\")'>"
+			+"<td>"+item.seq+"</td>"
+			+"<td>"+item.title+"</td>"
+			+"<td>"+item.writer+"</td>"
+			+"<td>"+item.reg_date+"</td>"
+			+"</tr>"
+			$("#"+tb+"_body").append(el)
+		})
+	}
+}
+function findBoard(url,type){
+	$("#"+type+"_body").empty()
+	$.ajax({
+		type:"get",
+		url:url,
+		dataType:"text",
+		error:function(data){alert("error")}
+	}).done(function(data){
+		setTable(type,JSON.parse(data),url_param[type])
+		if(type === 'board'){
+			if(board_tb == null){
+				board_tb = setDataTable(type)
+			}
+		}
+		if(type === 'often'){
+			if(often_tb == null){
+				often_tb = setDataTable(type)
+			}
+		}
 	})
-	$("#"+tb).DataTable({
+}
+
+function setDataTable(type){
+	var el = $("#"+type).DataTable({
 		"scrollY":        "500px",
         "scrollCollapse": true,
         "paging":         false,
@@ -101,5 +150,22 @@ function setTable(tb){
             "infoFiltered": "(filtered from _MAX_ total records)"
         }
 	});
+	return el;
 }
+function openPopup(url){
+	console.log(url)
+	$("#popup1").css("display","initial")
+	console.log(url)
+	$("#field").load(url)
+}
+function closePopup(){
+	$("#popup1").css("display","none")
+	$("#field").empty()
+}
+</script>
+
+<script>
+let type = null
+let board_seq = 0;	
+
 </script>

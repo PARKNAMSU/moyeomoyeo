@@ -34,5 +34,6 @@ public class OTOQuestionEntity {
 	@PrePersist
 	public void prePersist() {
 		this.oto_qst_reg_date = this.oto_qst_reg_date == null ? new Date():this.oto_qst_reg_date;
+		this.oto_qst_writer = this.oto_qst_writer == null ? "admin":this.oto_qst_writer;
 	}
 }

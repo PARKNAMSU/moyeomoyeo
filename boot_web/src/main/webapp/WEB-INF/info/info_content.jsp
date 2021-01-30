@@ -21,29 +21,32 @@
 	<div class="ray_20" id="ray_01" style="">
 		<p class="font_50">공지사항</p>
 		<div class="line_01"></div><br><br>
-		<div style="width:100%;text-align:right;" class="font_15">작성자 : admin &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2020/01/01</div>
-		<p class="font_30">공지사항 제목</p>
+		<div style="width:100%;text-align:right;" class="font_15">작성자 : <span id="writer"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="reg_date"></span></div>
+		<p class="font_30" id="title"></p>
 		<hr>
-		<nav class="font_20">
-			안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.s
+		<nav class="font_20" id="content">
 		</nav>
 		<br>
 		<div class="div_01" style="width:100%;margin-top:40px;">
 			<div class="fl margin_left_50 div_01_01 sub_div" style="text-align:right;width:100%;">
 				<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/'">홈으로</button>
-				<button class="btn_01_01 font_30 margin_right_40">공지사항</button>
+				<button class="btn_01_01 font_30 margin_right_40" onclick="location.href='/board_page'">공지사항</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+let board_seq = ${seq}
+
 $(document).ready(function(){
 	chkWindowWidth()
+	setBoardContent()
 	$(window).resize(function(){
 		chkWindowWidth()
 	})
 })
+
 function chkWindowWidth(){
 	if($(window).width()< 900){
 		$("#ray_01").css("margin-left","3%");
@@ -52,5 +55,22 @@ function chkWindowWidth(){
 		$("#ray_01").css("margin-left","20%");
 		$("#ray_01").css("width","58%");
 	}
+}
+
+function setBoardContent(){
+	$.ajax({
+		type:"get",
+		url:"/get_board",
+		dataType:"text",
+		data:{seq:board_seq},
+		error:function(data){alert("error")}
+	}).done(function(data){
+		var data_obj = JSON.parse(data) 
+		console.log(data_obj)
+		$("#title").text(data_obj.board_title)
+		$("#writer").text(data_obj.board_writer)
+		$("#reg_date").text(data_obj.board_reg_date)
+		$("#content").text(data_obj.board_content)
+	})
 }
 </script>

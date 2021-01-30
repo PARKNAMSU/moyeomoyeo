@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.common.Utils;
 import com.spring.moyeo.service.admin.adminService;
+import com.spring.moyeo.vo.BoardEntity;
+import com.spring.moyeo.vo.OftenQuestionEntity;
 
 @Controller
 public class adminCont {
@@ -24,20 +26,51 @@ public class adminCont {
 	@Autowired
 	Utils utils;
 	
+	
 	@RequestMapping(value = "/admin/index")
 	public ModelAndView adminIndex(ModelAndView mv) {
-		System.out.println("admin");
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../admin/statistics");
 		return mv;
 	}
 	@RequestMapping(value = "/admin/board_main")
 	public ModelAndView adminBoard(ModelAndView mv) {
-		System.out.println("admin");
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../admin/board_manage");
 		return mv;
 	}	
+	@RequestMapping(value = "/admin/board_manage_pop")
+	public ModelAndView adminBoardCreatePop(
+			ModelAndView mv,
+			@RequestParam(value = "seq",required = false,defaultValue = "0") int board_seq
+		) {
+		mv.setViewName("root/main");
+		if(board_seq == 0 ) {
+			mv.addObject("type","insert");
+			mv.addObject("seq",board_seq);
+		}else {
+			mv.addObject("type","update");
+			mv.addObject("seq",board_seq);
+		}
+		mv.addObject("jsp_page", "../admin/board_create_pop");
+		return mv;
+	}
+	@RequestMapping(value = "/admin/often_manage_pop")
+	public ModelAndView adminOftenCreatePop(
+			ModelAndView mv,
+			@RequestParam(value = "seq",required = false,defaultValue = "0") int often_seq
+		) {
+		mv.setViewName("root/main");
+		if(often_seq == 0 ) {
+			mv.addObject("type","insert");
+			mv.addObject("seq",often_seq);
+		}else {
+			mv.addObject("type","update");
+			mv.addObject("seq",often_seq);
+		}
+		mv.addObject("jsp_page", "../admin/often_create_pop");
+		return mv;
+	}
 	
 	@RequestMapping(value = "/admin/statistics",produces = "application/text; charset=utf8")
 	public @ResponseBody String getStatisticsDateAjax(
@@ -58,4 +91,17 @@ public class adminCont {
 		if(list.size() == 0) return "na";
 		return utils.jsonParse(list);
 	}
+	
+	@RequestMapping(value = "/admin/manage_board",produces = "application/text; charset=utf8")
+	public @ResponseBody String manageBoard(
+			BoardEntity board,
+			OftenQuestionEntity often,
+			@RequestParam("type") String type,
+			@RequestParam("table_type") String table_type
+	) {
+		if(table_type.equals("board")) service.manageBoard(board, type);
+		if(table_type.equals("often")) service.manageOften(often, type);
+		return "";
+	}
+
 }

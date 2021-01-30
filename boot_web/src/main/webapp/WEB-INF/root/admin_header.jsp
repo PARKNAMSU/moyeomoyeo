@@ -45,13 +45,8 @@
 		<div class="h_menu" id="h_menu_1" style="" onmouseover="visibleEl(1,'line')" onmouseleave="hiddenEl(1,'line')" onclick="location.href='/admin/index'">
 			<span class="h_text">통계</span><div class="h_line" id="h_line1"></div>
 		</div>
-		<div class="h_menu" id="h_menu_2" style="" onmouseover="visibleEl(2,'line')" onmouseleave="hiddenEl(2,'line')" >
+		<div class="h_menu" id="h_menu_2" style="" onmouseover="visibleEl(2,'line')" onmouseleave="hiddenEl(2,'line')" onclick="location.href='/admin/board_main'" >
 			<span class="h_text" onclick="visibleEl(2,'sub_menu')">관리</span><div class="h_line" id="h_line2"></div>
-			<div class="h_sub_menu" id="h_sub_menu_2">
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;" onclick="location.href='/admin/board_main'">게시판</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">1:1문의</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">자주묻는 질문</span></div>
-			</div>
 		</div>
 		
 		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" >
