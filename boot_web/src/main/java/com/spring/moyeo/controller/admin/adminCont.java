@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.common.Utils;
 import com.spring.moyeo.service.admin.adminService;
 import com.spring.moyeo.vo.BoardEntity;
+import com.spring.moyeo.vo.OTOQuestionEntity;
 import com.spring.moyeo.vo.OftenQuestionEntity;
 
 @Controller
@@ -96,11 +97,13 @@ public class adminCont {
 	public @ResponseBody String manageBoard(
 			BoardEntity board,
 			OftenQuestionEntity often,
+			OTOQuestionEntity oto,
 			@RequestParam("type") String type,
 			@RequestParam("table_type") String table_type
 	) {
 		if(table_type.equals("board")) service.manageBoard(board, type);
 		if(table_type.equals("often")) service.manageOften(often, type);
+		if(table_type.equals("oto")) service.manageOto(oto, type);
 		return "";
 	}
 

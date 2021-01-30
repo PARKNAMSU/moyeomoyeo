@@ -54,8 +54,8 @@
 			<span class="h_text" onclick="visibleEl(2,'sub_menu')">도움말</span><div class="h_line" id="h_line2"></div>
 			<div class="h_sub_menu" id="h_sub_menu_2">
 				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;" onclick="location.href='/board_page'">공지사항</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">1:1문의</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">자주묻는 질문</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;" onclick="location.href='/oto_page'">1:1문의</span></div>
+				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;" onclick="location.href='/often_page'">자주묻는 질문</span></div>
 			</div>
 		</div>
 		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" onclick="location.href='/logout'">

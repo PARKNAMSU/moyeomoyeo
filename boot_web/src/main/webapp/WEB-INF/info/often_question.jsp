@@ -18,7 +18,7 @@
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
 	<div class="ray_20" id="ray_01" style="">
-		<p class="font_50">공지사항</p>
+		<p class="font_50">자주묻는 질문</p>
 		<div class="line_01"></div>
 		<br>
 		<br>
@@ -38,8 +38,8 @@
 		</table>
 		<div class="div_01" style="width:100%;margin-top:40px;">
 			<div class="fl margin_left_50 div_01_01 sub_div" style="text-align:right;width:100%;">
-				<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/oto_page'">1:1문의</button>
-				<button class="btn_01_01 font_30 margin_right_40">홈으로</button>
+				<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/board_page'">공지사항</button>
+				<button class="btn_01_01 font_30 margin_right_40" onclick="location.href='/'">홈으로</button>
 			</div>
 		</div>
 	</div>
@@ -61,10 +61,10 @@ function chkWindowWidth(){
 		$("#ray_01").css("width","58%");
 	}
 }
-	findBoard("/get_all_board","board")
+	findBoard("/get_all_often","board")
 	
 	const url_param = {
-		"board":"/board_info_page",
+		"board":"/often_info_page",
 	}
 	let board_tb = null;
 

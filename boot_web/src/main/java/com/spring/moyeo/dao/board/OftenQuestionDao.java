@@ -15,4 +15,9 @@ public interface OftenQuestionDao extends CrudRepository<OftenQuestionEntity, In
 			+ "to_char(often_reg_date,'yyyy-mm-dd') as reg_date, often_title as title"
 			+ " FROM often_question",nativeQuery = true)
 	ArrayList<Map<String, Object>> getAllOften();
+	
+	@Query(value = "SELECT "
+			+ "often_seq,often_title,often_writer, to_char(often_reg_date,'yyyy-mm-dd') as often_reg_date, often_content"
+			+ " FROM often_question WHERE often_seq = ?1", nativeQuery = true)
+	Map<String, Object> getOneOften(int seq);
 }

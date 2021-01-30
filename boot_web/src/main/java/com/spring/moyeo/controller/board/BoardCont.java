@@ -37,6 +37,37 @@ public class BoardCont {
 		mv.addObject("seq",Integer.parseInt(seq));
 		return mv;
 	}
+	@RequestMapping("/oto_page")
+	public ModelAndView otoPage(ModelAndView mv){
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../info/oto_question");
+		return mv;
+	}
+	@RequestMapping("/oto_info_page")
+	public ModelAndView otoInfoPage(
+			ModelAndView mv, @RequestParam("seq") String seq
+	) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../info/oto_content");
+		mv.addObject("seq",Integer.parseInt(seq));
+		return mv;
+	}
+	@RequestMapping("/often_page")
+	public ModelAndView oftenPage(ModelAndView mv){
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../info/often_question");
+		return mv;
+	}
+	@RequestMapping("/often_info_page")
+	public ModelAndView oftenInfoPage(
+			ModelAndView mv, @RequestParam("seq") String seq
+	) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../info/often_content");
+		mv.addObject("seq",Integer.parseInt(seq));
+		return mv;
+	}
+	
 	
 	@RequestMapping(value = "/get_all_board",produces = "application/text; charset=utf8")
 	public @ResponseBody String getAllBoard() throws JsonProcessingException {
@@ -55,5 +86,14 @@ public class BoardCont {
 	public @ResponseBody String getOften(@RequestParam("seq") String seq) throws JsonProcessingException {
 		
 		return utils.jsonParse(service.getOften(Integer.parseInt(seq)));
+	}
+	@RequestMapping(value = "/get_all_oto",produces = "application/text; charset=utf8")
+	public @ResponseBody String getAllOto() throws JsonProcessingException {
+		return utils.jsonParse(service.getAllOto());
+	}
+	@RequestMapping(value = "/get_oto",produces = "application/text; charset=utf8")
+	public @ResponseBody String getOtos(@RequestParam("seq") String seq) throws JsonProcessingException {
+		
+		return utils.jsonParse(service.getOtos(Integer.parseInt(seq)));
 	}
 }
