@@ -57,6 +57,13 @@ function setActive(email,pass,pass_ck,yn){
 	
 }
 
+function strCheck(el){
+	if(el == null || el == ''){
+		return false;
+	}
+	return true;
+}
+
 function postForm(path, keys, values ,method) {
     method = method || 'post';
     var form = document.createElement('form');

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,14 +99,13 @@ public class adminCont {
 	public @ResponseBody String manageBoard(
 			BoardEntity board,
 			OftenQuestionEntity often,
-			OTOQuestionEntity oto,
 			@RequestParam("type") String type,
 			@RequestParam("table_type") String table_type
 	) {
 		if(table_type.equals("board")) service.manageBoard(board, type);
 		if(table_type.equals("often")) service.manageOften(often, type);
-		if(table_type.equals("oto")) service.manageOto(oto, type);
 		return "";
 	}
+
 
 }

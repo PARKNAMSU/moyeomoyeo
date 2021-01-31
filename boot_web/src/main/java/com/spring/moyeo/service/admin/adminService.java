@@ -121,6 +121,9 @@ public class adminService {
 	public Map<String, Object> getOften(int seq) {
 		return often_question_dao.getOneOften(seq);
 	}
+	public ArrayList<Map<String, Object>> getAllMyOto(String email){
+		return oto_question_dao.getALLMyOto(email);
+	}
 	public ArrayList<Map<String, Object>> getAllOto(){
 		return oto_question_dao.getALLOto();
 	}

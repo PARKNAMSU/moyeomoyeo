@@ -1,6 +1,9 @@
 package com.spring.moyeo.controller.board;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.spring.common.Utils;
 import com.spring.moyeo.service.admin.adminService;
+import com.spring.moyeo.vo.OTOQuestionEntity;
 
 import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 
@@ -21,6 +25,9 @@ public class BoardCont {
 	
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@RequestMapping("/board_page")
 	public ModelAndView boardPage(ModelAndView mv){
@@ -34,7 +41,7 @@ public class BoardCont {
 	) {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../info/info_content");
-		mv.addObject("seq",Integer.parseInt(seq));
+		mv.addObject("seq",seq);
 		return mv;
 	}
 	@RequestMapping("/oto_page")
@@ -68,6 +75,19 @@ public class BoardCont {
 		return mv;
 	}
 	
+	@RequestMapping(value = "/manage_oto", produces = "application/text; charset=utf8")
+	public @ResponseBody String manageOto(
+			HttpSession  session,
+			@RequestParam("type") String type,
+			OTOQuestionEntity oto
+	) {
+		String id = (String)session.getAttribute("user_id");
+		if(!id.equals("admin")) {
+			oto.setOto_qst_writer(id);
+		}
+		 service.manageOto(oto, type);
+		 return "";
+	}
 	
 	@RequestMapping(value = "/get_all_board",produces = "application/text; charset=utf8")
 	public @ResponseBody String getAllBoard() throws JsonProcessingException {
@@ -88,8 +108,16 @@ public class BoardCont {
 		return utils.jsonParse(service.getOften(Integer.parseInt(seq)));
 	}
 	@RequestMapping(value = "/get_all_oto",produces = "application/text; charset=utf8")
-	public @ResponseBody String getAllOto() throws JsonProcessingException {
-		return utils.jsonParse(service.getAllOto());
+	public @ResponseBody String getAllOto(
+			@RequestParam(value = "type", defaultValue = "admin") String type,
+			HttpSession session
+			) throws JsonProcessingException {
+		if(type.equals("user")) {
+			return utils.jsonParse(service.getAllMyOto((String)session.getAttribute("user_id")));
+		}else {
+			return utils.jsonParse(service.getAllOto());
+		}
+		
 	}
 	@RequestMapping(value = "/get_oto",produces = "application/text; charset=utf8")
 	public @ResponseBody String getOtos(@RequestParam("seq") String seq) throws JsonProcessingException {

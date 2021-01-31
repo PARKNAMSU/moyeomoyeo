@@ -53,6 +53,7 @@
 		})
 	})
 function chkWindowWidth(){
+		
 	if($(window).width()< 900){
 		$("#ray_01").css("margin-left","3%");
 		$("#ray_01").css("width","95%");
@@ -69,16 +70,17 @@ function chkWindowWidth(){
 	let board_tb = null;
 
 	function setTable(tb,data,url){
-		data.forEach(function(item){
-			var el = "<tr class='cursur_p' onclick='location.href=\""+url+"?seq="+item.seq+"\"'>"
-			+"<td>"+item.seq+"</td>"
-			+"<td>"+item.title+"</td>"
-			+"<td>"+item.writer+"</td>"
-			+"<td>"+item.reg_date+"</td>"
-			+"</tr>"
-			$("#"+tb+"_body").append(el)
-		})
-		
+		if(  typeof data == 'object'){
+			data.forEach(function(item){
+				var el = "<tr class='cursur_p' onclick='location.href=\""+url+"?seq="+item.seq+"\"'>"
+				+"<td>"+item.seq+"</td>"
+				+"<td>"+item.title+"</td>"
+				+"<td>"+item.writer+"</td>"
+				+"<td>"+item.reg_date+"</td>"
+				+"</tr>"
+				$("#"+tb+"_body").append(el)
+			})
+		}
 	}
 	function findBoard(url,type){
 		$("#"+type+"_body").empty()

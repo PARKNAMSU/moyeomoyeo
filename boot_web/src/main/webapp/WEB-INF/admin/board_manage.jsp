@@ -27,7 +27,7 @@
 	<table class="table table-info table-hover table-striped t_align_c"
 		id="board">
 		<thead class="table-primary ">
-			<tr>
+			<tr style="font-size:12px;">
 				<th scope="col" style="width: 10%;">no.</th>
 				<th scope="col" style="width: 60%;">제목</th>
 				<th scope="col" style="width: 19%;">작성자</th>
@@ -39,7 +39,7 @@
 	</table>
 	<div class="div_01" style="width:100%;margin-top:20px;">
 		<div class="fl margin_left_40 div_01_01 sub_div" style="text-align:right;width:100%;">
-			<button class="btn_01_01 font_30 margin_right_40" onclick="openPopup('/admin/board_manage_pop')">게시판 생성</button>
+			<button class="btn_01_01 font_30 margin_right_40" onclick="openPopup('/admin/board_manage_pop')">추가</button>
 		</div>
 	</div>
 </div>
@@ -48,7 +48,7 @@
 	<table class="table table-info table-hover table-striped t_align_c"
 		id="oto">
 		<thead class="table-primary ">
-			<tr>
+			<tr style="font-size:12px;">
 				<th scope="col" style="width: 10%;">no.</th>
 				<th scope="col" style="width: 60%;">제목</th>
 				<th scope="col" style="width: 19%;">작성자</th>
@@ -64,7 +64,7 @@
 	<table class="table table-info table-hover table-striped t_align_c"
 		id="often">
 		<thead class="table-primary ">
-			<tr>
+			<tr style="font-size:12px;">
 				<th scope="col" style="width: 10%;">no.</th>
 				<th scope="col" style="width: 53%;">제목</th>
 				<th scope="col" style="width: 19%;">작성자</th>
@@ -93,19 +93,27 @@
 <script>
 findBoard("/get_all_board","board")
 findBoard("/get_all_often","often")
-
+findBoard("/get_all_oto","oto")
 const url_param = {
 	"board":"/admin/board_manage_pop",
-	"often":"/admin/often_manage_pop"
+	"often":"/admin/often_manage_pop",
+	"oto":"/oto_info_page"
 }
 
 
 let board_tb = null;
 let often_tb = null;
-function setTable(tb,data,url){
+let oto_tb = null;
+function setTable(tb,data,url,type){
 	if(data.length >0){
 		data.forEach(function(item){
-			var el = "<tr class='cursur_p' onclick='openPopup(\""+url+"?seq="+item.seq+"\")'>"
+			var mtd = null
+			if(type === 'oto'){
+				mtd = "<tr class='cursur_p' onclick='location.href=\""+url+"?seq="+item.seq+"\"'>"
+			}else{
+				mtd = "<tr class='cursur_p' onclick='openPopup(\""+url+"?seq="+item.seq+"\")'>"
+			}
+			var el = mtd
 			+"<td>"+item.seq+"</td>"
 			+"<td>"+item.title+"</td>"
 			+"<td>"+item.writer+"</td>"
@@ -123,7 +131,7 @@ function findBoard(url,type){
 		dataType:"text",
 		error:function(data){alert("error")}
 	}).done(function(data){
-		setTable(type,JSON.parse(data),url_param[type])
+		setTable(type,JSON.parse(data),url_param[type],type)
 		if(type === 'board'){
 			if(board_tb == null){
 				board_tb = setDataTable(type)
@@ -132,6 +140,11 @@ function findBoard(url,type){
 		if(type === 'often'){
 			if(often_tb == null){
 				often_tb = setDataTable(type)
+			}
+		}
+		if(type === "oto"){
+			if(oto_tb == null){
+				oto_tb = setDataTable(type)
 			}
 		}
 	})
@@ -153,9 +166,7 @@ function setDataTable(type){
 	return el;
 }
 function openPopup(url){
-	console.log(url)
 	$("#popup1").css("display","initial")
-	console.log(url)
 	$("#field").load(url)
 }
 function closePopup(){

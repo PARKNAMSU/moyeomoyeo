@@ -14,6 +14,11 @@
 	width: 58%;
 	margin-bottom: 60px;
 }
+#manage_pop{
+	padding:20px;
+	margin-top:11%;
+	background-color: #b8daff;
+}
 </style>
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
@@ -39,15 +44,34 @@
 		<div class="div_01" style="width:100%;margin-top:40px;">
 			<div class="fl margin_left_50 div_01_01 sub_div" style="text-align:right;width:100%;">
 				<button class="btn_01_01 font_30 margin_right_20" onclick="location.href='/often_page'">자주묻는 질문</button>
-				<button class="btn_01_01 font_30 margin_right_40" onclick="">문의하기</button>
+				<button class="btn_01_01 font_30 margin_right_40" onclick="openPopup()">문의하기</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<div id="popup1" class="overlay" style="">
+	<div class="popup" style="" id="manage_pop">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
+			<p class="font_30">1:1문의 등록</p>
+			<input id="title" style="background-color: transparent;box-shadow: 2px 2px 2px 2px" class="form-control">
+			<textarea id="content" rows="12" class="form-control" style="margin-top:15px;background-color: transparent;box-shadow: 2px 2px 2px 2px" ></textarea>
+			<div style="width:100%;text-align:right;margin-top:15px;">
+				<input type="button" class="btn_01_01 font_20" value="등록" onclick="addOtoQst($('#title'),$('#content'))">
+				<input type="button" class="btn_01_01 font_20" value="취소" onclick="closePopup()">
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
+
+let board_tb = null;
 	$(document).ready(function(){
 		chkWindowWidth()
-		setTable()
+		findBoard("/get_all_oto","board")
 		$(window).resize(function(){
 			chkWindowWidth()
 		})
@@ -61,45 +85,47 @@ function chkWindowWidth(){
 		$("#ray_01").css("width","58%");
 	}
 }
-	findBoard("/get_all_oto","board")
 	
 	const url_param = {
 		"board":"/oto_info_page",
 	}
-	let board_tb = null;
-
+	
 	function setTable(tb,data,url){
-		data.forEach(function(item){
-			var el = "<tr class='cursur_p' onclick='location.href=\""+url+"?seq="+item.seq+"\"'>"
-			+"<td>"+item.seq+"</td>"
-			+"<td>"+item.title+"</td>"
-			+"<td>"+item.writer+"</td>"
-			+"<td>"+item.reg_date+"</td>"
-			+"</tr>"
-			$("#"+tb+"_body").append(el)
-		})
-		
+		if(  typeof data == 'object'){
+			data.forEach(function(item){
+
+				var el = "<tr class='cursur_p' onclick='mvQst(\""+url+"\","+item.oto_qst_seq+")'>"
+				+"<td>"+item.oto_qst_seq+"</td>"
+				+"<td>"+item.oto_qst_title+"</td>"
+				+"<td>"+item.oto_qst_writer+"</td>"
+				+"<td>"+item.oto_qst_reg_date+"</td>"
+				+"</tr>"
+				$("#"+tb+"_body").append(el)
+			})
+		}	
+	}
+	
+	function mvQst(url,val){
+		postForm(url,["seq","${_csrf.parameterName}"],[val,"${_csrf.token}"],"post")
 	}
 	function findBoard(url,type){
-		$("#"+type+"_body").empty()
+		
 		$.ajax({
 			type:"get",
 			url:url,
 			dataType:"text",
+			data:{
+				type:"user"
+			},
 			error:function(data){alert("error")}
 		}).done(function(data){
 			console.log(JSON.parse(data))
+			$("#"+type+"_body").empty()
 			setTable(type,JSON.parse(data),url_param[type])
-			if(type === 'board'){
-				if(board_tb == null){
-					board_tb = setDataTable(type)
-				}
+			if(board_tb == null){
+				board_tb = setDataTable(type)
 			}
-			if(type === 'often'){
-				if(often_tb == null){
-					often_tb = setDataTable(type)
-				}
-			}
+
 		})
 	}
 
@@ -118,17 +144,36 @@ function chkWindowWidth(){
 		});
 		return el;
 	}
-	function openPopup(url){
-		console.log(url)
+	function openPopup(){
 		$("#popup1").css("display","initial")
-		console.log(url)
-		$("#field").load(url)
 	}
 	function closePopup(){
 		$("#popup1").css("display","none")
-		$("#field").empty()
 	}
 	
+	function addOtoQst(title,content){
+		if(!strCheck(title.val()) || !strCheck(content.val())){
+			alert("내용을 입력해 주세요.")
+			return false;
+		}
+		$.ajax({
+			type:"get",
+			dataType:"text",
+			url:"/manage_oto",
+			data:{
+				oto_qst_title:title.val(),
+				oto_qst_content:content.val(),
+				type:"insert"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			closePopup()
+			findBoard("/get_all_oto","board")
+		})
+			
+	}
+
+
 
 
 </script>

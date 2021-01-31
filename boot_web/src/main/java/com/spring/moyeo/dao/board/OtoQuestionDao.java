@@ -29,10 +29,16 @@ public interface OtoQuestionDao extends CrudRepository<OTOQuestionEntity, Intege
 	void setRootRootPath(int seq);
 	
 	@Query(value = "SELECT "
+			+ "oto_qst_seq as seq,oto_qst_title as title ,oto_qst_writer as writer,"
+			+ "oto_qst_content as content,to_char(oto_qst_reg_date,'yyyy-mm-dd') as reg_date "
+			+ "FROM oto_qst WHERE oto_qst_depth = 0 ORDER BY oto_qst_seq DESC",nativeQuery = true)
+	ArrayList<Map<String, Object>> getALLOto();
+	
+	@Query(value = "SELECT "
 			+ "oto_qst_seq,oto_qst_title,oto_qst_writer,"
 			+ "oto_qst_content,to_char(oto_qst_reg_date,'yyyy-mm-dd') as oto_qst_reg_date "
-			+ "FROM oto_qst WHERE oto_qst_depth = 0 ORDER BY oto_qst_reg_date DESC",nativeQuery = true)
-	ArrayList<Map<String, Object>> getALLOto();
+			+ "FROM oto_qst WHERE oto_qst_depth = 0 AND oto_qst_writer = ?1 ORDER BY oto_qst_seq DESC",nativeQuery = true)
+	ArrayList<Map<String, Object>> getALLMyOto(String email);
 	
 	@Query(value = "DELETE FROM oto_qst WHERE oto_qst_root_seq = ?1",nativeQuery = true)
 	@Transactional
