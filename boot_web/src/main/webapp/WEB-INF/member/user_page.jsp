@@ -25,6 +25,11 @@
 .div_01_02 {
 	width: 300px;
 }
+#manage_pop{
+	padding:20px;
+	margin-top:11%;
+	background-color: #b8daff;
+}
 </style>
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
@@ -42,7 +47,7 @@
 			<div class="clear"></div>
 		</div>
 		<div style="width:58%;text-align:right;">
-			<p style=""><a class="a_btn" id="follow_yn"></a>&nbsp;&nbsp;<a class="a_btn">신고</a></p>
+			<p style=""><a class="a_btn" id="follow_yn"></a>&nbsp;&nbsp;<a class="a_btn" onclick="openPopupDis()">신고</a></p>
 		</div>
 		<br><hr>
 		<div style="width:100%;text-align:right;">
@@ -51,6 +56,22 @@
 		</div>
 	</div>
 </div>
+
+<div id="popup1" class="overlay" style="">
+	<div class="popup" style="" id="manage_pop">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
+			<p class="font_30">유저신고</p>
+			<textarea id="blame_reason" rows="12" class="form-control" style="background-color: transparent;box-shadow: 2px 2px 2px 2px" ></textarea>
+			<div style="width:100%;text-align:right;margin-top:15px;">
+				<input type="button" class="btn_01_01 font_20" value="신고" onclick="blameUser($('#blame_reason'))">
+				<input type="button" class="btn_01_01 font_20" value="취소" onclick="closePopup()">
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 $(document).ready(function(){
 	chkWindowWidth()
@@ -72,6 +93,24 @@ function chkWindowWidth(){
 		$("#ray_01").css("width","58%");
 		$("#img_div").css("height",$("#img_div").css("width"))
 	}
+}
+
+function blameUser(reason){
+	var user_obj = JSON.parse(user_info)
+	$.ajax({
+		type:"post",
+		url:"/member/add_blame",
+		dataType:"text",
+		data:{
+			type:"user",
+			blamed_user:user_obj.email,
+			blame_reason:reason.val(),
+			"${_csrf.parameterName}":"${_csrf.token}"
+		},
+		error:function(data){alert("error")}
+	}).done(function(data){
+		closePopup()
+	})
 }
 function setUserInfo(){
 	var user_obj = JSON.parse(user_info)

@@ -206,6 +206,7 @@ $(document).ready(function(){
 			alert("닉네임 형식이 맞지 않습니다.")
 			return false;
 		}
+		
 		$.ajax({
 			 type:"POST",
 			 url:"/member/chg_account",

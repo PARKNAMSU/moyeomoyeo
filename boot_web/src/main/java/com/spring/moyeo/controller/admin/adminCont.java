@@ -41,6 +41,12 @@ public class adminCont {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../admin/board_manage");
 		return mv;
+	}
+	@RequestMapping(value = "/admin/blame_main")
+	public ModelAndView adminblame(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../admin/blame_manage");
+		return mv;
 	}	
 	@RequestMapping(value = "/admin/board_manage_pop")
 	public ModelAndView adminBoardCreatePop(

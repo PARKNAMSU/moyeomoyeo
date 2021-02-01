@@ -14,7 +14,7 @@ import com.spring.moyeo.vo.OTOQuestionEntity;
 public interface OtoQuestionDao extends CrudRepository<OTOQuestionEntity, Integer>{
 
 	@Query(value = "SELECT max(oto_qst_depth) FROM oto_qst"
-			+ " WHERE oto_seq = ?1",nativeQuery = true)
+			+ " WHERE oto_qst_root_seq = ?1",nativeQuery = true)
 	int getMaxDepthBySeq(int seq);
 	
 	@Query(value = "SELECT "

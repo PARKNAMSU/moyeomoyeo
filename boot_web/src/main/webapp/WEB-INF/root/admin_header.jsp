@@ -49,13 +49,8 @@
 			<span class="h_text" onclick="visibleEl(2,'sub_menu')">관리</span><div class="h_line" id="h_line2"></div>
 		</div>
 		
-		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" >
-			<span class="h_text" onclick="visibleEl(3,'sub_menu')">신고</span><div class="h_line" id="h_line3"></div>
-			<div class="h_sub_menu" id="h_sub_menu_3">
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;"><span class="h_text" style="font-size:20px;margin-left:0;">모임신고</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">유저신고</span></div>
-				<div class="h_menu" style="float:none;padding-top: 10px;padding-bottom: 10px;text-align:center;border-top:solid 1px;"><span class="h_text" style="font-size:20px;margin-left:0;">댓글신고</span></div>
-			</div>
+		<div class="h_menu" id="h_menu_3" style="" onmouseover="visibleEl(3,'line')" onmouseleave="hiddenEl(3,'line')" onclick="location.href='/admin/blame_main'">
+			<span class="h_text" >신고</span><div class="h_line" id="h_line3"></div>
 		</div>
 		
 		<div class="h_menu" id="h_menu_4" style="" onmouseover="visibleEl(4,'line')" onmouseleave="hiddenEl(4,'line')" onclick="location.href='/logout'">

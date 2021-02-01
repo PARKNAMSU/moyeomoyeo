@@ -104,7 +104,7 @@ public class adminService {
 		if(type.equals("delete")) {
 			OTOQuestionEntity entity = oto_question_dao.findById(board.getOto_qst_seq()).get();
 			if(entity.getOto_qst_depth() == 0) oto_question_dao.deleteOtoUseRootSeq(entity.getOto_qst_seq());
-			oto_question_dao.delete(board);
+			else oto_question_dao.delete(board);
 		}
 	}
 

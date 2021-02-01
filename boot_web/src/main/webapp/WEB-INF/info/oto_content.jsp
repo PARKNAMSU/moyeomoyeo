@@ -14,7 +14,11 @@
 	width: 58%;
 	margin-bottom: 60px;
 }
-
+#manage_pop{
+	padding:20px;
+	margin-top:11%;
+	background-color: #b8daff;
+}
 .oto_sub_div{
 	width:100%;padding:10px;border-bottom:solid #3063C2;
 }
@@ -25,7 +29,7 @@
 		<p class="font_50">1:1문의</p>
 		<div class="line_01"></div>
 		<br>
-		<div style="width: 100%; text-align: right;"><a class="a_btn">삭제</a></div>
+		<div style="width: 100%; text-align: right;"><a class="a_btn" onclick="deleteOto()">삭제</a></div>
 		<br>
 		<div style="width: 100%; text-align: right;" class="font_15"><span id="writer">나</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="date">2020/01/01</span></div>
 		<p class="font_30" id="title">1:1문의 제목</p>
@@ -58,15 +62,25 @@
 </div>
 
 <div id="popup1" class="overlay" style="">
-	<div class="popup" id="manage_pop" style="">
+	<div class="popup" style="" id="manage_pop">
 		<a class="close" href="#" onclick="closePopup()">&times;</a>
 		<br><br><br>
 		<div id="field">
+			<p class="font_30">1:1문의 답글 등록</p>
+			<input id="answer_title" style="background-color: transparent;box-shadow: 2px 2px 2px 2px" class="form-control">
+			<textarea id="answer_content" rows="12" class="form-control" style="margin-top:15px;background-color: transparent;box-shadow: 2px 2px 2px 2px" ></textarea>
+			<div style="width:100%;text-align:right;margin-top:15px;">
+				<input type="button" class="btn_01_01 font_20" value="등록" onclick="addAnswer($('#answer_title'),$('#answer_content'))">
+				<input type="button" class="btn_01_01 font_20" value="취소" onclick="closePopup()">
+			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+
+	let oto_root_obj = null;
+	
 	$(document).ready(function() {
 		chkWindowWidth()
 		setOtoContent()
@@ -83,7 +97,51 @@
 			$("#ray_01").css("width", "58%");
 		}
 	}
+	function deleteOto(){
+		if(!confirm("정말로 삭제하시겠습니까?")){
+			return false;
+		}
+		$.ajax({
+			type:"get",
+			dataType:"text",
+			url:"/manage_oto",
+			data:{
+				oto_qst_seq:oto_root_obj.oto_qst_seq,
+				type:"delete"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			if("${user_id}" === 'admin'){
+				location.href='/admin/board_main'
+			}
+			location.href='/oto_page'
+		})
+	}
+	function addAnswer(title,content){
+		console.log()
+		if(!strCheck(title.val()) || !strCheck(content.val())){
+			alert("내용을 입력해 주세요.")
+			return false;
+		}
+		$.ajax({
+			type:"get",
+			dataType:"text",
+			url:"/manage_oto",
+			data:{
+				oto_qst_title:title.val(),
+				oto_qst_content:content.val(),
+				oto_qst_root_seq:oto_root_obj.oto_qst_seq,
+				type:"insert"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			closePopup()
+			setOtoContent()
+		})
+	}
+
 	function setOtoContent(){
+		$("#sub_div").empty()
 		$.ajax({
 			type:"get",
 			url:"get_oto",
@@ -95,13 +153,14 @@
 		}).done(function(data){
 			var data_obj = JSON.parse(data)
 			var root_data = data_obj[0]
+			oto_root_obj = root_data
 			data_obj.shift();
 			$("#title").text(root_data.oto_qst_title)
 			$("#writer").text(root_data.oto_qst_writer)
 			$("#date").text(root_data.oto_qst_reg_date)
 			$("#content").text(root_data.oto_qst_content)
 			if(data_obj.length == 0 && root_data.oto_qst_writer != "${user_id}"){
-				$("#answer_div").append("<a class='a_btn'>답글</a>")
+				$("#answer_div").append("<a class='a_btn' onclick='openPopupDis()'>답글</a>")
 			}
 			for(var i=0;i<data_obj.length;i++){
 				var answer_el = '<div class="oto_sub_div">'
@@ -109,7 +168,7 @@
 					+'<p style="color: gray;text-align:right;">'+data_obj[i].oto_qst_writer+' '+data_obj[i].oto_qst_reg_date+'</p>'
 					+'<p class="font_20"><span style="color:#3063C2">re:</span> '+data_obj[i].oto_qst_title+'</p>'
 					+'<p>'+data_obj[i].oto_qst_content+'</p>'
-					+'<div style="width:100%;text-align:right;"><a class="a_btn">답글</a></div>'
+					+'<div style="width:100%;text-align:right;"><a class="a_btn" onclick="openPopupDis()">답글</a></div>'
 				+'</div>'
 				+'</div>'
 				var no_answer_el = '<div class="oto_sub_div">'

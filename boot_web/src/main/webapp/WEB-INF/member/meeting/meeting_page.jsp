@@ -178,7 +178,6 @@ function exitRoom(){
 	})
 }
 function settingContent(){
-	console.log(room_code)
 	$.ajax({
 		type:"GET",
 		dataType:"text",
@@ -241,7 +240,6 @@ function settingContent(){
 	})
 }
 function updateRoom(node){
-	console.log(name)
 	$("#meeting_name").html("<input type='text' id='meeting_name_val' value='"+$("#meeting_name").text()+"' >")
 	$("#meeting_goal").html("<input type='text' id='meeting_goal_val' value='"+$("#meeting_goal").text()+"' >")
 	$("#end_date").html("<input type='text' id='end_date_val' value='"+$("#end_date").text()+"' x>")
@@ -299,7 +297,6 @@ function settingMeetingInfo(data){
 	$("#max_num").text(data.meeting_num)
 	pay_obj.room_name = data.meeting_name
 	if(data.end_date_yn == 'n'){
-		console.log(data.end_date_yn)
 		$("span").remove("#end_date_div")
 		room_end_date_yn = 'n'
 	}
@@ -394,7 +391,6 @@ function settingComments(){
 			return false;
     	}
         var data_obj = JSON.parse(data)
-        console.log(data_obj)
         var sub_el = "<b style='color:gray;cursor:pointer;' onclick='setCommentsNum(\"more\")'>더보기..</b>"
         var sub_el2 = "<b style='color:gray;cursor:pointer;' onclick='setCommentsNum(\"rm\")'>접기..</b>"
     	if(data_obj.length > comments_num){
@@ -468,7 +464,6 @@ function setUpdate(node,seq){
 	
 }
 function updateComment(seq,content){
-	console.log(content)
 	if(content === "" || content == null){
 		alert("수정하실 댓글을 입력해주세요.")
 		return false;

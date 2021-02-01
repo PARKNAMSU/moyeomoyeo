@@ -116,6 +116,9 @@ function openPopup(url){
 	$("#popup1").css("display","initial")
 	$("#field").load(url)		
 }
+function openPopupDis(){
+	$("#popup1").css("display","initial")
+}
 function closePopup(){
 	$("#popup1").css("display","none")
 }

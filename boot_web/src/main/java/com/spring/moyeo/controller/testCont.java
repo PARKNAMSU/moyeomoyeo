@@ -53,11 +53,11 @@ public class testCont {
 		}
 		*/
 		MemberEntity m = new MemberEntity();
-		m.setEmail("admin");
-		m.setPassword("admin");
+		m.setEmail("test123@gmail.com");
+		m.setPassword("test1234");
 		m.setName("관리자");
 		m.setNick_name("");
-		m.setAuth(Role.ADMIN.getValue());
+		m.setAuth(Role.USER.getValue());
 		loginService.createUser(m);
 		return "test";
 	}

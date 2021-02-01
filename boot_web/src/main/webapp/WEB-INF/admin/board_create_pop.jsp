@@ -101,7 +101,7 @@ function setBoard(){
 			alert("error")
 		}
 	}).done(function(data){
-		findBoard("/admin/get_all_board","board")
+		findBoard("/get_all_board","board")
 		closePopup()
 	})
 }

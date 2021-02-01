@@ -21,7 +21,7 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			+ "case (select count(follow_email) from fw where follow_email = m.email) "
 			+ "	when 0 then 'f' " + 
 			  "else ?1 end as res " + 
-			"FROM member m WHERE email like concat('%',?1,'%') and email != ?2 ", nativeQuery = true)
+			"FROM member m WHERE email like concat('%',?1,'%') and email != ?2 and auth != 'ADMIN' ", nativeQuery = true)
 	ArrayList<Map<String, Object>>  getMemberBySearchEmail(String search,String email);
 	
 	@Query(value = "with fw as ( "+ 
@@ -30,7 +30,7 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			+ "case (select count(follow_email) from fw where follow_email = m.email) "
 			+ "	when 0 then 'f' " + 
 			  "else ?1 end as res " + 
-			"FROM member m WHERE name like concat('%',?1,'%') and email != ?2", nativeQuery = true)
+			"FROM member m WHERE name like concat('%',?1,'%') and email != ?2 and auth != 'ADMIN'", nativeQuery = true)
 	ArrayList<Map<String, Object>>  getMemberBySearchName(String name, String email);
 	
 	@Query(value = "with fw as ( "+ 
@@ -39,7 +39,7 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			+ "case (select count(follow_email) from fw where follow_email = m.email) "
 			+ "	when 0 then 'f' " + 
 			  "else ?1 end as res " + 
-			"FROM member m WHERE nick_name like concat('%',?1,'%') and email != ?2", nativeQuery = true)
+			"FROM member m WHERE nick_name like concat('%',?1,'%') and email != ?2 and auth != 'ADMIN'", nativeQuery = true)
 	ArrayList<Map<String, Object>>  getMemberBySearchNickName(String name,String email);
 	
 	@Query(value = "with m_date as (" + 

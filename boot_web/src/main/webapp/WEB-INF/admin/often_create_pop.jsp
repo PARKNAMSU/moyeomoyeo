@@ -101,7 +101,7 @@ function setoften(){
 			alert("error")
 		}
 	}).done(function(data){
-		findBoard("/admin/get_all_often","often")
+		findBoard("/get_all_often","often")
 		closePopup()
 	})
 }

@@ -80,6 +80,7 @@ public class LoginService implements UserDetailsService{
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + member.getEmail()));
 		get_member.setIntroduce(member.getIntroduce());
 		get_member.setName(member.getName());
+		get_member.setNick_name(member.getNick_name());
 		get_member.setPhone_corp(member.getPhone_corp());
 		get_member.setPhone_number(member.getPhone_number());
 		dao.save(get_member);

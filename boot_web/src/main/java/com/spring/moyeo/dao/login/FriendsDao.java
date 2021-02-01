@@ -22,7 +22,7 @@ public interface FriendsDao extends CrudRepository<FriendsEntity, Integer>{
 			"select follow_email from friends where follower_email = ?1" + 
 			")SELECT email,name,nick_name,profile_url "
 			+ "FROM member m WHERE (select count(follow_email) from fw where follow_email = m.email) = 0 "
-			+ "AND email != ?1 ORDER BY name asc LIMIT 8", nativeQuery = true)
+			+ "AND email != ?1 AND auth != 'ADMIN' ORDER BY name asc LIMIT 8", nativeQuery = true)
 	ArrayList<Map<String, Object>> getRecommendFriends(String email);
 	
 	@Query(value = "SELECT email,name,nick_name,profile_url FROM member "
