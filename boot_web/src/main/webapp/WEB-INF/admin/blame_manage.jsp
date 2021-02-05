@@ -42,8 +42,7 @@
 		id="meeting">
 		<thead class="table-primary ">
 			<tr style="font-size:12px;">
-				<th scope="col" style="width: 10%;">모임 번호</th>
-				<th scope="col" style="width: 40%;">모임 제목</th>
+				<th scope="col" style="width: 50%;">모임 제목</th>
 				<th scope="col" style="width: 30%;">모임 관리자</th>
 				<th scope="col" style="width: 20%;">신고횟수</th>
 			</tr>
@@ -53,14 +52,14 @@
 	</table>
 </div>
 <div class="blame_main1 fl">
-	<p class="font_40">자주묻는 질문 관리</p>
+	<p class="font_40">댓글 신고</p>
 	<table class="table table-info table-hover table-striped t_align_c"
 		id="comment">
 		<thead class="table-primary ">
 			<tr style="font-size:12px;">
-				<th scope="col" style="width: 10%;">댓글 번호</th>
+				<th scope="col" style="width: 20%;">댓글 번호</th>
 				<th scope="col" style="width: 40%;">댓글 내용</th>
-				<th scope="col" style="width: 30%;">댓글 작성자</th>
+				<th scope="col" style="width: 20%;">댓글 작성자</th>
 				<th scope="col" style="width: 20%;">신고 횟수</th>
 			</tr>
 		</thead>
@@ -74,6 +73,183 @@
 		<a class="close" href="#" onclick="closePopup()">&times;</a>
 		<br><br><br>
 		<div id="field">
+			<p class="font_30" id="pop_title"></p>
+			<table class="table table-info table-hover table-striped t_align_c"
+				id="pop_table">
+				<thead class="table-primary " id="pop_thead">
+				</thead>
+				<tbody id="pop_tbody">
+				</tbody>
+			</table>
+			<div id="pop_btn" style="text-align: right;"></div>
 		</div>
 	</div>
 </div>
+
+<script>
+	let tables = ["user","meeting","comment"]
+
+	setTableData(tables[0])
+	setTableData(tables[1])
+	setTableData(tables[2])
+	var popTb = null	
+	function setDataTable(type,size){
+
+		$("#"+type).DataTable({
+			"scrollY":        size+"px",
+	        "scrollCollapse": true,
+	        "paging":         false,
+	        "language": {
+	            "lengthMenu": "Display _MENU_ records per page",
+	            "zeroRecords": "Nothing found - sorry",
+	            "info": "",
+	            "infoEmpty": "No records available",
+	            "infoFiltered": "(filtered from _MAX_ total records)"
+	        }
+		});	
+	}
+	
+	function setTableData(type){
+		$.ajax({
+			type:"post",
+			url:"/admin/all_blame",
+			dataType:"text",
+			data:{
+				type:type,
+				"${_csrf.parameterName}":"${_csrf.token}"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			var data_obj = JSON.parse(data)
+			data_obj.forEach(function(item){
+				if(type === 'user'){
+					userTableAppend(item)
+				}else if(type === 'meeting'){
+					meetingTableAppend(item)
+				}else{
+					commentTableAppend(item)
+				}
+				
+			})
+			setDataTable(type,500)
+		})
+	}
+	
+	function popupTableSet(type,data,name,content){
+		$("#pop_title").empty()
+		$("#pop_thead").empty()
+		$("#pop_tbody").empty()
+		$("#pop_btn").empty()
+		if(type === 'user'){
+			$("#pop_title").text(data[0].blamed_user+" 신고 목록")
+			var th = '<tr style="font-size:15px;">'
+				+'<th scope="col" style="width: 5%;">no.</th>'
+				+'<th scope="col" style="width: 25%;">신고한 유저</th>'
+				+'<th scope="col" style="width: 50%;">사유</th>'
+				+'<th scope="col" style="width: 25%;">신고일</th>'
+			+'</tr>'
+			$("#pop_thead").append(th)
+			data.forEach(function(item){
+				var el = '<tr style="cursor:pointer;">'
+					+'<td>'+item.blame_seq+'</td>'
+					+'<td>'+item.blaming_user+'</td>'
+					+'<td>'+item.blame_reason+'</td>'
+					+'<td>'+item.date+'</td>'
+				+'</tr>'
+				$("#pop_tbody").append(el)
+			})
+			$("#pop_btn").append("<input type='button' value='유저 정지' onclick='' class='btn_01_01 margin_right_10 font_20'>"
+			+"<input class='btn_01_01 font_20' type='button' value='닫기' onclick='closePopup()'>")
+		}
+		if(type === 'meeting'){
+			$("#pop_title").text(name+" 신고 목록")
+			var th = '<tr style="font-size:15px;">'
+				+'<th scope="col" style="width: 5%;">no.</th>'
+				+'<th scope="col" style="width: 25%;">신고한 유저</th>'
+				+'<th scope="col" style="width: 50%;">사유</th>'
+				+'<th scope="col" style="width: 25%;">신고일</th>'
+			+'</tr>'
+			$("#pop_thead").append(th)
+			data.forEach(function(item){
+				var el = '<tr style="cursor:pointer;">'
+					+'<td>'+item.blame_seq+'</td>'
+					+'<td>'+item.blaming_user+'</td>'
+					+'<td>'+item.blame_reason+'</td>'
+					+'<td>'+item.date+'</td>'
+				+'</tr>'
+				$("#pop_tbody").append(el)
+			})
+			$("#pop_btn").append("<input type='button' value='해당 페이지 이동' onclick='' class='btn_01_01 margin_right_10 font_20'>"
+			+"<input class='btn_01_01 font_20' type='button' value='닫기' onclick='closePopup()'>")
+		}
+		if(type === 'comment'){
+			$("#pop_title").html(name+"님의 댓글 <br>'"+content+"' 신고 목록")
+			var th = '<tr style="font-size:15px;">'
+				+'<th scope="col" style="width: 5%;">no.</th>'
+				+'<th scope="col" style="width: 25%;">신고한 유저</th>'
+				+'<th scope="col" style="width: 50%;">사유</th>'
+				+'<th scope="col" style="width: 25%;">신고일</th>'
+			+'</tr>'
+			$("#pop_thead").append(th)
+			data.forEach(function(item){
+				var el = '<tr style="cursor:pointer;">'
+					+'<td>'+item.blame_seq+'</td>'
+					+'<td>'+item.blaming_user+'</td>'
+					+'<td>'+item.blame_reason+'</td>'
+					+'<td>'+item.date+'</td>'
+				+'</tr>'
+				$("#pop_tbody").append(el)
+			})
+			$("#pop_btn").append("<input type='button' value='유저 정지' onclick='' class='btn_01_01 margin_right_10 font_20'>"
+			+"<input class='btn_01_01 font_20' type='button' value='닫기' onclick='closePopup()'>")
+		}	
+		if(popTb == null){
+			popTb = setDataTable("pop_table",500)
+		}	
+	}
+	
+	
+	function openBlameDetail(type,id,name,content){
+		$.ajax({
+			type:"post",
+			url:"/admin/get_blame",
+			dataType:"text",
+			data:{
+				type:type,
+				id:id,
+				"${_csrf.parameterName}":"${_csrf.token}"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			var data_obj = JSON.parse(data)
+			console.log(data_obj)
+			openPopupDis();
+			popupTableSet(type,data_obj,name,content)
+		})
+	}
+	
+	function userTableAppend(data){
+		var el = '<tr style="cursor:pointer;" onclick="openBlameDetail(\'user\',\''+data.blamed_user+'\')">'
+					+'<td>'+data.blamed_user+'</td>'
+					+'<td>'+data.num+'</td>'
+				+'</tr>'
+		$("#"+tables[0]+"_body").append(el)
+	}
+	function meetingTableAppend(data){
+		var el = '<tr style="cursor:pointer;" onclick="openBlameDetail(\'meeting\',\''+data.blamed_content_code+'\',\''+data.name+'\')">'
+			+'<td>'+data.name+'</td>'
+			+'<td>'+data.email+'</td>'
+			+'<td>'+data.num+'</td>'
+		+'</tr>'
+		$("#"+tables[1]+"_body").append(el)
+	}
+	function commentTableAppend(data){
+		var el = '<tr style="cursor:pointer;" onclick="openBlameDetail(\'comment\',\''+data.blamed_content_seq+'\',\''+data.email+'\',\''+data.content+'\')">'
+			+'<td>'+data.blamed_content_seq+'</td>'
+			+'<td>'+data.content+'</td>'
+			+'<td>'+data.email+'</td>'
+			+'<td>'+data.num+'</td>'
+		+'</tr>'
+		$("#"+tables[2]+"_body").append(el)
+	}
+</script>

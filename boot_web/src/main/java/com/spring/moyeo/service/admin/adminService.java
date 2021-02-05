@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.moyeo.dao.blame.BlameContentDao;
+import com.spring.moyeo.dao.blame.BlameUserDao;
 import com.spring.moyeo.dao.board.BoardDao;
 import com.spring.moyeo.dao.board.OftenQuestionDao;
 import com.spring.moyeo.dao.board.OtoQuestionDao;
@@ -44,6 +46,12 @@ public class adminService {
 	@Autowired
 	OtoQuestionDao oto_question_dao;
 	
+	@Autowired
+	BlameContentDao blame_content_dao;
+	
+	@Autowired
+	BlameUserDao blame_user_dao;
+	
 	public ArrayList<ArrayList<Map<String, Object>>> getStatistics(String from_date,String to_date,String type){
 		ArrayList<ArrayList<Map<String, Object>>> list_li = new ArrayList<ArrayList<Map<String,Object>>>();
 		if(type.equals("sign_up")) {
@@ -56,6 +64,12 @@ public class adminService {
 		ArrayList<ArrayList<Map<String, Object>>> list_li = new ArrayList<ArrayList<Map<String,Object>>>();
 		if(type.equals("meeting")) { 
 			for(int i=0;i<type2.size(); i++) list_li.add(meeting_dao.getStatisticsMeetingRoom(from_date, to_date,type2.get(i)));		
+		}
+		if(type.equals("blame")) {
+			for(String t:type2) {
+				list_li.add(blame_content_dao.getBlameContentStatistics(from_date, to_date, t));
+			}
+			list_li.add(blame_user_dao.getBlameUserStatistics(from_date, to_date));
 		}
 		return list_li;
 	}

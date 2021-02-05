@@ -62,9 +62,14 @@
 <div class="admin_div_01 fl">
 	<p class="font_40">신고 통계</p>
 	<p style="width:90%;text-align:right;">
-		<input type="text" class="date_txt" readonly="readonly"> ~ <input type="text" class="date_txt_end" readonly="readonly">   	
-		&nbsp;<input type="button" class="btn_01_01" style="height:31px" value="검색"> 
+		<input type="text" class="date_txt" readonly="readonly" 
+		onchange="ckSearchDate($('#to_blame'),$(this))" id="from_blame"> ~ 
+		<input type="text" class="date_txt_end" readonly="readonly" 
+		onchange="ckSearchDate($(this),$('#from_blame'))" id="to_blame">   	
+		&nbsp;<input type="button" class="btn_01_01" style="height:31px"
+		onclick="setChart($('#from_blame').val(),$('#to_blame').val(),'blame','blame_chart')" value="검색" > 
 	</p>
+	<div id="blame_chart" class="chart_div"></div>
 </div>
 <div class="clear"></div>
 
@@ -78,6 +83,7 @@ setDatePicker()
 setChart(def_from_date,def_to_date,"sign_up","sign_up_chart")
 setChart(def_from_date,def_to_date,"meeting","meeting_chart",['secret','open'])
 setChart(def_from_date,def_to_date,"meeting_member","meeting_member_chart")
+setChart(def_from_date,def_to_date,"blame","blame_chart",['meeting','comment'])
 function chartOpt(xAxisData,series){
 	var customOption = {
 			grid:{
@@ -133,6 +139,7 @@ function setChart(from,to,type,dom,m_type){
 		},
 		error:function(data){alert("error")}
 	}).done(function(data){
+		console.log(data)
 		var data_obj = JSON.parse(data)
 		console.log(data_obj)
 		var _dom = document.getElementById(dom)

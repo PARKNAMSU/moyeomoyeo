@@ -22,6 +22,7 @@ public class BlameContentEntity {
 	private int blame_seq;
 	
 	private int blamed_content_seq;
+	private String blamed_content_code;
 	
 	private String blaming_user;
 	

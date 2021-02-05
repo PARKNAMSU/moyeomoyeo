@@ -74,6 +74,11 @@
 .comments_div_01{
 	width:100%;background-color:#B9E2FA;padding:10px;border-bottom:solid #3063C2;
 }
+#manage_pop{
+	padding:20px;
+	margin-top:11%;
+	background-color: #b8daff;
+}
 </style>
 <div id="main_1" class="container-fluid"
 	style="padding-top: 90px; padding-bottom: 90px;">
@@ -141,6 +146,22 @@
 		
 	</div>
 </div>
+
+<div id="popup1" class="overlay" style="">
+	<div class="popup" style="" id="manage_pop">
+		<a class="close" href="#" onclick="closePopup()">&times;</a>
+		<br><br><br>
+		<div id="field">
+			<p class="font_30" id="pop_title"></p>
+			<textarea id="blame_reason" rows="12" class="form-control" style="background-color: transparent;box-shadow: 2px 2px 2px 2px" ></textarea>
+			<div style="width:100%;text-align:right;margin-top:15px;">
+				<input type="button" class="btn_01_01 font_20" value="신고" id="pop_blame" >
+				<input type="button" class="btn_01_01 font_20" value="취소" onclick="closePopup()">
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 
 let money = 1000
@@ -149,7 +170,7 @@ let room_end_date_yn = 'y'
 let pay_obj = new Object();
 let df_comments_num = 5;
 let comments_num = df_comments_num;
-let top_a_btn_member = '<a class="a_btn" onclick="">신고</a>&nbsp;&nbsp;<a class="a_btn" onclick="exitRoom()">나가기</a>'
+let top_a_btn_member = '<a class="a_btn" onclick="blameRoom(\''+room_code+'\')">신고</a>&nbsp;&nbsp;<a class="a_btn" onclick="exitRoom()">나가기</a>'
 let a_btn_end_date_y= '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="updateRoom($(this))">수정</a>';
 let a_btn_end_date_n = '<a class="a_btn" onclick="followMember()">초대</a>&nbsp;&nbsp;<a class="a_btn" onclick="updateRoom($(this))">수정</a>&nbsp;&nbsp;<a class="a_btn" onclick="">끝내기</a>';
 let top_a_btn_admin = null;
@@ -162,6 +183,52 @@ $(document).ready(function(){
 		chkWindowWidth()
 	})
 })
+
+function blamePop(seq){
+	openPopupDis()
+	$("#pop_title").text("댓글 신고")
+	$("#pop_blame").attr("onclick","blamingContent("+seq+",'na','comment',$('#blame_reason'))")
+}
+function blameRoom(code){
+	openPopupDis()
+	$("#pop_title").text("모임 신고")
+	$("#pop_blame").attr("onclick","blamingContent(-1,'"+code+"','meeting',$('#blame_reason'))")
+}
+function blamingContent(seq,code,type, reason){
+	console.log(code)
+	if( !strCheck(reason.val())){
+		alert("사유를 입력해 주세요.")
+		return false;
+	}
+	var data_jsn = null
+	if(code != 'na'){
+		data_jsn = {
+			blamed_content_code:code,
+			blame_reason:reason.val(),
+			content_type:type,
+			type:type,
+			"${_csrf.parameterName}":"${_csrf.token}"
+		}
+	}else{
+		data_jsn = {
+			blamed_content_seq:seq,
+			blame_reason:reason.val(),
+			content_type:type,
+			type:type,
+			"${_csrf.parameterName}":"${_csrf.token}"
+		}
+	}
+	$.ajax({
+		type:"post",
+		url:"/member/add_blame",
+		dataType:"text",
+		data:data_jsn,
+		error:function(data){alert("error")}
+	}).done(function(data){
+		closePopup();
+	})
+}
+
 function exitRoom(){
 	$.ajax({
 		type:"post",
@@ -410,7 +477,7 @@ function settingComments(){
 }
 function setCommentsEl(data){
 	var a_btn = returnConditionObj(data.email,'${user_id}',
-			'<a class="a_btn margin_right_10" onclick="setUpdate($(this),'+data.comments_seq+')">수정</a><a class="a_btn margin_right_10" onclick="rmComment('+data.comments_seq+')">삭제</a>','<a class="a_btn margin_right_10">신고</a>')	
+			'<a class="a_btn margin_right_10" onclick="setUpdate($(this),'+data.comments_seq+')">수정</a><a class="a_btn margin_right_10" onclick="rmComment('+data.comments_seq+')">삭제</a>','<a class="a_btn margin_right_10" onclick="blamePop('+data.comments_seq+')">신고</a>')	
 	var el = '<div class="comments_div_01">'
 		+'<div class="fl" style="width:50px;height:50px;border-radius:70%;overflow:hidden;">'
 			+'<img src="'+getImgUrl(data.profile_url)+'" style="width:100%;height:100%;">'

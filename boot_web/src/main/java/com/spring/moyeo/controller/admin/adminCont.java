@@ -92,7 +92,7 @@ public class adminCont {
 			System.out.println("mtype: "+m_type.get(0));
 		}
 		ArrayList<ArrayList<Map<String, Object>>> list = new ArrayList<ArrayList<Map<String, Object>>>();
-		if(type.equals("meeting")) {
+		if(type.equals("meeting") || type.equals("blame")) {
 			list = service.getStatistics_dtype(from_date, to_date, type, m_type);
 		}else {
 			list = service.getStatistics(from_date, to_date, type);
