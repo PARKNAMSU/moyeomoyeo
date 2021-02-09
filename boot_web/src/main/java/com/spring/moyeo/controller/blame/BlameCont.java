@@ -52,6 +52,13 @@ public class BlameCont {
 		return utils.jsonParse(blame_service.getBlameForId(id, type));
 	}
 	
-	
+	@RequestMapping(value = "/admin/block_user", produces = "application/text; charset=utf8")
+	public @ResponseBody String blockUser(
+			@RequestParam("email") String email,
+			@RequestParam("date") String date
+	) {
+		blame_service.blockUser(email, date);
+		return "";
+	}
 	
 }

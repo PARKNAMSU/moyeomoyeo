@@ -112,6 +112,8 @@ public class MeetingService {
 		entity_get.setMeeting_goal(entity.getMeeting_goal());
 		entity_get.setMeeting_info(entity.getMeeting_info());
 		entity_get.setMeeting_name(entity.getMeeting_name());
+		entity_get.setMeeting_num(entity.getMeeting_num());
+		entity_get.setMeeting_fee(entity.getMeeting_fee());
 		meeting_dao.save(entity_get);
 	}
 	

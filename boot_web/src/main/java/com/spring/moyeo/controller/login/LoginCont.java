@@ -61,6 +61,7 @@ public class LoginCont {
 		mv.setViewName("account/loginPage");
 		return mv;
 	}
+	
 	@RequestMapping("/active_setting")
 	public String activeSetting() {
 		return "account/active_setting";
@@ -96,6 +97,12 @@ public class LoginCont {
 	public ModelAndView my_inval_account_pop(ModelAndView mv) {
 		mv.setViewName("root/main");
 		mv.addObject("jsp_page", "../member/my/my_inval_account_pop");
+		return mv;
+	}
+	@RequestMapping("/profile_pop")
+	public ModelAndView my_profile_pop(ModelAndView mv) {
+		mv.setViewName("root/main");
+		mv.addObject("jsp_page", "../member/my/my_profile_img_pop");
 		return mv;
 	}
 	@RequestMapping("/member/user_info")

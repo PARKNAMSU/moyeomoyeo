@@ -26,7 +26,7 @@
 				<input type="text" name="email" id="email" placeholder="이메일" class="form-control"><br>
 				<input type="password" name="password" id="password" placeholder="비밀번호" class="form-control"><br>
 				<input type="password" name="password_ck" id="password_ck" placeholder="비밀번호 확인" class="form-control"><br>
-				<input type="button" class="btn btn-primary" value="이메일로 발급" style="width: 200px;margin-right:23px;" 
+				<input type="button" class="btn btn-primary" value="계정 활성화" style="width: 200px;margin-right:23px;" 
 				onclick='setActive($("#email").val(),$("#password").val(),$("#password_ck").val(),"y")'>
 				<input type="button" class="btn btn-primary" value="뒤로" style="width: 200px;" onclick="location.href='/login_page'">
 			</form><br>

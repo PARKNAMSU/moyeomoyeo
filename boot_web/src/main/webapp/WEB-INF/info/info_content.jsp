@@ -23,7 +23,7 @@
 		<div class="line_01"></div><br><br>
 		<div style="width:100%;text-align:right;" class="font_15">작성자 : <span id="writer"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="reg_date"></span></div>
 		<p class="font_30" id="title"></p>
-		<hr>
+		<div class="line_01" style="background-color:black;"></div><br>
 		<nav class="font_20" id="content">
 		</nav>
 		<br>
@@ -70,7 +70,7 @@ function setBoardContent(){
 		$("#title").text(data_obj.board_title)
 		$("#writer").text(data_obj.board_writer)
 		$("#reg_date").text(data_obj.board_reg_date)
-		$("#content").text(data_obj.board_content)
+		$("#content").html(data_obj.board_content)
 	})
 }
 </script>

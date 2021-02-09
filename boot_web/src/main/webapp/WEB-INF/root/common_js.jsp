@@ -57,8 +57,9 @@ function setActive(email,pass,pass_ck,yn){
 	
 }
 
-function strCheck(el){
-	if(el == null || el == ''){
+//null or '' 일시 return false
+function strCheck(val){
+	if(val == null || val == ''){
 		return false;
 	}
 	return true;

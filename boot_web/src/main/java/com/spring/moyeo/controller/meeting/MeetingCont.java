@@ -172,8 +172,6 @@ public class MeetingCont {
 			SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
 			entity.setEnd_date(transFormat.parse(entity.getEnd_date_str()));
 		}
-		System.out.println("name"+entity.getMeeting_name());
-		System.out.println("date"+entity.getEnd_date_str());
 		service.setMeetingRoom(entity);
 		return "";
 	}
@@ -185,6 +183,7 @@ public class MeetingCont {
 	) throws JsonProcessingException{
 		ArrayList<Map<String, Object>> list = 
 				service.getMeetingRoomForSearch(search,(String)utils.getSessionAttr(session, "user_id"), type);
+		System.out.println(list.size());
 		if(list.size() == 0) return "na";
 		return utils.jsonParse(list);
 	}

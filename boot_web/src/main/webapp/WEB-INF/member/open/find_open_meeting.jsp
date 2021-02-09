@@ -101,6 +101,7 @@
 <script>
 
 function getSearchRoom(search,type){
+	
 	$("#room_main_div").empty()
 	$.ajax({
 		 type:"GET",
@@ -112,6 +113,7 @@ function getSearchRoom(search,type){
 		 },
 		 error:function(data){alert("error")}
 	}).done(function(data){
+		console.log(data)
 		if(data === "na"){
 			return false;
 		}

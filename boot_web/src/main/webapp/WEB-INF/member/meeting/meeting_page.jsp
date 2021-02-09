@@ -120,7 +120,7 @@
 		
 		<div class="clear"></div>
 		<hr>
-		<p class="font_30">코멘츠</p>
+		<p class="font_30">댓글</p>
 		<textarea rows="" cols="" class="form-control" id="content"></textarea><br>
 		<div style="width:100%;text-align:right;margin-bottom:30px;">
 			<button class="btn_01" onclick="addComment($('#content').val())">입력</button>
@@ -282,6 +282,7 @@ function settingContent(){
 				$("#admin_connect_email").attr("href","mailto:"+item.email)
 				pay_obj.name = item.name;
 				pay_obj.email = item.email;
+				
 				name = returnConditionObj(item.email,'${user_id}','나',item.name) + " (총무)"
 				pay_btn = ''
 			}
@@ -311,6 +312,15 @@ function updateRoom(node){
 	$("#meeting_goal").html("<input type='text' id='meeting_goal_val' value='"+$("#meeting_goal").text()+"' >")
 	$("#end_date").html("<input type='text' id='end_date_val' value='"+$("#end_date").text()+"' x>")
 	$("#meeting_info").html("<textArea id='meeting_info_val' style='width:100%;height:550px;'>"+$("#meeting_info").text()+"</textArea>")
+	$("#meeting_fee").html("<select id='meeting_fee_opt' class='font_20'></select>")
+	$("#max_num").html("<select id='max_num_opt' class='font_20'></select>")
+	for(var i=1000; i<100001;i = i+1000){
+		$("#meeting_fee_opt").append("<option value='"+i+"'>"+i+"</option>")
+	}
+	var tmp = returnConditionObj(pay_obj.room_type,"secret",20,100);
+	for(var i=2; i<=tmp; i++){
+		$("#max_num_opt").append("<option value='"+i+"'>"+i+"</option>")
+	}
 	
 	$("#end_date_val").datepicker({
 		dateFormat: 'yy-mm-dd',
@@ -334,6 +344,8 @@ function setUpdateMeeting(){
 	var goal = $("#meeting_goal_val").val();
 	var end_date = returnConditionObj(room_end_date_yn,'y',$("#end_date_val").val(),null);
 	var info = $("#meeting_info_val").val();
+	var max_num = $("#max_num_opt").val();
+	var price = $("#meeting_fee_opt").val();
 	$.ajax({
 		type:"post",
 		dataType:"text",
@@ -343,6 +355,8 @@ function setUpdateMeeting(){
 			meeting_name:name,
 			meeting_goal:goal,
 			meeting_info:info,
+			meeting_fee:price,
+			meeting_num:max_num,
 			end_date_str:end_date,
 			end_date_yn:room_end_date_yn,
 			"${_csrf.parameterName}":"${_csrf.token}"
@@ -362,6 +376,7 @@ function settingMeetingInfo(data){
 	$("#meeting_fee").text(data.meeting_fee)
 	$("#meeting_info").text(data.meeting_info)
 	$("#max_num").text(data.meeting_num)
+	pay_obj.room_type = data.meeting_type
 	pay_obj.room_name = data.meeting_name
 	if(data.end_date_yn == 'n'){
 		$("span").remove("#end_date_div")

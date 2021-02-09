@@ -2,9 +2,13 @@ package com.spring.moyeo.dao.login;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -53,4 +57,8 @@ public interface LoginDao extends CrudRepository<MemberEntity, String>{
 			+ "case when dta.num is null then 0 else dta.num end as num from m_date dte left outer join m_data dta on dte.date = dta.m_date",nativeQuery = true)
 	ArrayList<Map<String, Object>> getSignUpStatistics(String from_date, String to_date);
 	
+	@Transactional
+	@Modifying
+	@Query(value = "update member set stop_yn = 'y', stop_date = to_timestamp(?2,'YYYY-MM-DD') where email = ?1", nativeQuery = true)
+	void blockUser(String email, String date);
 }
