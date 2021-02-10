@@ -29,18 +29,14 @@
 		<p class="font_50">1:1문의</p>
 		<div class="line_01"></div>
 		<br>
-		<div style="width: 100%; text-align: right;"><a class="a_btn" onclick="deleteOto()">삭제</a></div>
+		<div style="width: 100%; text-align: right;"><a class="a_btn margin_right_10" id="main_mdf_bt" onclick=""></a><a class="a_btn" onclick="deleteOto()">삭제</a></div>
 		<br>
 		<div style="width: 100%; text-align: right;" class="font_15"><span id="writer">나</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="date">2020/01/01</span></div>
-		<p class="font_30" id="title">1:1문의 제목</p>
-		<hr>
-		<nav class="font_20" id="content">안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해
-			주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요
-			모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.안녕하세요 모여모여를 이용해 주셔서
-			감사합니다.안녕하세요 모여모여를 이용해 주셔서 감사합니다.s</nav>
+		<p class="font_30" id="title"></p><br>
+		<nav class="font_20" id="content"></nav>
 		<br>
 		<div id="answer_div" style="width: 100%;text-align: right;"></div>
-		<hr>
+		<div class="line_01" style="background-color: black;"></div><br>
 		<div id="sub_div"></div>
 		<div class="div_01" style="width: 100%; margin-top: 40px;">
 			<div class="fl margin_left_50 div_01_01 sub_div"
@@ -96,6 +92,37 @@
 			$("#ray_01").css("margin-left", "20%");
 			$("#ray_01").css("width", "58%");
 		}
+	}
+	function mdfOto(node,seq){
+		var root = node.parent().parent()
+		var title = root.find("#sub_title")
+		var content = root.find("#sub_content")
+		title.html("<input type='text' id='update_title"+seq+"' class='form-control' value='"+title.html()+"'>")
+		content.html("<textarea class='form-control' id='update_content"+seq+"'>"+content.text()+"</textarea>")
+		node.attr("onclick","updateOto("+seq+")")
+	}
+	function mdfOtoMain(seq){
+		$("#title").html("<input type='text' id='update_title"+seq+"' class='form-control' value='"+$("#title").html()+"'>")
+		$("#content").html("<textarea class='form-control' id='update_content"+seq+"'>"+$("#content").text()+"</textarea>")
+		$("#main_mdf_bt").attr("onclick","updateOto("+seq+")")
+	}
+	function updateOto(seq){
+		var title = $("#update_title"+seq).val()
+		var content = $("#update_content"+seq).val()
+		$.ajax({
+			type:"get",
+			dataType:"text",
+			url:"/manage_oto",
+			data:{
+				oto_qst_seq:seq,
+				oto_qst_title:title,
+				oto_qst_content:content,
+				type:"update"
+			},
+			error:function(data){alert("error")}
+		}).done(function(data){
+			setOtoContent()
+		})
 	}
 	function deleteOto(){
 		if(!confirm("정말로 삭제하시겠습니까?")){
@@ -159,6 +186,10 @@
 			$("#writer").text(root_data.oto_qst_writer)
 			$("#date").text(root_data.oto_qst_reg_date)
 			$("#content").text(root_data.oto_qst_content)
+			if("${user_id}" != "admin"){
+				$("#main_mdf_bt").text("수정")
+				$("#main_mdf_bt").attr("onclick","mdfOtoMain("+root_data.oto_qst_seq+")")
+			}
 			if(data_obj.length == 0 && root_data.oto_qst_writer != "${user_id}"){
 				$("#answer_div").append("<a class='a_btn' onclick='openPopupDis()'>답글</a>")
 			}
@@ -174,19 +205,27 @@
 				var no_answer_el = '<div class="oto_sub_div">'
 					+'<div class="" style="width:100%;">'
 					+'<p style="color: gray;text-align:right;">'+data_obj[i].oto_qst_writer+' '+data_obj[i].oto_qst_reg_date+'</p>'
-					+'<p class="font_20"><span style="color:#3063C2">re:</span> '+data_obj[i].oto_qst_title+'</p>'
-					+'<p>'+data_obj[i].oto_qst_content+'</p>'
+					+'<span style="color:#3063C2" class="font_20">re: </span><b class="font_20" id="sub_title">'+data_obj[i].oto_qst_title+'</b><br><br>'
+					+'<p id="sub_content">'+data_obj[i].oto_qst_content+'</p>'
+				+'</div>'
+				+'</div>'
+				var my_el = '<div class="oto_sub_div">'
+					+'<div class="" style="width:100%;">'
+					+'<p style="color: gray;text-align:right;">'+data_obj[i].oto_qst_writer+' '+data_obj[i].oto_qst_reg_date+'</p>'
+					+'<span style="color:#3063C2" class="font_20">re: </span><b class="font_20" id="sub_title">'+data_obj[i].oto_qst_title+'</b><br><br>'
+					+'<p id="sub_content">'+data_obj[i].oto_qst_content+'</p>'
+					+'<div style="width:100%;text-align:right;"><a class="a_btn" onclick="mdfOto($(this),'+data_obj[i].oto_qst_seq+')">수정</a></div>'
 				+'</div>'
 				+'</div>'
 				var el = null
-				if(i == data_obj.length - 1){
-					if(data_obj[i].oto_qst_writer === '${user_id}'){
-						el = no_answer_el	
-					}else{
+				if(data_obj[i].oto_qst_writer != '${user_id}'){
+					if(i == data_obj.length - 1){
 						el = answer_el
+					}else{
+						el = no_answer_el
 					}
 				}else{
-					el = no_answer_el
+					el = my_el
 				}
 				$("#sub_div").append(el)
 			}

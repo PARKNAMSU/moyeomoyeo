@@ -23,7 +23,7 @@
 </style>
 <div style="margin-top:110px;"></div>
 <div class="board_main1 fl">
-	<p class="font_40">게시판 관리</p>
+	<p class="font_40">공지사항 관리</p>
 	<table class="table table-info table-hover table-striped t_align_c"
 		id="board">
 		<thead class="table-primary ">
