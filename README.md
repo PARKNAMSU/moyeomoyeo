@@ -7,4 +7,5 @@
 
 ### Source Paths
 
-Controller Path : [controllers](https://github.com/PARKNAMSU/moyeomoyeo/tree/main/boot_web/src/main/java/com/spring/moyeo/controller)
+Model Path : [Vo](https://github.com/PARKNAMSU/moyeomoyeo/tree/main/boot_web/src/main/java/com/spring/moyeo/vo)
+Controller Path : [controller](https://github.com/PARKNAMSU/moyeomoyeo/tree/main/boot_web/src/main/java/com/spring/moyeo/controller)
